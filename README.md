@@ -1,8 +1,7 @@
-# Point Cloud Projection Configuration
-
-This repository contains a configuration file used to process and project a point cloud dataset. The configuration is in JSON format and can be customized for specific projects, such as generating range and color images, applying anti-aliasing, and adjusting camera and lighting settings.
+# ChangeDetPipeline
 
 ## Configuration File Structure
+The configuration file `config.json` is used to process and project a point cloud dataset. The configuration is in JSON format and can be customized for specific projects, such as generating range and color images, applying anti-aliasing, and adjusting camera and lighting settings.
 
 ### `pc_projection`
 
