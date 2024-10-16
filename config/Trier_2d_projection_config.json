@@ -12,8 +12,7 @@
 			"camera_position" : [330900, 5514963, 130],
 			"rgb_light_intensity" : 100,
 			"range_light_intensity" : 15,
-			"sigma" : 0.0,
-			"factor_anti_aliasing" : 3
+			"sigma" : 0.0
 		},
 	"change_projection":
 		{

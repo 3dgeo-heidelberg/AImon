@@ -27,8 +27,7 @@ class PCloudProjection:
         camera_position,
         rgb_light_intensity,
         range_light_intensity,
-        sigma,
-        factor_anti_aliasing
+        sigma
     ):
         ##############################
         ### INITIALIZING VARIABLES ###
@@ -44,7 +43,6 @@ class PCloudProjection:
         self.rgb_light_intensity = rgb_light_intensity # For the colored image: adjust this factor to increase/decrease light intensity
         self.range_light_intensity = range_light_intensity # For the range image: adjust this factor to increase/decrease light intensity
         self.sigma = sigma  # Standard deviation for Gaussian kernel
-        self.factor_anti_aliasing = factor_anti_aliasing
         ### INITIALIZING VARIABLES ###
         ##############################
 
@@ -338,9 +336,6 @@ class PCloudProjection:
         self.image_type = "Range"
         
     def apply_smoothing(self, input_image):
-        im = Image.fromarray(input_image.astype('uint8'), 'RGB')
-        h = int(self.h_img_res/self.factor_anti_aliasing)
-        w = int(self.v_img_res/self.factor_anti_aliasing)
         blur = cv2.GaussianBlur(input_image, (3, 3), 0)
         # Flip the image left to right
         output_image = np.fliplr(np.asarray(blur))
@@ -363,8 +358,7 @@ if __name__ == "__main__":
         camera_position = config["pc_projection"]["camera_position"],
         rgb_light_intensity = config["pc_projection"]["rgb_light_intensity"],
         range_light_intensity = config["pc_projection"]["range_light_intensity"],
-        sigma = config["pc_projection"]["sigma"],
-        factor_anti_aliasing = config["pc_projection"]["factor_anti_aliasing"]
+        sigma = config["pc_projection"]["sigma"]
     )
     prj.project_pc()
 
