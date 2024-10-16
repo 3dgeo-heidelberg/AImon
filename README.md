@@ -1,7 +1,7 @@
 # ChangeDetPipeline
 
 ## Configuration File Structure
-The configuration file `config.json` is used to process and project a point cloud dataset. The configuration is in JSON format and can be customized for specific projects, such as generating range and color images, applying anti-aliasing, and adjusting camera and lighting settings.
+The configuration file `config.json` is used to process and project a point cloud dataset. The configuration is in JSON format and can be customized for specific projects, such as generating range and color images, adjusting the image resolution and camera and lighting settings.
 
 ### `pc_projection`
 
@@ -19,7 +19,6 @@ This section defines the parameters for projecting a point cloud to create range
 - **rgb_light_intensity**: Light intensity for color image generation.
 - **range_light_intensity**: Light intensity for range image generation.
 - **sigma**: Value used to apply Gaussian blur. Set to `0.0` if no blur is needed.
-- **factor_anti_aliasing**: Anti-aliasing factor to improve image smoothness.
 
 ### `change_projection`
 
