@@ -7,7 +7,7 @@
 			"make_color_image" : false,
 			"top_view": false,
 			"save_rot_pc": false,
-			"outfolder" : "/home/william/Documents/GitHub/changeDetPipeline/output/img/trier",
+			"outfolder" : "output/img/trier",
 			"resolution_cm" : 15.0,
 			"camera_position" : [330900, 5514963, 130],
 			"rgb_light_intensity" : 100,
@@ -17,8 +17,8 @@
 		},
 	"change_projection":
 		{
-			"bg_img_path" : "/home/william/Documents/GitHub/changeDetPipeline/output/img/trier/trier_RangeImage.jpg",
-			"path_change_events" : "/home/william/Documents/GitHub/changeDetPipeline/data/trier/change_events_split_labeled.json"
+			"bg_img_path" : "output/img/trier/trier_RangeImage.jpg",
+			"path_change_events" : "data/trier/change_events_split_labeled.json"
 			
 		}
 }

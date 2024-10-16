@@ -118,26 +118,6 @@ class ProjectChange:
                 }
             })
 
-            ################################################
-
-            continue# Add icon
-            #self.icon = cv2.imread(self.icon_path)
-            #rows, cols, channels = self.icon.shape
-            #self.icon_gray = cv2.cvtColor(self.icon, cv2.COLOR_BGR2GRAY)
-            #ret, mask = cv2.threshold(self.icon_gray, 220, 255, cv2.THRESH_BINARY)
-            #inverse_mask = cv2.bitwise_not(mask)
-            #fground = cv2.bitwise_and(self.icon, self.icon, mask=inverse_mask)
-
-            this_hull = np.array(this_hull)
-            self.pts.append(this_hull)
-            this_hull_mean_x, this_hull_mean_y = int(np.mean(this_hull[:,0])), int(np.mean(this_hull[:,1]))
-
-            roi = self.img[this_hull_mean_y-int(rows/2):this_hull_mean_y+int(rows/2), this_hull_mean_x-int(cols/2):this_hull_mean_x+int(cols/2)]
-
-            bground = cv2.bitwise_and(roi, roi, mask=mask)
-            
-            dst = cv2.add(bground, fground)
-            self.img[this_hull_mean_y-int(rows/2):this_hull_mean_y+int(rows/2), this_hull_mean_x-int(cols/2):this_hull_mean_x+int(cols/2)] = dst
         geojson.close()
             
 

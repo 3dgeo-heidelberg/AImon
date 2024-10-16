@@ -7,7 +7,7 @@
 			"make_color_image" : false,
 			"top_view": false,
 			"save_rot_pc": false,
-			"outfolder" : "/home/william/Documents/GitHub/changeDetPipeline/output/img/office",
+			"outfolder" : "output/img/office",
 			"resolution_cm" : 0.1,
 			"camera_position" : [0,0,0],
 			"rgb_light_intensity" : 100.0,
@@ -17,8 +17,8 @@
 		},
 	"change_projection":
 		{
-			"bg_img_path" : "/home/william/Documents/GitHub/changeDetPipeline/output/img/office/office_RangeImage.jpg",
-			"path_change_events" : "/home/william/Documents/GitHub/changeDetPipeline/data/office/change_events_split_labeled.json"
+			"bg_img_path" : "output/img/office/office_RangeImage.jpg",
+			"path_change_events" : "data/office/change_events_split_labeled.json"
 			
 		}
 }
