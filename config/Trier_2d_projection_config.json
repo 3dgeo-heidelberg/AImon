@@ -3,8 +3,8 @@
 		{
 			"project" : "trier",
 			"pc_path" : "/home/william/Documents/trier.laz",
-			"make_range_image" : true,
-			"make_color_image" : false,
+			"make_range_image" : false,
+			"make_color_image" : true,
 			"top_view": false,
 			"save_rot_pc": false,
 			"outfolder" : "output/img/trier",
@@ -16,8 +16,8 @@
 		},
 	"change_projection":
 		{
-			"bg_img_path" : "output/img/trier/trier_RangeImage.jpg",
-			"path_change_events" : "data/trier/change_events_split_labeled.json"
+			"bg_img_path" : "output/img/trier/trier_ColorImage.tif",
+			"path_change_events" : "data/trier/12.5vs_0bs_0.9av_change_events_split.json"
 			
 		}
 }

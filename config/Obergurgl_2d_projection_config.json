@@ -2,7 +2,7 @@
 	"pc_projection":
 		{
 			"project" : "obergurgl",
-			"pc_path" : "/home/william/Documents/obergurgl.las",
+			"pc_path" : "data/obergurgl/obergurgl.las",
 			"make_range_image" : true,
 			"make_color_image" : false,
 			"top_view": false,

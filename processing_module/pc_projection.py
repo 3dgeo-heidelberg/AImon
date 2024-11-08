@@ -7,6 +7,8 @@ import cv2
 import PIL
 from PIL import Image
 from PIL.ExifTags import TAGS
+import rasterio
+from rasterio.crs import CRS
 import piexif
 import json
 sys.path.append('../')
@@ -99,13 +101,13 @@ class PCloudProjection:
     def save_image(self):
         """
         Saving the image with OpenCV and than saving it with piexif to write metadata
-
         - type (str) : "Color" or "Range" for the type of image to save
         """
+
         # Save image with the current time
         if not os.path.exists(self.outfolder):
             os.makedirs(self.outfolder)
-        filename = os.path.join(self.outfolder,f"{self.project}_{self.image_type}Image.jpg")
+        filename = os.path.join(self.outfolder,f"{self.project}_{self.image_type}Image.tif")
         image_metadata = {
             "image_path": filename,
             "pc_path": self.pc_path,
@@ -122,34 +124,60 @@ class PCloudProjection:
             "v_img_res": self.v_img_res,
             "h_fov": self.h_fov,
             "v_fov": self.v_fov,
-            "res": self.v_res,
+            "res": self.v_res
         }
 
         filename = image_metadata["image_path"]
-        # Reversing image array because Opencv reads and writes color channels in BGR instead of RGB
-        BGR_img = self.shaded_range_image[..., ::-1]
-        cv2.imwrite(filename, BGR_img)
+        #cv2.imwrite(filename, BGR_img)
 
-        # Opening image with Pillow
-        img = Image.open(image_metadata["image_path"])
+        raster = np.moveaxis(self.shaded_image, [0, 1, 2], [2, 1, 0])
+        #raster = np.transpose(raster)  # Transpose to fix the rotation
+        raster = np.rot90(raster, k=-1, axes=(1, 2))
+        raster = np.flip(raster, axis=2)
 
-        # Preparing metadata
-        metadata_json = json.dumps(image_metadata)
-        metadata_bytes = metadata_json.encode("utf-8")
+        #from rasterio.transform import from_origin
+        #transform = from_origin(0, 3000, 1, 1)
 
-        # Load existing EXIF data (if any)
-        exif_dict = (
-            piexif.load(img.info["exif"]) if "exif" in img.info else {"Exif": {}}
-        )
+        meta = {
+            'driver': 'GTiff',
+            'dtype': 'uint8',
+            'nodata': None,
+            'height': self.shaded_image.shape[0],
+            'width': self.shaded_image.shape[1],
+            'count': 3,  # number of bands
+            "tiled": False,
+            "compress": 'lzw'
+        }
+        custom_tags = {
+                "pc_path": self.pc_path,
+                "image_path": filename,
+                "make_range_image": self.make_range_image,
+                "make_color_image": self.make_color_image,
+                "resolution_cm": self.resolution_cm,
+                "top_view": self.top_view,
+                "save_rot_pc": self.save_rot_pc,
+                "camera_position_x": self.camera_position[0],
+                "camera_position_y": self.camera_position[1],
+                "camera_position_z": self.camera_position[2],
+                "rgb_light_intensity": self.rgb_light_intensity,
+                "range_light_intensity": self.range_light_intensity,
+                "sigma": self.sigma,
+                "h_img_res": self.h_img_res,
+                "v_img_res": self.v_img_res,
+                "h_fov_x": self.h_fov[0],
+                "h_fov_y": self.h_fov[1],
+                "v_fov_x": self.v_fov[0],
+                "v_fov_y": self.v_fov[1],
+                "res": self.v_res
+            }
 
-        # Add the custom metadata to the UserComment field in the EXIF data
-        exif_dict["Exif"][piexif.ExifIFD.UserComment] = metadata_bytes
+        # Write the raster
+        with rasterio.open(filename, "w", **meta) as dest:
+            dest.write(raster, [1,2,3])
+            dest.update_tags(**custom_tags)
 
-        # Convert the EXIF dictionary back to binary EXIF data
-        exif_bytes = piexif.dump(exif_dict)
+        x=0
 
-        # Save the image with the new EXIF data
-        img.save(image_metadata["image_path"], "jpeg", exif=exif_bytes, quality='keep')
 
     def load_pc_file(self):
         # Load the .las/.laz file
@@ -295,16 +323,12 @@ class PCloudProjection:
         shading = np.clip(dot_product * self.rgb_light_intensity, 0, 1)
 
         # Apply smoothed shading to the color image
-        shaded_color_image = (
-            self.color_image.astype(np.float32) * shading[..., np.newaxis]
-        )
+        shaded_color_image = (self.color_image.astype(np.float32) * shading[..., np.newaxis])
         shaded_color_image = np.clip(shaded_color_image, 0, 255).astype(np.uint8)
-        # If the image is flipped right to left, apply the fliplr() numpy function
-        final_image = np.fliplr(shaded_color_image)
         # Apply median filter to selectively remove isolated black pixels
-        shaded_color_image = self.remove_isolated_black_pixels(final_image)
+        shaded_color_image = self.remove_isolated_black_pixels(shaded_color_image)
 
-        self.shaded_color_image = self.apply_smoothing(shaded_color_image)
+        self.shaded_image = self.apply_smoothing(shaded_color_image)
 
         # Call save_image function
         self.image_type = "Color"
@@ -330,7 +354,7 @@ class PCloudProjection:
         filter_0 = shaded_range_image<0.
         shaded_range_image[filter_0] = 0.
 
-        self.shaded_range_image = self.apply_smoothing(shaded_range_image)
+        self.shaded_image = self.apply_smoothing(shaded_range_image)
 
         # Call save_image function
         self.image_type = "Range"
@@ -344,7 +368,7 @@ class PCloudProjection:
 
 
 if __name__ == "__main__":
-    config_file = r"./config/Obergurgl_2d_projection_config.json"
+    config_file = r"./config/Trier_2d_projection_config.json"
     config = utils.read_json_file(config_file)
     prj = PCloudProjection(
         project=config["pc_projection"]["project"],

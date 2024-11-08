@@ -1,0 +1,4 @@
+*.ply
+*.las
+*.laz
+tmp/*

@@ -5,6 +5,8 @@ from shapely import Polygon
 import cv2
 import piexif
 import json
+import rasterio
+from itertools import islice
 
 from shapely.geometry import mapping, Polygon
 import fiona
@@ -27,22 +29,32 @@ class ProjectChange:
 
     def project_change(self):
         # Load EXIF data from an image
-        exif_data = piexif.load(self.bg_img_path)
+        #exif_data = piexif.load(self.bg_img_path)
         try:
-            user_comment = exif_data["Exif"].get(piexif.ExifIFD.UserComment, b'')
-            metadata_json = user_comment.decode('utf-8')
-            image_metadata_loaded = json.loads(metadata_json)
+            #user_comment = exif_data["Exif"].get(piexif.ExifIFD.UserComment, b'')
+            #metadata_json = user_comment.decode('utf-8')
+            #image_metadata_loaded = json.loads(metadata_json)
+            # Retrieve the metadata
+            with rasterio.open(self.bg_img_path) as src:
+                image_metadata_loaded = dict(src.tags().items())
+                    #print(f"{key}: {value}")
+                #print("Core Metadata:", src.meta)
         except:
             print("Missing some information, cannot project change into image")
             pass
 
         # Get metadata of the image. Necessary for the projection of the change event points
-        camera_position = image_metadata_loaded['camera_position']
-        h_img_res = image_metadata_loaded['h_img_res']
-        v_img_res = image_metadata_loaded['v_img_res']
-        h_fov = image_metadata_loaded['h_fov']
-        v_fov = image_metadata_loaded['v_fov']
-        res = image_metadata_loaded['res']
+        camera_position_x = float(image_metadata_loaded['camera_position_x'])
+        camera_position_y = float(image_metadata_loaded['camera_position_y'])
+        camera_position_z = float(image_metadata_loaded['camera_position_z'])
+        h_img_res = float(image_metadata_loaded['h_img_res'])
+        v_img_res = float(image_metadata_loaded['v_img_res'])
+        h_fov_x = float(image_metadata_loaded['h_fov_x'])
+        h_fov_y = float(image_metadata_loaded['h_fov_y'])
+        v_fov_x = float(image_metadata_loaded['v_fov_x'])
+        v_fov_y = float(image_metadata_loaded['v_fov_y'])
+        res = float(image_metadata_loaded['res'])
+        #top_view = bool(image_metadata_loaded['top_view'])
 
         # Get change events dictionnary in json file
         with open(self.path_change_events) as json_data:
@@ -52,10 +64,11 @@ class ProjectChange:
         output_folder_path = f"output/geojson/{self.project}"
         if not os.path.exists(output_folder_path):
             os.makedirs(f"output/geojson/{self.project}")
-        # Name shapefile according to the project name written in the json file
+        # Name geojson according to the project name written in the json file
         geojson_name = f"{output_folder_path}/{self.project}_change_events.geojson"
+        geojson_name_gis = f"{output_folder_path}/{self.project}_change_events_gis.geojson"
         
-        # Create the schema for the attributes of the shapefile
+        # Create the schema for the attributes of the geojson
         schema = {
             'geometry': 'Polygon',
             'properties': {
@@ -68,6 +81,7 @@ class ProjectChange:
             }
         # Open the shapefile to be able to write each polygon in it
         geojson = fiona.open(geojson_name, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(4979), 'binary')
+        geojson_gis = fiona.open(geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(25832))
 
         for change_event in change_events:
             if 'undefined' in str(change_event['event_type']): continue
@@ -79,17 +93,31 @@ class ProjectChange:
             # Handle the empty array, if any
             if change_event_pts_og.shape[0] == 0:
                 continue
+            
+            # GIS layer
+            self.project_gis_layer(change_event_pts_og)
+            # Add the polygon to the main geojson file
+            geojson_gis.write({
+                'geometry': mapping(self.polygon_gis),
+                'properties': {
+                    'event_type': str(change_event['event_type'][0]),
+                    'object_id': str(change_event['object_id']),
+                    'X_centroid': float(self.centroid_gis[0]),
+                    'Y_centroid': float(self.centroid_gis[1]),
+                    'Z_centroid': float(self.centroid_gis[2])
+                }
+            })
 
             # Translation of point cloud coordinates for the scanner position of (0, 0, 0)
-            change_event_pts = change_event_pts_og - np.asarray(camera_position)
+            change_event_pts = change_event_pts_og - np.asarray([camera_position_x, camera_position_y, camera_position_z])
 
             # Transformation from cartesian coordinates (x, y, z) to spherical coordinates (r, θ, φ)
             r, theta, phi = utils.xyz_2_spherical(change_event_pts)
             theta, phi = np.rad2deg(theta), np.rad2deg(phi)
 
             # Transformation from spherical coordinates (r, θ, φ) to pixel coordinates (u, v)
-            u = np.round((theta - h_fov[0]) / res).astype(int)
-            v = np.round((phi - v_fov[0]) / res).astype(int)
+            u = np.round((theta - h_fov_x) / res).astype(int)
+            v = np.round((phi - v_fov_x) / res).astype(int)
             change_points_uv = np.c_[u, v]
 
             # Create the convex hull
@@ -117,12 +145,30 @@ class ProjectChange:
                     'Z_centroid': float(centroid[2])
                 }
             })
-
         geojson.close()
+
+
+    def project_gis_layer(self, change_event_pts_og):
+        change_event_pts_xy = change_event_pts_og[:,:2]
+        # Create the convex hull
+        hull = ConvexHull(change_event_pts_xy)
+        # Order the points anti-clockwise
+        list_points = []
+        for simplex in hull.vertices:
+            list_points.append([int(change_event_pts_xy[simplex, 1]), -int(change_event_pts_xy[simplex, 0])])
+        
+        # Create the polygon
+        list_points = np.asarray(list_points)
+        list_points.T[[0, 1]] = list_points.T[[1, 0]]
+        list_points[:, 0] *= -1
+        self.polygon_gis = Polygon(np.array(list_points))
+        # Compute centroid
+        self.centroid_gis = np.mean(change_event_pts_og, axis=0)
+
             
 
 if __name__ == "__main__":
-    config_file = r"./config/Obergurgl_2d_projection_config.json"
+    config_file = r"./config/Trier_2d_projection_config.json"
     config = utils.read_json_file(config_file)
     img = ProjectChange(
         project = config["pc_projection"]["project"],

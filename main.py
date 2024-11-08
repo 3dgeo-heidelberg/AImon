@@ -4,7 +4,7 @@ from processing_module import pc_projection, change_projection
 
 
 if __name__ == '__main__':
-    config_file = r"config/Obergurgl_2d_projection_config.json"
+    config_file = r"config/Trier_2d_projection_config.json"
     config = utils.read_json_file(config_file)
     pc_prj = pc_projection.PCloudProjection(
         project=config["pc_projection"]["project"],
@@ -18,8 +18,7 @@ if __name__ == '__main__':
         camera_position = config["pc_projection"]["camera_position"],
         rgb_light_intensity = config["pc_projection"]["rgb_light_intensity"],
         range_light_intensity = config["pc_projection"]["range_light_intensity"],
-        sigma = config["pc_projection"]["sigma"],
-        factor_anti_aliasing = config["pc_projection"]["factor_anti_aliasing"]
+        sigma = config["pc_projection"]["sigma"]
     )
     pc_prj.project_pc()
     change_prj = change_projection.ProjectChange(
