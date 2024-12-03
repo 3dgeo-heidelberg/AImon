@@ -1,11 +1,27 @@
 from helpers import utils
 from processing_module import pc_projection, change_projection
+import argparse
 
+"""
+Main script for executing point cloud projection and change visualization.
 
+This script initializes the required classes using a JSON configuration file
+and executes the projection of point clouds and change detection visualization.
+
+Modules Used:
+    - pc_projection: For handling point cloud projection.
+    - change_projection: For projecting change events in image coordinates.
+
+Example:
+    python main.py "config/Trier_2d_projection_config.json"
+"""
 
 if __name__ == '__main__':
-    config_file = r"config/Trier_2d_projection_config.json"
-    config = utils.read_json_file(config_file)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
+    args = parser.parse_args()
+    config = utils.read_json_file(args.config)
+    
     pc_prj = pc_projection.PCloudProjection(
         project=config["pc_projection"]["project"],
         pc_path=config["pc_projection"]["pc_path"],

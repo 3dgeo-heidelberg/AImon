@@ -1,3 +1,5 @@
+import argparse
+
 import sys, os
 import numpy as np
 from scipy.spatial import ConvexHull
@@ -16,6 +18,22 @@ from changeDetPipeline.helpers import utils
 
 
 class ProjectChange:
+    """
+    Change Projection Module.
+
+    This module processes spatial change events, projects them onto images,
+    and generates GeoJSON and kml files for visualization in GIS tools.
+
+    Classes:
+        - ProjectChange: Handles loading change data, projecting onto images, 
+                        and generating GeoJSON outputs.
+
+    Methods:
+        - __init__: Initializes the ProjectChange class with input parameters.
+        - project_change: Main function to project changes and create GeoJSON files.
+        - project_gis_layer: Helper function to handle GIS layer projection.
+    """
+    
     def __init__(self, project, bg_img_path, path_change_events):
         ##############################
         ### INITIALIZING VARIABLES ###
@@ -29,19 +47,12 @@ class ProjectChange:
 
     def project_change(self):
         # Load EXIF data from an image
-        #exif_data = piexif.load(self.bg_img_path)
         try:
-            #user_comment = exif_data["Exif"].get(piexif.ExifIFD.UserComment, b'')
-            #metadata_json = user_comment.decode('utf-8')
-            #image_metadata_loaded = json.loads(metadata_json)
             # Retrieve the metadata
             with rasterio.open(self.bg_img_path) as src:
                 image_metadata_loaded = dict(src.tags().items())
-                    #print(f"{key}: {value}")
-                #print("Core Metadata:", src.meta)
         except:
             print("Missing some information, cannot project change into image")
-            pass
 
         # Get metadata of the image. Necessary for the projection of the change event points
         camera_position_x = float(image_metadata_loaded['camera_position_x'])
@@ -180,8 +191,12 @@ class ProjectChange:
             
 
 if __name__ == "__main__":
-    config_file = r"./config/Trier_2d_projection_config.json"
-    config = utils.read_json_file(config_file)
+    #config_file = r"config/Trier_2d_projection_config.json"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
+    args = parser.parse_args()
+    config = utils.read_json_file(args.config)
+
     img = ProjectChange(
         project = config["pc_projection"]["project"],
         bg_img_path = config["change_projection"]["bg_img_path"],

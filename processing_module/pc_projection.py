@@ -1,3 +1,5 @@
+import argparse
+
 import sys
 import os
 from datetime import datetime
@@ -16,6 +18,28 @@ from changeDetPipeline.helpers import utils
 
 
 class PCloudProjection:
+    """
+    Point Cloud Projection Module.
+
+    This module processes point clouds, creating 2D projections (color and range images)
+    from either a top-down or scanner-based perspective.
+
+    Classes:
+        - PCloudProjection: Main class for handling point cloud processing and projection.
+
+    Methods:
+        - __init__: Initializes the PCloudProjection class with configuration parameters.
+        - project_pc: Main function to execute the projection process.
+        - load_pc_file: Loads point cloud data from .las or .laz files.
+        - create_top_view: Rotates the point cloud for top-down projection.
+        - main_projection: Projects the point cloud into 2D image space.
+        - create_shading: Calculates surface normals for image shading.
+        - apply_shading_to_color_img: Applies lighting effects to color images.
+        - apply_shading_to_range_img: Applies lighting effects to range images.
+        - apply_smoothing: Smoothens images using Gaussian blur.
+        - save_image: Saves generated images with metadata.
+    """
+
     def __init__(
         self,
         project,
@@ -368,8 +392,12 @@ class PCloudProjection:
 
 
 if __name__ == "__main__":
-    config_file = r"./config/Trier_2d_projection_config.json"
-    config = utils.read_json_file(config_file)
+    #config_file = r"config/Trier_2d_projection_config.json"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
+    args = parser.parse_args()
+    config = utils.read_json_file(args.config)
+
     prj = PCloudProjection(
         project=config["pc_projection"]["project"],
         pc_path=config["pc_projection"]["pc_path"],
