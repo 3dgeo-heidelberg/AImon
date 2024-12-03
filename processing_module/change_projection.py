@@ -76,7 +76,11 @@ class ProjectChange:
                 'object_id': 'str',
                 'X_centroid': 'float',
                 'Y_centroid': 'float',
-                'Z_centroid': 'float'
+                'Z_centroid': 'float',
+                't_min': 'str',
+                't_max': 'str',
+                'change_magnitudes_avg': 'float',
+                'volumes_from_convex_hulls': 'float'
                 }
             }
         # Open the shapefile to be able to write each polygon in it
@@ -104,7 +108,11 @@ class ProjectChange:
                     'object_id': str(change_event['object_id']),
                     'X_centroid': float(self.centroid_gis[0]),
                     'Y_centroid': float(self.centroid_gis[1]),
-                    'Z_centroid': float(self.centroid_gis[2])
+                    'Z_centroid': float(self.centroid_gis[2]),
+                    't_min': str(change_event['t_min']),
+                    't_max': str(change_event['t_min']),
+                    'change_magnitudes_avg': float(change_event['change_magnitudes_avg'][0]),
+                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0])
                 }
             })
 
@@ -142,7 +150,11 @@ class ProjectChange:
                     'object_id': str(change_event['object_id']),
                     'X_centroid': float(centroid[0]),
                     'Y_centroid': float(centroid[1]),
-                    'Z_centroid': float(centroid[2])
+                    'Z_centroid': float(centroid[2]),
+                    't_min': str(change_event['t_min']),
+                    't_max': str(change_event['t_min']),
+                    'change_magnitudes_avg': float(change_event['change_magnitudes_avg'][0]),
+                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0])
                 }
             })
         geojson.close()
