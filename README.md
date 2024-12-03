@@ -30,4 +30,8 @@ This section defines parameters for applying changes or transformations based on
 ## Example Usage
 
 Ensure that the configuration JSON is properly set up with paths and parameters before executing the point cloud processing. To change or customize the parameters, edit the respective values as needed.
-Indicate the configuration JSON in the `main.py` file as the `config_file` variable. Run the `main.py` file.
+Indicate the configuration JSON file when running the `main.py` file as followed:
+
+```console
+~/Documents/GitHub/changeDetPipeline$ python main.py "config/Trier_2d_projection_config.json"
+```
