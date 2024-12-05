@@ -17,7 +17,7 @@
 	"change_projection":
 		{
 			"bg_img_path" : "output/img/trier/trier_ColorImage.tif",
-			"path_change_events" : "data/trier/12.5vs_0bs_0.9av_change_events_split.json"
+			"path_change_events" : "data/trier/change_events_splitREF.json"
 			
 		}
 }

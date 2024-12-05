@@ -1,18 +1,11 @@
 import argparse
-
 import sys
 import os
-from datetime import datetime
 import laspy
 import numpy as np
 import cv2
-import PIL
-from PIL import Image
 from PIL.ExifTags import TAGS
 import rasterio
-from rasterio.crs import CRS
-import piexif
-import json
 sys.path.append('../')
 from changeDetPipeline.helpers import utils
 
@@ -123,11 +116,6 @@ class PCloudProjection:
         return result_image
 
     def save_image(self):
-        """
-        Saving the image with OpenCV and than saving it with piexif to write metadata
-        - type (str) : "Color" or "Range" for the type of image to save
-        """
-
         # Save image with the current time
         if not os.path.exists(self.outfolder):
             os.makedirs(self.outfolder)
@@ -152,15 +140,10 @@ class PCloudProjection:
         }
 
         filename = image_metadata["image_path"]
-        #cv2.imwrite(filename, BGR_img)
 
         raster = np.moveaxis(self.shaded_image, [0, 1, 2], [2, 1, 0])
-        #raster = np.transpose(raster)  # Transpose to fix the rotation
         raster = np.rot90(raster, k=-1, axes=(1, 2))
         raster = np.flip(raster, axis=2)
-
-        #from rasterio.transform import from_origin
-        #transform = from_origin(0, 3000, 1, 1)
 
         meta = {
             'driver': 'GTiff',
@@ -200,8 +183,6 @@ class PCloudProjection:
             dest.write(raster, [1,2,3])
             dest.update_tags(**custom_tags)
 
-        x=0
-
 
     def load_pc_file(self):
         # Load the .las/.laz file
@@ -227,6 +208,7 @@ class PCloudProjection:
         self.mean_x = np.mean(x)
         self.mean_y = np.mean(y)
         self.mean_z = np.mean(z)
+
 
     def create_top_view(self):
         # If the user want a top view, we rotate the point cloud on the side instead of changing the camera view
@@ -262,6 +244,7 @@ class PCloudProjection:
             self.las_f.y = self.xyz[:, 1]
             self.las_f.z = self.xyz[:, 2]
             self.las_f.write(self.pc_path[:-4] + "_rotated" + self.pc_path[-4:])
+
 
     def main_projection(self):
         # Shift the point cloud by the camera position' coordinates so the latter is positionned on the origin
@@ -316,6 +299,7 @@ class PCloudProjection:
             self.green = self.green[valid_indices]
             self.blue = self.blue[valid_indices]
 
+
     def create_shading(self):
         # Compute surface normals' components (gradient approximation)
         z_img = np.zeros((self.h_img_res, self.v_img_res))
@@ -327,6 +311,7 @@ class PCloudProjection:
         self.normals = np.dstack((-dz_du, -dz_dv, np.ones_like(z_img)))
         self.norms = np.linalg.norm(self.normals, axis=2, keepdims=True)
         self.normals /= self.norms  # Normalize
+
 
     def apply_shading_to_color_img(self):
         # Populate
@@ -357,6 +342,7 @@ class PCloudProjection:
         # Call save_image function
         self.image_type = "Color"
 
+
     def apply_shading_to_range_img(self):
         # Populate the range image with the radius (scanner to point distance)
         self.range_image[self.u, self.v, 0] = \
@@ -382,6 +368,7 @@ class PCloudProjection:
 
         # Call save_image function
         self.image_type = "Range"
+
         
     def apply_smoothing(self, input_image):
         blur = cv2.GaussianBlur(input_image, (3, 3), 0)
@@ -392,11 +379,13 @@ class PCloudProjection:
 
 
 if __name__ == "__main__":
-    #config_file = r"config/Trier_2d_projection_config.json"
     parser = argparse.ArgumentParser()
     parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
     args = parser.parse_args()
     config = utils.read_json_file(args.config)
+
+    """config_file = r"config/Trier_2d_projection_config.json"
+    config = utils.read_json_file(config_file)"""
 
     prj = PCloudProjection(
         project=config["pc_projection"]["project"],

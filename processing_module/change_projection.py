@@ -1,17 +1,14 @@
 import argparse
-
 import sys, os
+import json
 import numpy as np
 from scipy.spatial import ConvexHull
 from shapely import Polygon
-import cv2
-import piexif
 import json
 import rasterio
-from itertools import islice
-
 from shapely.geometry import mapping, Polygon
 import fiona
+
 
 sys.path.append('../')
 from changeDetPipeline.helpers import utils
@@ -33,7 +30,7 @@ class ProjectChange:
         - project_change: Main function to project changes and create GeoJSON files.
         - project_gis_layer: Helper function to handle GIS layer projection.
     """
-    
+
     def __init__(self, project, bg_img_path, path_change_events):
         ##############################
         ### INITIALIZING VARIABLES ###
@@ -68,16 +65,15 @@ class ProjectChange:
         #top_view = bool(image_metadata_loaded['top_view'])
 
         # Get change events dictionnary in json file
-        with open(self.path_change_events) as json_data:
-            change_events = json.load(json_data)
+        change_events = utils.read_json_file(self.path_change_events)
 
         # Create output folder file if not existant
         output_folder_path = f"output/geojson/{self.project}"
         if not os.path.exists(output_folder_path):
             os.makedirs(f"output/geojson/{self.project}")
         # Name geojson according to the project name written in the json file
-        geojson_name = f"{output_folder_path}/{self.project}_change_events.geojson"
-        geojson_name_gis = f"{output_folder_path}/{self.project}_change_events_gis.geojson"
+        self.geojson_name = f"{output_folder_path}/{self.project}_change_events_pixel.geojson"
+        self.geojson_name_gis = f"{output_folder_path}/{self.project}_change_events_gis.geojson"
         
         # Create the schema for the attributes of the geojson
         schema = {
@@ -91,15 +87,16 @@ class ProjectChange:
                 't_min': 'str',
                 't_max': 'str',
                 'change_magnitudes_avg': 'float',
-                'volumes_from_convex_hulls': 'float'
+                'volumes_from_convex_hulls': 'float',
+                'rel_filepath': 'str'
                 }
             }
         # Open the shapefile to be able to write each polygon in it
-        geojson = fiona.open(geojson_name, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(4979), 'binary')
-        geojson_gis = fiona.open(geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(25832))
+        geojson = fiona.open(self.geojson_name, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(4979), 'binary')
+        geojson_gis = fiona.open(self.geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(25832))
 
         for change_event in change_events:
-            if 'undefined' in str(change_event['event_type']): continue
+            #if 'undefined' in str(change_event['event_type']): continue
 
             # Fetch contour points in WGS84 coordinate system
             change_event_pts_og = change_event['points_builing_convex_hulls'][0]
@@ -123,7 +120,8 @@ class ProjectChange:
                     't_min': str(change_event['t_min']),
                     't_max': str(change_event['t_min']),
                     'change_magnitudes_avg': float(change_event['change_magnitudes_avg'][0]),
-                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0])
+                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
+                    'rel_filepath': str(change_event['rel_filepath'])
                 }
             })
 
@@ -165,10 +163,14 @@ class ProjectChange:
                     't_min': str(change_event['t_min']),
                     't_max': str(change_event['t_min']),
                     'change_magnitudes_avg': float(change_event['change_magnitudes_avg'][0]),
-                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0])
+                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
+                    'rel_filepath': str(change_event['rel_filepath'])
                 }
             })
         geojson.close()
+        geojson_gis.close()
+
+        #self.geojson2kml()
 
 
     def project_gis_layer(self, change_event_pts_og):
@@ -188,14 +190,111 @@ class ProjectChange:
         # Compute centroid
         self.centroid_gis = np.mean(change_event_pts_og, axis=0)
 
+
+    def geojson2kml(self):
+        self.kml_name_gis = self.geojson_name_gis.replace('.geojson', ".kml")
+        self.kml_name_gis = f"{os.path.abspath('.')}/{self.kml_name_gis}"
+        geojson_data = utils.read_json_file(self.geojson_name_gis)
+
+        from xml.etree.ElementTree import Element, SubElement, tostring, ElementTree
+        import xml.dom.minidom
+        #############################
+        
+        # Helper function to create XML elements
+        def create_simple_field(parent, name, field_type):
+            simple_field = SubElement(parent, "SimpleField", name=name, type=field_type)
+            return simple_field
+
+        # Initialize KML structure
+        kml = Element('kml', xmlns="http://www.opengis.net/kml/2.2")
+        document = SubElement(kml, 'Document', id="root_doc")
+
+        # Schema definition
+        schema = SubElement(document, 'Schema', name="trier_change_events_gis", id="trier_change_events_gis")
+        fields = [
+            ("event_type", "string"),
+            ("object_id", "string"),
+            ("X_centroid", "float"),
+            ("Y_centroid", "float"),
+            ("Z_centroid", "float")
+        ]
+        for name, field_type in fields:
+            create_simple_field(schema, name, field_type)
+
+        # Folder for Placemarks
+        folder = SubElement(document, 'Folder')
+        folder_name = SubElement(folder, 'name')
+        folder_name.text = "trier_change_events_gis"
+
+        # Generate Placemarks from GeoJSON
+        for feature in geojson_data.get("features", []):
+            properties = feature.get("properties", {})
+            geometry = feature.get("geometry", {})
             
+            # Extract values from properties
+            event_type = properties.get("event_type", "Unknown")
+            object_id = properties.get("object_id", "Unknown")
+            x_centroid = str(properties.get("X_centroid", 0))
+            y_centroid = str(properties.get("Y_centroid", 0))
+            z_centroid = str(properties.get("Z_centroid", 0))
+            
+            # Extract coordinates
+            coordinates = ""
+            if geometry.get("type") == "Polygon":
+                for ring in geometry.get("coordinates", []):
+                    coordinates += " ".join(f"{lon},{lat}" for lon, lat in ring) + " "
+            
+            # Create Placemark
+            placemark = SubElement(folder, 'Placemark')
+            style = SubElement(placemark, 'Style')
+            line_style = SubElement(style, 'LineStyle')
+            line_width = SubElement(line_style, 'width')
+            line_width.text = "4"
+            line_color = SubElement(line_style, 'color')
+            line_color.text = "ff0000ff"
+            poly_style = SubElement(style, 'PolyStyle')
+            fill = SubElement(poly_style, 'fill')
+            fill.text = "0"
+            
+            extended_data = SubElement(placemark, 'ExtendedData')
+            schema_data = SubElement(extended_data, 'SchemaData', schemaUrl="#trier_change_events_gis")
+            
+            # Add properties to SchemaData
+            for name, value in [
+                ("event_type", event_type),
+                ("object_id", object_id),
+                ("X_centroid", x_centroid),
+                ("Y_centroid", y_centroid),
+                ("Z_centroid", z_centroid)
+            ]:
+                simple_data = SubElement(schema_data, 'SimpleData', name=name)
+                simple_data.text = value
+
+            # Add Polygon geometry
+            if coordinates:
+                polygon = SubElement(placemark, 'Polygon')
+                outer_boundary = SubElement(polygon, 'outerBoundaryIs')
+                linear_ring = SubElement(outer_boundary, 'LinearRing')
+                coord_element = SubElement(linear_ring, 'coordinates')
+                coord_element.text = coordinates.strip()
+        
+        ########################
+        
+        # Beautify the output XML
+        kml_str = xml.dom.minidom.parseString(tostring(kml)).toprettyxml(indent="  ")
+        with open(self.kml_name_gis, 'w') as file:
+            file.write(kml_str)
+
+        #############################
 
 if __name__ == "__main__":
-    #config_file = r"config/Trier_2d_projection_config.json"
     parser = argparse.ArgumentParser()
     parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
     args = parser.parse_args()
     config = utils.read_json_file(args.config)
+
+    """config_file = r"config/Trier_2d_projection_config.json"
+    config = utils.read_json_file(config_file)"""
 
     img = ProjectChange(
         project = config["pc_projection"]["project"],

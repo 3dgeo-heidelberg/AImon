@@ -12,15 +12,17 @@ Modules Used:
     - pc_projection: For handling point cloud projection.
     - change_projection: For projecting change events in image coordinates.
 
-Example:
+Example, from the main repository:
     python main.py "config/Trier_2d_projection_config.json"
 """
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    """parser = argparse.ArgumentParser()
     parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
     args = parser.parse_args()
-    config = utils.read_json_file(args.config)
+    config = utils.read_json_file(args.config)"""
+
+    config = utils.read_json_file(r"config/Trier_2d_projection_config.json")
     
     pc_prj = pc_projection.PCloudProjection(
         project=config["pc_projection"]["project"],

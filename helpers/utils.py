@@ -53,3 +53,32 @@ def xyz_2_spherical(xyz):
     theta = np.arctan2(dxy, xyz[:, 2])          # theta θ   # for elevation angle defined from Z-axis down
     phi = np.arctan2(xyz[:, 1], xyz[:, 0])      # phi ϕ
     return r, theta, phi                        # [m, rad, rad]
+
+
+def loc2ref_TRIER():
+    change_events = read_json_file("/home/william/Documents/GitHub/changeDetPipeline/data/trier/change_events_split.json")
+    for change_event in change_events:
+        if 'undefined' in str(change_event['event_type']): continue
+
+        # Fetch contour points in WGS84 coordinate system
+        change_event_pts_og = change_event['points_builing_convex_hulls'][0]
+        change_event_pts_og = np.asarray(change_event_pts_og)
+
+        mRT = np.array([[0.307283101602, 0.951597433800, 0.006278491405, 330022.325080771232],
+            [-0.951613714032, 0.307254846897, 0.005079205073, 5516592.615982715972],
+            [0.002904261597, -0.007535452413, 0.999967390579, 134.990167052281],
+            [0.000000000000, 0.000000000000, 0.000000000000, 1.000000000000]]).T
+        print(change_event_pts_og.shape)
+        o = np.ones(shape=(change_event_pts_og.shape[0], 1))
+        change_event_pts_og = np.c_[change_event_pts_og, o]
+        
+        temp = list(change_event_pts_og@mRT)
+        for enum,t in enumerate(temp):
+            temp[enum] = list(t[:-1])
+        change_event['points_builing_convex_hulls'][0] = temp
+        
+    with open("/home/william/Documents/GitHub/changeDetPipeline/data/trier/change_events_splitREF.json", 'w') as f:
+        json.dump(change_events, f)
+    
+
+#loc2ref_TRIER()
