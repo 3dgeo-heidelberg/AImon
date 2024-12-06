@@ -1,0 +1,30 @@
+[
+    {
+        "event_type":"Rockfall",
+        "color":"#AA7A00",
+        "alpha":0.7,
+        "linewidth": 0.5,
+        "symbol":"path_to_symbol. If given we might want to plot only the symbol with the color and scale by magnitude or similar?"
+    },
+    {
+        "event_type":"Debrisflow",
+        "color":"#693c0d",
+        "alpha":0.7,
+        "linewidth": 0.3,
+        "symbol":"path_to_symbol. If given we might want to plot only the symbol with the color and scale by magnitude or similar?"
+    },
+    {
+        "event_type":"Vegetation",
+        "color":"#268c0a",
+        "alpha":0.7,
+        "linewidth": 0.5,
+        "symbol":"path_to_symbol. If given we might want to plot only the symbol with the color and scale by magnitude or similar?"
+    },
+    {
+        "event_type":"undefined",
+        "color":"#9d00ff",
+        "alpha":0.4,
+        "linewidth": 0.5,
+        "symbol":"path_to_symbol. If given we might want to plot only the symbol with the color and scale by magnitude or similar?"
+    }
+]

@@ -1,4 +1,5 @@
 *.ply
 *.las
 *.laz
+*.pyc
 tmp/*
