@@ -71,14 +71,13 @@ class ProjectChange:
         change_events = utilities.read_json_file(self.path_change_events)
 
         # Create output folder file if not existant
-        output_folder_path = f"out/{self.project}/04_Change_visualisation_UHD_Change_Events/"
         
         # Name geojson according to the project name written in the json file
 
-        if os.path.exists(self.geojson_name) and os.path.exists(self.geojson_name_gis):
-            print(self.geojson_name)
-            print("Geojson files already exist")
-            return
+        # if os.path.exists(self.geojson_name) and os.path.exists(self.geojson_name_gis):
+        #     print(self.geojson_name)
+        #     print("Geojson files already exist")
+        #     return
         
         # Create the schema for the attributes of the geojson
         schema = {
