@@ -82,7 +82,7 @@ class ProjectChange:
                 'Z_centroid': 'float',
                 't_min': 'str',
                 't_max': 'str',
-                'change_magnitudes_avg': 'float',
+                'change_magnitudes_mean': 'float',
                 'volumes_from_convex_hulls': 'float',
                 'rel_filepath': 'str'
                 }
@@ -115,7 +115,7 @@ class ProjectChange:
                     'Z_centroid': float(self.centroid_gis[2]),
                     't_min': str(change_event['t_min']),
                     't_max': str(change_event['t_min']),
-                    'change_magnitudes_avg': float(change_event['change_magnitudes_avg'][0]),
+                    'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
                     'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
                     'rel_filepath': str(change_event['rel_filepath'])
                 }
@@ -158,7 +158,7 @@ class ProjectChange:
                     'Z_centroid': float(centroid[2]),
                     't_min': str(change_event['t_min']),
                     't_max': str(change_event['t_min']),
-                    'change_magnitudes_avg': float(change_event['change_magnitudes_avg'][0]),
+                    'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
                     'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
                     'rel_filepath': str(change_event['rel_filepath'])
                 }

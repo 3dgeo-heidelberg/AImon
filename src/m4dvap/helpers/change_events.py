@@ -23,10 +23,19 @@ def extract_time_info(filepath, date_format="%y%m%d_%H%M%S"):
     matches = re.findall(pattern, filepath)
     
     if len(matches) >= 2:
-        t_min_str = matches[1]  # Assuming the second timestamp is t_min
-        t_max_str = matches[2]  # Assuming the third timestamp is t_max
-        t_min = datetime.strptime(t_min_str, date_format)
-        t_max = datetime.strptime(t_max_str, date_format)
+        t_1_str = matches[0]  # Assuming the second timestamp is t_min
+        t_2_str = matches[-1]  # Assuming the third timestamp is t_max
+        if datetime.strptime(t_1_str, date_format) < datetime.strptime(t_2_str, date_format): 
+            t_min = datetime.strptime(t_1_str, date_format)
+            t_max = datetime.strptime(t_2_str, date_format)
+            t_min_str = t_1_str
+            t_max_str = t_2_str
+        else:
+            t_max = datetime.strptime(t_1_str, date_format)
+            t_min = datetime.strptime(t_2_str, date_format)
+            t_max_str = t_1_str
+            t_min_str = t_2_str
+            
         delta_t = round((t_max - t_min).total_seconds() / 3600,3)  # in hours
 
         return {
