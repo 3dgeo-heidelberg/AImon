@@ -8,6 +8,7 @@ from helpers.change_events import convert_cluster_to_change_events,merge_change_
 from bi_vapc_01 import compute_bitemporal_vapc
 from pc_projection_03 import PCloudProjection
 from change_projection_04 import ProjectChange
+import vapc
 
 
 def parse_args():
@@ -40,13 +41,16 @@ def main() -> None:
         m3c2_out_file,
         m3c2_clustered,
         change_event_folder,
+        change_event_file,
         delta_t,
         project_name,
         projected_image_folder,
-        polygons_change_event_folder
+        projected_events_folder
         ) = setup_configuration(config_file, t1_file, t2_file)
 
-
+        if configuration["project_setting"]["silent_mode"]:
+            vapc.enable_trace(False)
+            vapc.enable_timeit(False)
         # #BI-VAPC
         compute_bitemporal_vapc(
             t1_file,
@@ -77,14 +81,14 @@ def main() -> None:
             )
 
         # #Merge change events to change event collection
-        change_event_file = merge_change_events(change_event_folder)    # Outputs the change events JSON file path
+        merge_change_events(change_event_folder)    # Outputs the change events JSON file path
 
         # Project the RBG point cloud to image
         pc_prj = PCloudProjection(configuration, project_name, projected_image_folder)
         pc_prj.project_pc()
         
         # Project the 3D change events point cloud to pixel and UTM 32N coordinates
-        change_prj = ProjectChange(configuration, change_event_file, project_name)
+        change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder)
         change_prj.project_change()
 
 

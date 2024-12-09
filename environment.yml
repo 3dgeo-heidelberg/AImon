@@ -15,7 +15,6 @@ dependencies:
   - plyfile
   - shapely
   - fiona
-  - 
   - pip
   - pip:
     - py4dgeo

@@ -107,6 +107,9 @@ class PCloudProjection:
         if not os.path.exists(self.projected_image_folder):
             os.makedirs(self.projected_image_folder)
         filename = os.path.join(self.projected_image_folder,f"{self.project_name}_{self.image_type}Image.tif")
+        if os.path.exists(filename):
+            print(f"File {filename} already exists. Skipping...")
+            return
         image_metadata = {
             "image_path": filename,
             "pc_path": self.pc_path,

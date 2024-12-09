@@ -1,7 +1,8 @@
 {   "project_setting":{
         "project_name": "Trier",
         "output_folder":"./out",
-        "temporal_format": "%y%m%d_%H%M%S"
+        "temporal_format": "%y%m%d_%H%M%S",
+        "silent_mode":true
     },
     "vapc_settings":{
         "vapc_config": {
@@ -80,7 +81,7 @@
         }
     },
     "pc_projection":{
-        "pc_path":"/home/william/Documents/trier.laz",
+        "pc_path":"E:/trier/hierarchical_analysis/infiles/trier/ScanPos001 - SINGLESCANS - 240826_000005.las",
         "make_range_image" : false,
         "make_color_image" : true,
         "top_view": false,
@@ -90,8 +91,5 @@
         "rgb_light_intensity" : 100,
         "range_light_intensity" : 15,
         "sigma" : 0.0
-    },
-    "change_projection":{
-        "bg_img_path" : "out/out_data/Trier/03_Change_visualisation_UHD_Projected_Images/tif/Trier_ColorImage.tif"
     }
     }

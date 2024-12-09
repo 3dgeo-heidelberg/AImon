@@ -26,16 +26,22 @@ class ProjectChange:
         - project_gis_layer: Helper function to handle GIS layer projection.
     """
 
-    def __init__(self, configuration, change_event_file, project_name):
+    def __init__(self, change_event_file, project_name,projected_image_folder,projected_events_folder):
         ##############################
         ### INITIALIZING VARIABLES ###
         self.project = project_name
-        self.bg_img_path = configuration["change_projection"]["bg_img_path"]
+        self.bg_img_folder = projected_image_folder
         self.path_change_events = change_event_file
         self.img = None
         self.pts = []
+        self.geojson_name = os.path.join(projected_events_folder,"%s_change_events_pixel.geojson"%self.project)
+        self.geojson_name_gis = os.path.join(projected_events_folder,"%s_change_events_gis.geojson"%self.project)
         ##############################
-
+        if not os.path.isdir(self.bg_img_folder):
+            print("Missing some information, cannot find %s"%self.bg_img_folder)
+            return 
+        else:
+            self.bg_img_path = os.path.join(self.bg_img_folder, os.listdir(self.bg_img_folder)[0])
 
     def project_change(self):
         # Load EXIF data from an image
@@ -46,6 +52,7 @@ class ProjectChange:
                 image_metadata_loaded = dict(src.tags().items())
         except:
             print("Missing some information, cannot project change into image")
+            return
 
         # Get metadata of the image. Necessary for the projection of the change event points
         camera_position_x = float(image_metadata_loaded['camera_position_x'])
@@ -64,12 +71,14 @@ class ProjectChange:
         change_events = utilities.read_json_file(self.path_change_events)
 
         # Create output folder file if not existant
-        output_folder_path = f"out/out_data/{self.project}/04_Change_visualisation_UHD_Change_Events/"
-        if not os.path.exists(output_folder_path):
-            os.makedirs(output_folder_path)
+        output_folder_path = f"out/{self.project}/04_Change_visualisation_UHD_Change_Events/"
+        
         # Name geojson according to the project name written in the json file
-        self.geojson_name = f"{output_folder_path}/{self.project}_change_events_pixel.geojson"
-        self.geojson_name_gis = f"{output_folder_path}/{self.project}_change_events_gis.geojson"
+
+        if os.path.exists(self.geojson_name) and os.path.exists(self.geojson_name_gis):
+            print(self.geojson_name)
+            print("Geojson files already exist")
+            return
         
         # Create the schema for the attributes of the geojson
         schema = {

@@ -107,15 +107,8 @@ def create_project_structure(config) -> None:
     ]
     outdir = config["output_folder"]
 
-    #Create out data Folder
-    output_data = os.path.join(outdir, 
-                              "out_data")
-    if not os.path.isdir(output_data):
-        os.mkdir(output_data)
-
     #Create Project Folder
-    output_dir = os.path.join(outdir, 
-                              "out_data", 
+    output_dir = os.path.join(outdir,
                               config["project_name"])
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
@@ -174,7 +167,7 @@ def setup_configuration(config_file,t1_file,t2_file):
     assert os.path.isfile(config_file), "Configuration file does not exist at: %s"%config_file
 
     configuration = read_json_file(config_file)
-    assert os.path.isdir(configuration["project_setting"]["output_folder"])
+    if not os.path.isdir(configuration["project_setting"]["output_folder"]): os.mkdir(configuration["project_setting"]["output_folder"])
     project_name, out_folders, temporal_format = create_project_structure(configuration["project_setting"])
     delta_t = get_delta_t(t1_file,t2_file,temporal_format)
 
@@ -183,15 +176,16 @@ def setup_configuration(config_file,t1_file,t2_file):
     t2_out_file = os.path.join(out_folders["01_Change_analysis_UHD_VASP"],combination_of_names+"_t2.laz")
     m3c2_out_file = os.path.join(out_folders["02_Change_analysis_UHD_Change_Events"],combination_of_names+".laz")
     change_event_folder = os.path.join(out_folders["02_Change_analysis_UHD_Change_Events"])
+    change_event_file = os.path.join(change_event_folder, "change_events.json")
     m3c2_clustered = os.path.join(change_event_folder,combination_of_names,"clustered.laz")
 
-    projected_image_folder = os.path.join(out_folders["03_Change_visualisation_UHD_Projected_Images"],"tif")
-    polygons_change_event_folder = os.path.join(out_folders["03_Change_visualisation_UHD_Projected_Images"],"geojson")
+    projected_image_folder = out_folders["03_Change_visualisation_UHD_Projected_Images"]
+    projected_events_folder =out_folders["04_Change_visualisation_UHD_Change_Events"]
 
     # m3c2_out_file = os.path.join(out_folders["02_Change_analysis_UHD_M3C2"],combination_of_names+".laz")
     # change_event_folder = os.path.join(out_folders["03_Change_analysis_UHD_Change_Events"])
     # m3c2_clustered = os.path.join(change_event_folder,combination_of_names,"clustered.laz")
-    return configuration, t1_out_file,t2_out_file,m3c2_out_file,m3c2_clustered,change_event_folder, delta_t, project_name, projected_image_folder, polygons_change_event_folder
+    return configuration, t1_out_file,t2_out_file,m3c2_out_file,m3c2_clustered,change_event_folder, change_event_file, delta_t, project_name, projected_image_folder, projected_events_folder
 
 
 ############################################################################################################
