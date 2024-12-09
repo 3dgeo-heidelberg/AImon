@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "Trier_change_events_gis",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::25832" } },
-"features": [
-
-]
-}
