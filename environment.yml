@@ -1,0 +1,22 @@
+name: m4dvap
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - laspy[lazrs]
+  - opencv
+  - rasterio
+  - matplotlib
+  - plyfile
+  - shapely
+  - fiona
+  - 
+  - pip
+  - pip:
+    - py4dgeo
+    - git+https://github.com/3dgeo-heidelberg/vapc.git@main

@@ -49,14 +49,14 @@
 			"normal_radii":[1],
 			"cyl_radii":1,
 			"max_distance":20.0,
-			"registration_error":0.01
+			"registration_error":0.02
 		}
     },
     "cluster_settings":{
         "cluster_method": "DBSCAN",
         "distance_threshold": 1.0,
         "cluster_by": ["X", "Y", "Z"],
-        "min_cluster_size": 50
+        "min_cluster_size": 100
     },
 
     "change_event_settings":{

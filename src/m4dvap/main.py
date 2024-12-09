@@ -29,8 +29,8 @@ def main() -> None:
     t1_file = r"E:\trier\hierarchical_analysis\infiles\trier\ScanPos001 - SINGLESCANS - 240826_000005.las"
     t2_file = r"E:\trier\hierarchical_analysis\infiles\trier\ScanPos001 - SINGLESCANS - 240826_010006.las"
 
-    t1_file = r"/home/william/Downloads/ScanPos001 - SINGLESCANS - 240826_000005.las"
-    t2_file = r"/home/william/Downloads/ScanPos001 - SINGLESCANS - 240826_010006.las"
+    # t1_file = r"/home/william/Downloads/ScanPos001 - SINGLESCANS - 240826_000005.las"
+    # t2_file = r"/home/william/Downloads/ScanPos001 - SINGLESCANS - 240826_010006.las"
     
     for config_file in glob.glob(f"{conf_folder}/*.json"):
         (
@@ -71,18 +71,6 @@ def main() -> None:
                 )
         
         #Change events of current clusters
-        # WILL:
-        #   I get this error:
-        #       Traceback (most recent call last):
-        #       File "/home/william/Documents/GitHub/m4dvap/src/m4dvap/main.py",
-        #           main()
-        #       File "/home/william/Documents/GitHub/m4dvap/src/m4dvap/main.py",
-        #           convert_cluster_to_change_events(
-        #       File "/home/william/Documents/GitHub/m4dvap/src/m4dvap/helpers/change_events.py", line 201, in convert_cluster_to_change_events
-        #           timedict = extract_time_info(m3c2_clustered)
-        #       File "/home/william/Documents/GitHub/m4dvap/src/m4dvap/helpers/change_events.py", line 27, in extract_time_info
-        #           t_max_str = matches[2]  # Assuming the third timestamp is t_max
-        #       IndexError: list index out of range
         convert_cluster_to_change_events(
             m3c2_clustered,
             configuration
