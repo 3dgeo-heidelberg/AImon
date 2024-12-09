@@ -4,3 +4,5 @@
 *.pyc
 tmp/*
 *.log
+*.geojson
+*.json

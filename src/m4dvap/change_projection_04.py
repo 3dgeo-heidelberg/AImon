@@ -84,7 +84,7 @@ class ProjectChange:
                 't_max': 'str',
                 'change_magnitudes_mean': 'float',
                 'volumes_from_convex_hulls': 'float',
-                'rel_filepath': 'str'
+                'filepath': 'str'
                 }
             }
         # Open the shapefile to be able to write each polygon in it
@@ -117,7 +117,7 @@ class ProjectChange:
                     't_max': str(change_event['t_min']),
                     'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
                     'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
-                    'rel_filepath': str(change_event['rel_filepath'])
+                    'filepath': str(change_event['filepath'])
                 }
             })
 
@@ -160,7 +160,7 @@ class ProjectChange:
                     't_max': str(change_event['t_min']),
                     'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
                     'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
-                    'rel_filepath': str(change_event['rel_filepath'])
+                    'filepath': str(change_event['filepath'])
                 }
             })
         geojson.close()
