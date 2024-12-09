@@ -9,7 +9,6 @@ dependencies:
   - scipy
   - scikit-learn
   - laspy[lazrs]
-  - opencv
   - rasterio
   - matplotlib
   - plyfile
@@ -17,5 +16,6 @@ dependencies:
   - fiona
   - pip
   - pip:
+    - opencv-python
     - py4dgeo
     - git+https://github.com/3dgeo-heidelberg/vapc.git@main

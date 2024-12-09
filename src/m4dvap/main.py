@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import argparse
 import glob
 from helpers.utilities import setup_configuration
@@ -13,7 +14,7 @@ import vapc
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Use processing pipeline.")
-    parser.add_argument("config_file", help="Configuration of the processing pipeline.")
+    parser.add_argument("config_folder", help="Configuration of the processing pipeline.")
     parser.add_argument("t1_file", help="Path to reference file.")
     parser.add_argument("t2_file", help="Path to target file.")
     return parser.parse_args()
@@ -24,16 +25,17 @@ def main() -> None:
     """
     
     # Get input 
-    # args = parse_args()
+    args = parse_args()
 
-    conf_folder = r"./config"
-    t1_file = r"E:\trier\hierarchical_analysis\infiles\trier\ScanPos001 - SINGLESCANS - 240826_000005.las"
-    t2_file = r"E:\trier\hierarchical_analysis\infiles\trier\ScanPos001 - SINGLESCANS - 240826_010006.las"
+    # conf_folder = r"./config"
+
+    # t1_file = r"E:\trier\hierarchical_analysis\infiles\trier\ScanPos001 - SINGLESCANS - 240826_000005.las"
+    # t2_file = r"E:\trier\hierarchical_analysis\infiles\trier\ScanPos001 - SINGLESCANS - 240826_010006.las"
 
     # t1_file = r"/home/william/Downloads/ScanPos001 - SINGLESCANS - 240826_000005.las"
     # t2_file = r"/home/william/Downloads/ScanPos001 - SINGLESCANS - 240826_010006.las"
     
-    for config_file in glob.glob(f"{conf_folder}/*.json"):
+    for config_file in glob.glob(f"{args.config_folder}/*.json"):
         (
         configuration,
         t1_vapc_out_file,
@@ -46,19 +48,21 @@ def main() -> None:
         project_name,
         projected_image_folder,
         projected_events_folder
-        ) = setup_configuration(config_file, t1_file, t2_file)
+        ) = setup_configuration(config_file, args.t1_file, args.t2_file)
 
         if configuration["project_setting"]["silent_mode"]:
             vapc.enable_trace(False)
             vapc.enable_timeit(False)
         # #BI-VAPC
         compute_bitemporal_vapc(
-            t1_file,
-            t2_file,
+            args.t1_file,
+            args.t2_file,
             t1_vapc_out_file,
             t2_vapc_out_file,
             configuration
             )
+
+        # TODO: Add subsampling
 
         #M3C2
         do_two_sided_bitemporal_m3c2(
@@ -68,6 +72,8 @@ def main() -> None:
             configuration
             )
         
+        # TODO: Add function to mask w.r.t. changes
+
         #Cluster Changes
         cluster(m3c2_out_file, 
                 m3c2_clustered,

@@ -539,7 +539,7 @@ def clusters_from_attribute(vapc,cluster_attribute,min_max_eq,filter_value,clust
             vapc.compute_clusters(cluster_distance=cluster_distance,
                                     cluster_by = cluster_by)
             vapc.filter_attributes(filter_attribute="cluster_size",
-                                    min_max_eq="min_eq",
+                                    min_max_eq="greater_than_or_equal_to",
                                     filter_value=min_cluster_size)
 
 

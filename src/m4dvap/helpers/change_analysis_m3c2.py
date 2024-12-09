@@ -45,6 +45,8 @@ def compute_m3c2(reference, target, corepoints, m3c2_config):
     epoch_refernce = py4dgeo.Epoch(reference)
     epoch_target = py4dgeo.Epoch(target)
     epoch_corepoints = py4dgeo.Epoch(corepoints)
+    print("epoch_refernce: ",epoch_refernce.cloud.shape)
+    print("corepoints: ",corepoints.shape)
     m3c2 = py4dgeo.M3C2(
         epochs=(epoch_refernce, epoch_target),
         corepoints=epoch_corepoints.cloud[::],
