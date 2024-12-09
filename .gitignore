@@ -3,4 +3,4 @@
 *.laz
 *.pyc
 tmp/*
-py4dgeo.log
+./*.log
