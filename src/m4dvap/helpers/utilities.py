@@ -119,7 +119,6 @@ def create_project_structure(config) -> None:
         out_folders[sub_dir] = sub_dir_path
         if not os.path.isdir(sub_dir_path):
             os.mkdir(sub_dir_path)
-        
     return config["project_name"], out_folders, config["temporal_format"]
 
 def get_delta_t(t1_file, 
@@ -161,8 +160,6 @@ def get_delta_t(t1_file,
 
 
 def setup_configuration(config_file,t1_file,t2_file, timestamp):
-    now = datetime.datetime.now()
-    timestamp = now.strftime("%Y_%m_%d_%H-%M-%S")
     #Check if input is proper
     assert os.path.isfile(t1_file), "This file does not exist: %s"%t1_file
     assert os.path.isfile(t2_file), "This file does not exist: %s"%t2_file
@@ -170,8 +167,12 @@ def setup_configuration(config_file,t1_file,t2_file, timestamp):
 
     configuration = read_json_file(config_file)
     if not os.path.isdir(configuration["project_setting"]["output_folder"]): os.mkdir(configuration["project_setting"]["output_folder"])
-    configuration["project_setting"]["project_name"] = configuration["project_setting"]["project_name"] + "_" + timestamp
+    if configuration["project_setting"]["include_timestamp"]:
+        configuration["project_setting"]["project_name"] = configuration["project_setting"]["project_name"] + "_" + timestamp
     project_name, out_folders, temporal_format = create_project_structure(configuration["project_setting"])
+    with open(os.path.join(out_folders["documentation"],configuration["project_setting"]["project_name"]+".json"), 'w') as f:
+        json.dump(configuration, f,indent=4)
+
     delta_t = get_delta_t(t1_file,t2_file,temporal_format)
 
     combination_of_names = os.path.basename(t1_file)[:-4] + "_" + os.path.basename(t2_file)[:-4]
@@ -188,6 +189,7 @@ def setup_configuration(config_file,t1_file,t2_file, timestamp):
     # m3c2_out_file = os.path.join(out_folders["02_Change_analysis_UHD_M3C2"],combination_of_names+".laz")
     # change_event_folder = os.path.join(out_folders["03_Change_analysis_UHD_Change_Events"])
     # m3c2_clustered = os.path.join(change_event_folder,combination_of_names,"clustered.laz")
+
     return configuration, t1_out_file,t2_out_file,m3c2_out_file,m3c2_clustered,change_event_folder, change_event_file, delta_t, project_name, projected_image_folder, projected_events_folder
 
 
