@@ -13,6 +13,14 @@ import vapc
 import datetime
 
 def parse_args():
+    """
+    Parse command-line arguments.
+
+    Returns:
+        argparse.Namespace: Parsed command-line arguments, including:
+            - config_folder (str): Configuration of the processing pipeline.
+            - filenames (list of str): List of filenames.
+    """
     parser = argparse.ArgumentParser(description="Use processing pipeline.")
     parser.add_argument("config_folder", help="Configuration of the processing pipeline.")
     parser.add_argument('filenames', nargs='+', help='List of filenames')
@@ -23,10 +31,11 @@ def main() -> None:
     Main function to execute the full workflow.
     """
     
-    # Get input 
+    # Parse command-line arguments
     args = parse_args()
-    print(args)
 
+    # Iterate over all pairs of input files
+    # and all configuration files
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y_%m_%d_%H-%M-%S")
     for i, t1_file in enumerate(args.filenames[:-1]):
@@ -49,7 +58,9 @@ def main() -> None:
             if configuration["project_setting"]["silent_mode"]:
                 vapc.enable_trace(False)
                 vapc.enable_timeit(False)
-            # #BI-VAPC
+
+
+            #BI-VAPC - Change detetction module
             compute_bitemporal_vapc(
                 t1_file,
                 t2_file,
@@ -58,6 +69,7 @@ def main() -> None:
                 configuration
                 )
             
+            #Optional subsampling for M3C2
             if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
                 for tx_vapc_out_file in [t1_vapc_out_file, t2_vapc_out_file]:
                     if os.path.isfile(tx_vapc_out_file.replace(".laz", "_bk.laz")):
@@ -77,7 +89,7 @@ def main() -> None:
                     os.rename(tx_vapc_out_file,tx_vapc_out_file.replace(".laz", "_bk.laz"))
                     os.rename(sspath,tx_vapc_out_file)
 
-            #M3C2
+            #M3C2 - Change analysis module
             do_two_sided_bitemporal_m3c2(
                 t1_vapc_out_file,
                 t2_vapc_out_file,
@@ -85,7 +97,7 @@ def main() -> None:
                 configuration
                 )
             
-            # TODO: Add function to mask w.r.t. changes
+            #Add original points to M3C2 result
             if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
                 if os.path.exists(m3c2_out_file.replace(".laz", "_bk.laz")):
                     pass

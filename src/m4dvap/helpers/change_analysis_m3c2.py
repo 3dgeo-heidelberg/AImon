@@ -42,6 +42,26 @@ def read_json_file(file_path):
 @timeit
 @trace
 def compute_m3c2(reference, target, corepoints, m3c2_config):
+    """
+    Compute M3C2 distances and uncertainties between reference and target point clouds.
+
+    Parameters:
+    ----------
+    reference (str or numpy.ndarray): Path to the reference point cloud file or the point cloud data as a numpy array.
+    target (str or numpy.ndarray): Path to the target point cloud file or the point cloud data as a numpy array.
+    corepoints (str or numpy.ndarray): Path to the corepoints file or the corepoints data as a numpy array.
+    m3c2_config (dict): Configuration dictionary for M3C2 parameters, containing:
+        - "normal_radii" (list or tuple): Radii for normal computation.
+        - "cyl_radii" (float): Radius for the cylindrical neighborhood.
+        - "max_distance" (float): Maximum distance for M3C2 computation.
+        - "registration_error" (float): Registration error for uncertainty computation.
+
+    Returns:
+    ----------
+    tuple: A tuple containing:
+        - m3c2_distances (numpy.ndarray): Computed M3C2 distances.
+        - uncertainties (numpy.ndarray): Computed uncertainties.
+    """
     epoch_refernce = py4dgeo.Epoch(reference)
     epoch_target = py4dgeo.Epoch(target)
     epoch_corepoints = py4dgeo.Epoch(corepoints)
@@ -62,6 +82,23 @@ def compute_m3c2(reference, target, corepoints, m3c2_config):
 @timeit
 @trace
 def do_bitemporal_m3c2(reference_file,tx_path,m3c2_config_path,project_name):
+    """
+    Perform bitemporal M3C2 change analysis between two point clouds.
+    Args:
+    ----------
+        reference_file (str): Path to the reference point cloud file.
+        tx_path (str): Path to the target point cloud file.
+        m3c2_config_path (str): Path to the JSON configuration file for M3C2 analysis.
+        project_name (str): Name of the project for organizing output data.
+
+    Returns:
+    ----------
+        None
+
+    This function reads the configuration file, processes the point clouds, and computes the M3C2 distances.
+    The results are saved in the specified output folder. If the results already exist, the function will
+    print a message and return without reprocessing.
+    """
     # Read the JSON configuration file
     config_data = read_json_file(m3c2_config_path)
 
@@ -137,7 +174,28 @@ def do_bitemporal_m3c2(reference_file,tx_path,m3c2_config_path,project_name):
             ef.write("%s"%error)
 
 
-def do_two_sided_bitemporal_m3c2(t1_file_vapc,t2_file_vapc,outfile_m3c2,config):
+def do_two_sided_bitemporal_m3c2(t1_file_vapc, t2_file_vapc, outfile_m3c2, config):
+    """
+    Perform two-sided bitemporal M3C2 change detection analysis on two point clouds.
+
+    Parameters:
+    ----------
+        t1_file_vapc (str): File path to the first voxelized point cloud (VAPC) file.
+        t2_file_vapc (str): File path to the second voxelized point cloud (VAPC) file.
+        outfile_m3c2 (str): File path to save the M3C2 results.
+        config (dict): Configuration dictionary containing M3C2 and corepoint settings.
+
+    Returns:
+    ----------
+        pd.DataFrame: DataFrame containing the corepoints, M3C2 distances, level of detection, and epoch IDs.
+
+    Notes:
+    ----------
+        - The function checks if the input files exist and if the output files already exist.
+        - It loads the point clouds, reduces them to voxels, and computes M3C2 distances.
+        - Results are saved in LAS format if significant changes are detected.
+        - If an error occurs during computation, a no-change file is created with the error message.
+    """
 
     m3c2_config = config["m3c2_settings"]["m3c2"]
     corepoint_config = config["m3c2_settings"]["corepoints"]
@@ -211,7 +269,22 @@ def do_two_sided_bitemporal_m3c2(t1_file_vapc,t2_file_vapc,outfile_m3c2,config):
     return dh.df
 
 
-def add_original_points_to_m3c2(m3c2_out_file_in,m3c2_out_file_points_added,t1_vapc,t2_vapc,voxel_size):
+def add_original_points_to_m3c2(m3c2_out_file_in, m3c2_out_file_points_added, t1_vapc, t2_vapc, voxel_size):
+    """
+    Adds original points from two epochs to the M3C2 output file.
+
+    Parameters:
+    ----------
+        m3c2_out_file_in (str): Path to the input M3C2 output file.
+        m3c2_out_file_points_added (str): Path to save the M3C2 output file with added points.
+        t1_vapc (str): Path to the VAPC file for the first epoch.
+        t2_vapc (str): Path to the VAPC file for the second epoch.
+        voxel_size (float): Size of the voxel to be used.
+
+    Returns:
+    ----------
+        None
+    """
     m3c2 = DataHandler(m3c2_out_file_in)
     m3c2.load_las_files()
     m3c2.df["epoch"] = m3c2.df["epoch"].astype(int)

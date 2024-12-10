@@ -160,6 +160,35 @@ def get_delta_t(t1_file,
 
 
 def setup_configuration(config_file,t1_file,t2_file, timestamp):
+    """
+    Sets up the configuration for the change detection pipeline.
+
+    Parameters:
+    ----------
+        config_file (str): Path to the JSON configuration file.
+        t1_file (str): Path to the first timepoint file.
+        t2_file (str): Path to the second timepoint file.
+        timestamp (str): Timestamp to append to the project name if included.
+
+    Returns:
+    ----------
+        tuple: A tuple containing:
+            - configuration (dict): Loaded configuration settings.
+            - t1_out_file (str): Path for the output t1 file.
+            - t2_out_file (str): Path for the output t2 file.
+            - m3c2_out_file (str): Path for the M3C2 output file.
+            - m3c2_clustered (str): Path for the clustered M3C2 output file.
+            - change_event_folder (str): Path to the change event folder.
+            - change_event_file (str): Path to the change events JSON file.
+            - delta_t (float): Time delta between t1 and t2.
+            - project_name (str): Name of the project.
+            - projected_image_folder (str): Path to the projected images folder.
+            - projected_events_folder (str): Path to the projected events folder.
+            
+    Raises:
+    ----------
+        AssertionError: If any of the input files do not exist.
+    """
     #Check if input is proper
     assert os.path.isfile(t1_file), "This file does not exist: %s"%t1_file
     assert os.path.isfile(t2_file), "This file does not exist: %s"%t2_file

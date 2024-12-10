@@ -184,7 +184,6 @@ def convert_cluster_to_change_events(m3c2_clustered, configuration):
             }
     
     #create folder to store change events and point clouds for each cluster
-    print(m3c2_clustered)
     outfolder = os.path.dirname(m3c2_clustered)
     if not os.path.isdir(outfolder):
         os.makedirs(outfolder)
