@@ -160,7 +160,9 @@ def get_delta_t(t1_file,
 
 
 
-def setup_configuration(config_file,t1_file,t2_file):
+def setup_configuration(config_file,t1_file,t2_file, timestamp):
+    now = datetime.datetime.now()
+    timestamp = now.strftime("%Y_%m_%d_%H-%M-%S")
     #Check if input is proper
     assert os.path.isfile(t1_file), "This file does not exist: %s"%t1_file
     assert os.path.isfile(t2_file), "This file does not exist: %s"%t2_file
@@ -168,6 +170,7 @@ def setup_configuration(config_file,t1_file,t2_file):
 
     configuration = read_json_file(config_file)
     if not os.path.isdir(configuration["project_setting"]["output_folder"]): os.mkdir(configuration["project_setting"]["output_folder"])
+    configuration["project_setting"]["project_name"] = configuration["project_setting"]["project_name"] + "_" + timestamp
     project_name, out_folders, temporal_format = create_project_structure(configuration["project_setting"])
     delta_t = get_delta_t(t1_file,t2_file,temporal_format)
 
