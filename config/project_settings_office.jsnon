@@ -1,12 +1,12 @@
 {   "project_setting":{
-        "project_name": "Trier",
+        "project_name": "Office",
         "output_folder":"./out",
         "temporal_format": "%y%m%d_%H%M%S",
-        "silent_mode":true
+        "silent_mode":false
     },
     "vapc_settings":{
         "vapc_config": {
-            "voxel_size": 6,
+            "voxel_size": 0.2,
             "origin": [
                 0,
                 0,
@@ -16,7 +16,7 @@
             },
             "filter": {
                 "filter_attribute": "point_count",
-                "min_max_eq": "min",
+                "min_max_eq": "greater_than",
                 "filter_value": 30
             },
             "compute": [],
@@ -26,9 +26,9 @@
             "mahalanobis": true,
             "fahle": false,
             "z_score": false,
-            "signicance_threshold": 0.999,
+            "signicance_threshold": 0.900,
             "cluster_attribute": "mahalanobi_significance",
-            "min_max_eq": "eq",
+            "min_max_eq": "equal_to",
             "filter_value": 1,
             "cluster_by": [
                 "X",
@@ -43,8 +43,11 @@
         }
     },
     "m3c2_settings":{
+        "subsampling":{
+			"voxel_size":0.01
+		},
         "corepoints":{
-			"subsample_distance_m":0.05
+			"subsample_distance_m":0.02
 		},
 		"m3c2":{
 			"normal_radii":[1],
@@ -55,7 +58,7 @@
     },
     "cluster_settings":{
         "cluster_method": "DBSCAN",
-        "distance_threshold": 1.0,
+        "distance_threshold": 0.1,
         "cluster_by": ["X", "Y", "Z"],
         "min_cluster_size": 100
     },
@@ -81,15 +84,15 @@
         }
     },
     "pc_projection":{
-        "pc_path":"E:/trier/hierarchical_analysis/infiles/trier/ScanPos001 - SINGLESCANS - 240826_000005.las",
-        "make_range_image" : false,
-        "make_color_image" : true,
-        "top_view": false,
+        "pc_path":"/home/william/Documents/GitHub/m4dvap/ScanPos002 - SINGLESCANS - 241002_155654.laz",
+        "make_range_image" : true,
+        "make_color_image" : false,
+        "top_view": true,
         "save_rot_pc": false,
-        "resolution_cm" : 15.0,
-        "camera_position" : [330900, 5514963, 130],
+        "resolution_cm" : 0.1,
+        "camera_position" : [0, 0, 0],
         "rgb_light_intensity" : 100,
-        "range_light_intensity" : 15,
+        "range_light_intensity" : 150,
         "sigma" : 0.0
     }
     }

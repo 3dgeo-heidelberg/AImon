@@ -246,4 +246,34 @@ def loc2ref_TRIER():
         json.dump(change_events, f)
     
 
+def rotate_to_top_view(xyz, mean_x, mean_y, mean_z):
+        # If the user want a top view, we rotate the point cloud on the side instead of changing the camera view
+        rot_angle = np.radians(90)
+        rotation_matrix_x = np.array(
+            [
+                [1, 0, 0],
+                [0, np.cos(rot_angle), -np.sin(rot_angle)],
+                [0, np.sin(rot_angle), np.cos(rot_angle)],
+            ]
+        )
+        rot_angle = np.radians(20)
+        rotation_matrix_y = np.array(
+            [
+                [np.cos(rot_angle), 0, np.sin(rot_angle)],
+                [0, 1, 0],
+                [-np.sin(rot_angle), 0, np.cos(rot_angle)],
+            ]
+        )
+
+        rotation_matrix = np.dot(rotation_matrix_y, rotation_matrix_x)
+        xyz[:, 0] -= mean_x
+        xyz[:, 1] -= mean_y
+        xyz[:, 2] -= mean_z
+        xyz = np.dot(xyz, rotation_matrix.T)
+        xyz[:, 0] += mean_x
+        xyz[:, 1] += mean_y
+        xyz[:, 2] += mean_z
+
+        return xyz
+
 #loc2ref_TRIER()#

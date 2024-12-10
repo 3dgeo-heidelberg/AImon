@@ -52,10 +52,11 @@ class PCloudProjection:
         ### INITIALIZING VARIABLES ###
         ##############################
 
+
     def project_pc(self):
         self.load_pc_file()
         if self.top_view:
-            self.create_top_view()
+            self.xyz = utilities.rotate_to_top_view(self.xyz, self.mean_x, self.mean_y, self.mean_z)
         self.main_projection()
         self.create_shading()
         if self.make_color_image:
@@ -102,6 +103,7 @@ class PCloudProjection:
 
         return result_image
 
+
     def save_image(self):
         # Save image with the current time
         if not os.path.exists(self.projected_image_folder):
@@ -110,23 +112,6 @@ class PCloudProjection:
         if os.path.exists(filename):
             print(f"File {filename} already exists. Skipping...")
             return
-        image_metadata = {
-            "image_path": filename,
-            "pc_path": self.pc_path,
-            "make_range_image": self.make_range_image,
-            "make_color_image": self.make_color_image,
-            "resolution_cm": self.resolution_cm,
-            "top_view": self.top_view,
-            "camera_position": self.camera_position,
-            "rgb_light_intensity": self.rgb_light_intensity,
-            "range_light_intensity": self.range_light_intensity,
-            "sigma": self.sigma,
-            "h_img_res": self.h_img_res,
-            "v_img_res": self.v_img_res,
-            "h_fov": self.h_fov,
-            "v_fov": self.v_fov,
-            "res": self.v_res
-        }
 
         raster = np.moveaxis(self.shaded_image, [0, 1, 2], [2, 1, 0])
         raster = np.rot90(raster, k=-1, axes=(1, 2))
@@ -142,6 +127,7 @@ class PCloudProjection:
             "tiled": False,
             "compress": 'lzw'
         }
+        
         custom_tags = {
                 "pc_path": self.pc_path,
                 "image_path": filename,
@@ -152,6 +138,9 @@ class PCloudProjection:
                 "camera_position_x": self.camera_position[0],
                 "camera_position_y": self.camera_position[1],
                 "camera_position_z": self.camera_position[2],
+                "pc_mean_x": self.mean_x,
+                "pc_mean_y": self.mean_y,
+                "pc_mean_z": self.mean_z,
                 "rgb_light_intensity": self.rgb_light_intensity,
                 "range_light_intensity": self.range_light_intensity,
                 "sigma": self.sigma,
@@ -196,35 +185,6 @@ class PCloudProjection:
         self.mean_z = np.mean(z)
 
 
-    def create_top_view(self):
-        # If the user want a top view, we rotate the point cloud on the side instead of changing the camera view
-        rot_angle = np.radians(90)
-        rotation_matrix_x = np.array(
-            [
-                [1, 0, 0],
-                [0, np.cos(rot_angle), -np.sin(rot_angle)],
-                [0, np.sin(rot_angle), np.cos(rot_angle)],
-            ]
-        )
-        rot_angle = np.radians(20)
-        rotation_matrix_y = np.array(
-            [
-                [np.cos(rot_angle), 0, np.sin(rot_angle)],
-                [0, 1, 0],
-                [-np.sin(rot_angle), 0, np.cos(rot_angle)],
-            ]
-        )
-
-        rotation_matrix = np.dot(rotation_matrix_y, rotation_matrix_x)
-        self.xyz[:, 0] -= self.mean_x
-        self.xyz[:, 1] -= self.mean_y
-        self.xyz[:, 2] -= self.mean_z
-        self.xyz = np.dot(self.xyz, rotation_matrix.T)
-        self.xyz[:, 0] += self.mean_x
-        self.xyz[:, 1] += self.mean_y
-        self.xyz[:, 2] += self.mean_z
-
-
     def main_projection(self):
         # Shift the point cloud by the camera position' coordinates so the latter is positionned on the origin
         self.xyz -= self.camera_position
@@ -243,8 +203,7 @@ class PCloudProjection:
         # Get spherical coordinates
         r, theta, phi = utilities.xyz_2_spherical(self.xyz)  # Outputs r, theta (radians), phi (radians)
         # Convert radians to degrees
-        theta_deg = np.rad2deg(theta)
-        phi_deg = np.rad2deg(phi)
+        theta_deg, phi_deg = np.rad2deg(theta), np.rad2deg(phi)
 
         # Discretize angles to image coordinates
         self.h_fov = (np.floor(min(theta_deg)), np.ceil(max(theta_deg)))

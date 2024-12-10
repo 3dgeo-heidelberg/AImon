@@ -7,7 +7,7 @@ import rasterio
 from shapely.geometry import mapping, Polygon
 import fiona
 from helpers import utilities
-
+import json
 
 class ProjectChange:
     """
@@ -26,7 +26,7 @@ class ProjectChange:
         - project_gis_layer: Helper function to handle GIS layer projection.
     """
 
-    def __init__(self, change_event_file, project_name,projected_image_folder,projected_events_folder):
+    def __init__(self, change_event_file, project_name, projected_image_folder, projected_events_folder):
         ##############################
         ### INITIALIZING VARIABLES ###
         self.project = project_name
@@ -43,6 +43,7 @@ class ProjectChange:
         else:
             self.bg_img_path = os.path.join(self.bg_img_folder, os.listdir(self.bg_img_folder)[0])
 
+
     def project_change(self):
         # Load EXIF data from an image
         try:
@@ -55,6 +56,9 @@ class ProjectChange:
             return
 
         # Get metadata of the image. Necessary for the projection of the change event points
+        pc_mean_x = float(image_metadata_loaded['pc_mean_x'])
+        pc_mean_y = float(image_metadata_loaded['pc_mean_y'])
+        pc_mean_z = float(image_metadata_loaded['pc_mean_z'])
         camera_position_x = float(image_metadata_loaded['camera_position_x'])
         camera_position_y = float(image_metadata_loaded['camera_position_y'])
         camera_position_z = float(image_metadata_loaded['camera_position_z'])
@@ -65,19 +69,10 @@ class ProjectChange:
         v_fov_x = float(image_metadata_loaded['v_fov_x'])
         v_fov_y = float(image_metadata_loaded['v_fov_y'])
         res = float(image_metadata_loaded['res'])
-        top_view = bool(image_metadata_loaded['top_view'])
-
+        top_view = json.loads(image_metadata_loaded['top_view'].lower()) # Using json.loads() method to convert the string "True"/"False" to a boolean
+        
         # Get change events dictionnary in json file
         change_events = utilities.read_json_file(self.path_change_events)
-
-        # Create output folder file if not existant
-        
-        # Name geojson according to the project name written in the json file
-
-        # if os.path.exists(self.geojson_name) and os.path.exists(self.geojson_name_gis):
-        #     print(self.geojson_name)
-        #     print("Geojson files already exist")
-        #     return
         
         # Create the schema for the attributes of the geojson
         schema = {
@@ -129,8 +124,19 @@ class ProjectChange:
                 }
             })
 
+            
+            # If top_view is True, rotate the change events the same way the point cloud was rotated to make the top view
+            if top_view:
+                change_event_pts = utilities.rotate_to_top_view(change_event_pts_og, 
+                                                                pc_mean_x,
+                                                                pc_mean_y,
+                                                                pc_mean_z
+                                                                )
+            else:
+                change_event_pts = change_event_pts_og.copy()
+            
             # Translation of point cloud coordinates for the scanner position of (0, 0, 0)
-            change_event_pts = change_event_pts_og - np.asarray([camera_position_x, camera_position_y, camera_position_z])
+            change_event_pts = change_event_pts - np.asarray([camera_position_x, camera_position_y, camera_position_z])
 
             # Transformation from cartesian coordinates (x, y, z) to spherical coordinates (r, θ, φ)
             r, theta, phi = utilities.xyz_2_spherical(change_event_pts)
