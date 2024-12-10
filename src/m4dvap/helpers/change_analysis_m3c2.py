@@ -211,11 +211,8 @@ def do_two_sided_bitemporal_m3c2(t1_file_vapc,t2_file_vapc,outfile_m3c2,config):
     return dh.df
 
 
-def add_original_points_to_m3c2(m3c2_out_file,t1_vapc,t2_vapc,voxel_size):
-    if not os.path.isfile(m3c2_out_file):
-        return
-    
-    m3c2 = DataHandler(m3c2_out_file)
+def add_original_points_to_m3c2(m3c2_out_file_in,m3c2_out_file_points_added,t1_vapc,t2_vapc,voxel_size):
+    m3c2 = DataHandler(m3c2_out_file_in)
     m3c2.load_las_files()
     m3c2.df["epoch"] = m3c2.df["epoch"].astype(int)
     vp_m3c2 = Vapc(voxel_size)
@@ -242,4 +239,4 @@ def add_original_points_to_m3c2(m3c2_out_file,t1_vapc,t2_vapc,voxel_size):
     del m3c2.df["voxel_x"]
     del m3c2.df["voxel_y"]
     del m3c2.df["voxel_z"]
-    m3c2.save_as_las(m3c2_out_file)
+    m3c2.save_as_las(m3c2_out_file_points_added)

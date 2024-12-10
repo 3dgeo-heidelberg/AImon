@@ -109,9 +109,6 @@ class PCloudProjection:
         if not os.path.exists(self.projected_image_folder):
             os.makedirs(self.projected_image_folder)
         filename = os.path.join(self.projected_image_folder,f"{self.project_name}_{self.image_type}Image.tif")
-        if os.path.exists(filename):
-            print(f"File {filename} already exists. Skipping...")
-            return
 
         raster = np.moveaxis(self.shaded_image, [0, 1, 2], [2, 1, 0])
         raster = np.rot90(raster, k=-1, axes=(1, 2))

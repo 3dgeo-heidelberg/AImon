@@ -71,21 +71,21 @@ def get_change(points, stat):
     """
     abs_dist = np.abs(points.M3C2_distance)
     if stat == "std":
-        return np.std(abs_dist)
+        return np.nanstd(abs_dist)
     if stat == "mean":
-        return np.mean(abs_dist)
+        return np.nanmean(abs_dist)
     if stat == "min":
-        return np.min(abs_dist)
+        return np.nanmin(abs_dist)
     if stat == "max":
-        return np.max(abs_dist)
+        return np.nanmax(abs_dist)
     if stat == "median":
-        return np.median(abs_dist)
+        return np.nanmedian(abs_dist)
     if stat == "quant90":
-        return np.quantile(abs_dist,.90)
+        return np.nanquantile(abs_dist,.90)
     if stat == "quant95":
-        return np.quantile(abs_dist,.95)
+        return np.nanquantile(abs_dist,.95)
     if stat == "quant99":
-        return np.quantile(abs_dist,.99)
+        return np.nanquantile(abs_dist,.99)
     else:
         print("Stat unknown")
 

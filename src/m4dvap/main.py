@@ -91,17 +91,25 @@ def main() -> None:
         
         # TODO: Add function to mask w.r.t. changes
         if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
-            add_original_points_to_m3c2(m3c2_out_file,
-                                        t1_vapc_out_file.replace(".laz", "_bk.laz"),
-                                        t2_vapc_out_file.replace(".laz", "_bk.laz"),
-                                        configuration["m3c2_settings"]["subsampling"]["voxel_size"])
+            if os.path.exists(m3c2_out_file.replace(".laz", "_bk.laz")):
+                pass
+            else:
+                os.rename(m3c2_out_file,m3c2_out_file.replace(".laz", "_bk.laz"))
+                
+                add_original_points_to_m3c2(m3c2_out_file.replace(".laz", "_bk.laz"),
+                                            m3c2_out_file,
+                                            t1_vapc_out_file.replace(".laz", "_bk.laz"),
+                                            t2_vapc_out_file.replace(".laz", "_bk.laz"),
+                                            configuration["m3c2_settings"]["subsampling"]["voxel_size"])
 
 
         #Cluster Changes
-        cluster(m3c2_out_file, 
+        if cluster(m3c2_out_file, 
                 m3c2_clustered,
                 configuration
-                )
+                ) is False:
+            return
+            
         
         #Change events of current clusters
         convert_cluster_to_change_events(

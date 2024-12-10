@@ -121,6 +121,9 @@ def compute_clusters_dbscan(
     df_out = df.merge(ct_df, on=field_name, how="left", validate="many_to_one")
     df_out = df_out[df_out[field_name] > -1]
     dh.df = df_out[df_out["cluster_size"] >= min_cluster_size]
+    if dh.df.shape[0] == 0:
+        print("No clusters found")
+        return False
     dh.save_as_las(m3c2_clustered)
     return True
 
