@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse
 import glob
 from helpers.utilities import setup_configuration
-from helpers.change_analysis_m3c2 import do_two_sided_bitemporal_m3c2
+from helpers.change_analysis_m3c2 import do_two_sided_bitemporal_m3c2, add_original_points_to_m3c2
 from helpers.cluster import cluster
 from helpers.change_events import convert_cluster_to_change_events,merge_change_events
 from bi_vapc_01 import compute_bitemporal_vapc
@@ -64,6 +64,8 @@ def main() -> None:
         
         if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
             for tx_vapc_out_file in [t1_vapc_out_file, t2_vapc_out_file]:
+                if os.path.isfile(tx_vapc_out_file.replace(".laz", "_bk.laz")):
+                    continue
                 vapc_command = {
                     "tool":"subsample",
                     "args":{
@@ -88,6 +90,12 @@ def main() -> None:
             )
         
         # TODO: Add function to mask w.r.t. changes
+        if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
+            add_original_points_to_m3c2(m3c2_out_file,
+                                        t1_vapc_out_file.replace(".laz", "_bk.laz"),
+                                        t2_vapc_out_file.replace(".laz", "_bk.laz"),
+                                        configuration["m3c2_settings"]["subsampling"]["voxel_size"])
+
 
         #Cluster Changes
         cluster(m3c2_out_file, 

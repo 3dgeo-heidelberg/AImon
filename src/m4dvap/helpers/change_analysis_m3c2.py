@@ -209,3 +209,37 @@ def do_two_sided_bitemporal_m3c2(t1_file_vapc,t2_file_vapc,outfile_m3c2,config):
                         ], columns= ["X","Y","Z","M3C2_distance","M3C2_lodetection","epoch"])
     dh.save_as_las(outfile_m3c2)
     return dh.df
+
+
+def add_original_points_to_m3c2(m3c2_out_file,t1_vapc,t2_vapc,voxel_size):
+    if not os.path.isfile(m3c2_out_file):
+        return
+    
+    m3c2 = DataHandler(m3c2_out_file)
+    m3c2.load_las_files()
+    m3c2.df["epoch"] = m3c2.df["epoch"].astype(int)
+    vp_m3c2 = Vapc(voxel_size)
+    vp_m3c2.get_data_from_data_handler(m3c2)
+
+    t1 = DataHandler(t1_vapc)
+    t1.load_las_files()
+    t1.df["epoch"] = 0
+    vp_t1 = Vapc(voxel_size)
+    vp_t1.get_data_from_data_handler(t1)
+
+    t2 = DataHandler(t2_vapc)
+    t2.load_las_files()
+    t2.df["epoch"] = 1
+    vp_t2 = Vapc(voxel_size)
+    vp_t2.get_data_from_data_handler(t2)
+
+    vp_t1.select_by_mask(vp_m3c2,mask_attribute = "voxel_index")
+    vp_t2.select_by_mask(vp_m3c2,mask_attribute = "voxel_index")
+
+    vp_m3c2.df = pd.concat([vp_m3c2.df,vp_t1.df,vp_t2.df])
+    m3c2.df = vp_m3c2.df
+    del m3c2.df["voxel_index"]
+    del m3c2.df["voxel_x"]
+    del m3c2.df["voxel_y"]
+    del m3c2.df["voxel_z"]
+    m3c2.save_as_las(m3c2_out_file)
