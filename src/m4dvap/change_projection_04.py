@@ -65,7 +65,7 @@ class ProjectChange:
         v_fov_x = float(image_metadata_loaded['v_fov_x'])
         v_fov_y = float(image_metadata_loaded['v_fov_y'])
         res = float(image_metadata_loaded['res'])
-        #top_view = bool(image_metadata_loaded['top_view'])
+        top_view = bool(image_metadata_loaded['top_view'])
 
         # Get change events dictionnary in json file
         change_events = utilities.read_json_file(self.path_change_events)

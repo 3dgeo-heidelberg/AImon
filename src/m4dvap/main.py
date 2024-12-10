@@ -61,8 +61,23 @@ def main() -> None:
             t2_vapc_out_file,
             configuration
             )
-
-        # TODO: Add subsampling
+        
+        if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
+            for tx_vapc_out_file in [t1_vapc_out_file, t2_vapc_out_file]:
+                vapc_command = {
+                    "tool":"subsample",
+                    "args":{
+                        "sub_sample_method":"closest_to_center_of_gravity"
+                        }
+                    }
+                sspath = vapc.do_vapc_on_files(
+                    file=tx_vapc_out_file,
+                    out_dir=str(Path(tx_vapc_out_file).parent),
+                    voxel_size=configuration["m3c2_settings"]["subsampling"]["voxel_size"],
+                    vapc_command=vapc_command,
+                    save_as=".laz")
+                os.rename(tx_vapc_out_file,tx_vapc_out_file.replace(".laz", "_bk.laz"))
+                os.rename(sspath,tx_vapc_out_file)
 
         #M3C2
         do_two_sided_bitemporal_m3c2(
