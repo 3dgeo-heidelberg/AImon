@@ -1,4 +1,4 @@
-import os
+import os, sys
 from pathlib import Path
 import argparse
 import glob
@@ -21,6 +21,7 @@ def parse_args():
             - config_folder (str): Configuration of the processing pipeline.
             - filenames (list of str): List of filenames.
     """
+
     parser = argparse.ArgumentParser(description="Use processing pipeline.")
     parser.add_argument("config_folder", help="Configuration of the processing pipeline.")
     parser.add_argument('filenames', nargs='+', help='List of filenames')
@@ -30,17 +31,26 @@ def main() -> None:
     """
     Main function to execute the full workflow.
     """
-    
-    # Parse command-line arguments
-    args = parse_args()
-
-    # Iterate over all pairs of input files
-    # and all configuration files
+    if sys.gettrace() is not None:
+        args_filenames=['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155455.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz']
+        args_config_folder = "/home/william/Documents/GitHub/m4dvap/config/"
+    else:
+        # Parse command-line arguments
+        args = parse_args()
+        args_filenames = args.filenames
+        args_config_folder = args.config_folder
+   
+    # Iterate over all pairs of input files and all configuration files
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y_%m_%d_%H-%M-%S")
-    for i, t1_file in enumerate(args.filenames[:-1]):
-        t2_file = args.filenames[i+1]
-        for config_file in glob.glob(f"{args.config_folder}/*.json"):
+    args_filenames=['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155455.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz']
+    args_config_folder = "/home/william/Documents/GitHub/m4dvap/config/"
+    #for i, t1_file in enumerate(args.filenames[:-1]):
+    for i, t1_file in enumerate(args_filenames[:-1]):
+        #t2_file = args.filenames[i+1]
+        t2_file = args_filenames[i+1]
+        #for config_file in glob.glob(f"{args.config_folder}/*.json"):
+        for config_file in glob.glob(f"{args_config_folder}*.json"):
             (
             configuration,
             t1_vapc_out_file,
@@ -139,4 +149,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
