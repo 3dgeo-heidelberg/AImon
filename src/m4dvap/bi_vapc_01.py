@@ -59,8 +59,7 @@ def compute_bitemporal_vapc(t1_file,
     vapc_mask_config = config["vapc_settings"]["vapc_mask"]
 
     if (os.path.isfile(t1_out_file) or os.path.isfile(t1_out_file[:-4]+".txt")) and (os.path.isfile(t2_out_file) or os.path.isfile(t2_out_file[:-4]+".txt")) :
-        print("Result for \n%s and \n%s already computed."%(t1_out_file,
-                                                            t2_out_file))
+        #print("Result for \n%s and \n%s already computed."%(t1_out_file, t2_out_file))
         return
 
     # Hierarchichal approach
@@ -101,7 +100,7 @@ def compute_bitemporal_vapc(t1_file,
     vapc.df = bi_vapc.df
 
     if (vapc.df['mahalanobi_significance'] == 0).all():
-        print("No change detected.")
+        #print("No change detected.")
         # Mask point clouds based on significant change detected within voxels
         outfile_t1 = t1_out_file[:-4]+".txt"
         outfile_t2 = t2_out_file[:-4]+".txt"
@@ -283,7 +282,7 @@ def compute_bi_temporal_statistics(bi_temporal_vapc,statistics_to_compute,save_m
         bi_temporal_vapc.compute_z_score(signicance_threshold = statistics_to_compute["signicance_threshold"])
 
     if save_mahlanobis_output:
-        print(bi_temporal_vapc.df_merged)
+        #print(bi_temporal_vapc.df_merged)
         bi_temporal_vapc.df_merged.to_csv(save_mahlanobis_output, columns=['mahalanobis_distance', 'distance', 'p_value'], index=False)
 
     return bi_temporal_vapc
@@ -544,7 +543,7 @@ def clusters_from_attribute(vapc,cluster_attribute,min_max_eq,filter_value,clust
 
 
 def extract_by_mask(pc_file,vapc_mask,pc_file_masked,buffer_size = 2):
-                print(buffer_size)
+                #print(buffer_size)
                 dh = DataHandler([pc_file])
                 dh.load_las_files()
 

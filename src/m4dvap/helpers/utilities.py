@@ -6,72 +6,11 @@ from datetime import datetime
 from PySide6.QtCore import QDate
 import numpy as np
 
+from itertools import cycle
+from shutil import get_terminal_size
+from threading import Thread
 
-def trace(func):
-    """
-    A decorator that prints the name of the function before it is called.
 
-    This decorator is useful for debugging and logging purposes, allowing you to trace
-    the flow of function calls in your application by outputting "Calling <function_name>"
-    to the console before the function executes.
-
-    Args:
-        func (callable): The function to be wrapped.
-
-    Returns:
-        callable: The wrapped function that prints its name before execution.
-
-    Example:
-        >>> @trace
-        ... def greet(name):
-        ...     print(f"Hello, {name}!")
-        >>> greet("Alice")
-        Calling greet
-        Hello, Alice!
-    """
-    @wraps(func)
-    def call(*args,**kwargs):
-        print("Calling",func.__name__)
-        return func(*args,**kwargs)
-    return call
-
-def timeit(func):
-    """
-    A decorator that measures and prints the execution time of a function.
-
-    This decorator records the start and end times of the function execution using `time.time()`,
-    calculates the elapsed time, and prints it in seconds with four decimal places of precision.
-    It's useful for performance testing or profiling to see how long functions take to execute.
-
-    Args:
-        func (callable): The function to be wrapped.
-
-    Returns:
-        callable: The wrapped function that measures and prints its execution time.
-
-    Example:
-        >>> @timeit
-        ... def compute():
-        ...     time.sleep(1)
-        >>> compute()
-        Function 'compute' executed in 1.0001 seconds
-
-    Notes:
-        - The timing is based on wall-clock time, which can be affected by other system processes.
-        - For more precise timing (e.g., CPU time), consider using `time.perf_counter()`.
-    """
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start_time = time.time()  # Capture the start time
-        result = func(*args, **kwargs)  # Call the function
-        end_time = time.time()  # Capture the end time
-        elapsed_time = end_time - start_time  # Calculate elapsed time
-        print(f"Function '{func.__name__}' executed in {elapsed_time:.4f} seconds")
-        return result
-    return wrapper
-
-@timeit
-@trace
 def read_json_file(file_path):
     """Read JSON data from a file.
 
@@ -92,8 +31,7 @@ def read_json_file(file_path):
         print(f"Error reading JSON file: {e}")
         return None
 
-@timeit
-@trace
+
 def create_project_structure(config) -> None:
     """
     Generate output folder structure if not existing.
@@ -154,7 +92,7 @@ def get_delta_t(t1_file,
     # Calculate the difference in seconds
     delta_seconds = (t2_time - t1_time).total_seconds()
     
-    print(f"Time difference: {delta_seconds} seconds")
+    #print(f"Time difference between the two epochs: {delta_seconds} seconds")
     return delta_seconds
 
 
@@ -311,3 +249,49 @@ def rotate_to_top_view(xyz, mean_x, mean_y, mean_z):
         return xyz
 
 #loc2ref_TRIER()#
+
+
+############################################################################################################
+
+
+class Loader:
+    def __init__(self, desc="Loading...", end="Done!", timeout=0.1):
+        """
+        A loader-like context manager
+
+        Args:
+            desc (str, optional): The loader's description. Defaults to "Loading...".
+            end (str, optional): Final print. Defaults to "Done!".
+            timeout (float, optional): Sleep time between prints. Defaults to 0.1.
+        """
+        self.desc = desc
+        self.end = end
+        self.timeout = timeout
+
+        self._thread = Thread(target=self._animate, daemon=True)
+        self.steps = ["⢿ ", "⣻ ", "⣽ ", "⣾ ", "⣷ ", "⣯ ", "⣟ ", "⡿ "]
+        self.done = False
+
+    def start(self):
+        self._thread.start()
+        return self
+
+    def _animate(self):
+        for c in cycle(self.steps):
+            if self.done:
+                break
+            print(f"\r{self.desc} {c}", flush=True, end="")
+            time.sleep(self.timeout)
+
+    def __enter__(self):
+        self.start()
+
+    def stop(self):
+        self.done = True
+        cols = get_terminal_size((80, 20)).columns
+        print("\r" + " " * cols, end="", flush=True)
+        print(f"\r{self.end}", flush=True)
+
+    def __exit__(self, exc_type, exc_value, tb):
+        # handle exceptions with those variables ^
+        self.stop()

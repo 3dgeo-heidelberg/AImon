@@ -192,7 +192,7 @@ def convert_cluster_to_change_events(m3c2_clustered, configuration):
     if not os.path.isdir(pc_folder):
         os.makedirs(pc_folder) 
     if os.path.isfile(ce_file):
-        print("Change events already computed.")
+        #print("Change events already computed.")
         return
     # Load data
     dh = DataHandler(m3c2_clustered)

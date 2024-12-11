@@ -1,9 +1,10 @@
-import os, sys
+import os, sys, io
+import numpy as np
 from pathlib import Path
 import argparse
 import glob
-from helpers.utilities import setup_configuration
-from helpers.change_analysis_m3c2 import do_two_sided_bitemporal_m3c2, add_original_points_to_m3c2
+from helpers.utilities import setup_configuration, Loader
+from helpers.change_analysis_m3c2 import ChangeAnalysisM3C2
 from helpers.cluster import cluster
 from helpers.change_events import convert_cluster_to_change_events,merge_change_events
 from bi_vapc_01 import compute_bitemporal_vapc
@@ -11,6 +12,7 @@ from pc_projection_03 import PCloudProjection
 from change_projection_04 import ProjectChange
 import vapc
 import datetime
+
 
 def parse_args():
     """
@@ -31,11 +33,21 @@ def main() -> None:
     """
     Main function to execute the full workflow.
     """
+
+    loader = Loader("Computing... ", "Finished", 0.35).start()
+
+    # In case you debug
     if sys.gettrace() is not None:
-        args_filenames=['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155455.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz']
-        args_config_folder = "/home/william/Documents/GitHub/m4dvap/config/"
+        # In case it's Windows (Ronny)
+        if os.name == 'nt':
+            args_filenames=['', '']
+            args_config_folder = ""
+        # In case it's Ubuntu (Will)
+        else:
+            args_filenames=['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155654.laz']
+            args_config_folder = "/home/william/Documents/GitHub/m4dvap/config"
+    # If not in debug mode, parse command-line arguments
     else:
-        # Parse command-line arguments
         args = parse_args()
         args_filenames = args.filenames
         args_config_folder = args.config_folder
@@ -43,14 +55,9 @@ def main() -> None:
     # Iterate over all pairs of input files and all configuration files
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y_%m_%d_%H-%M-%S")
-    args_filenames=['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155455.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz']
-    args_config_folder = "/home/william/Documents/GitHub/m4dvap/config/"
-    #for i, t1_file in enumerate(args.filenames[:-1]):
     for i, t1_file in enumerate(args_filenames[:-1]):
-        #t2_file = args.filenames[i+1]
         t2_file = args_filenames[i+1]
-        #for config_file in glob.glob(f"{args.config_folder}/*.json"):
-        for config_file in glob.glob(f"{args_config_folder}*.json"):
+        for config_file in glob.glob(f"{args_config_folder}/*.json"):
             (
             configuration,
             t1_vapc_out_file,
@@ -68,7 +75,8 @@ def main() -> None:
             if configuration["project_setting"]["silent_mode"]:
                 vapc.enable_trace(False)
                 vapc.enable_timeit(False)
-
+                import logging
+                logging.disable(logging.CRITICAL)
 
             #BI-VAPC - Change detetction module
             compute_bitemporal_vapc(
@@ -100,7 +108,7 @@ def main() -> None:
                     os.rename(sspath,tx_vapc_out_file)
 
             #M3C2 - Change analysis module
-            do_two_sided_bitemporal_m3c2(
+            ChangeAnalysisM3C2.do_two_sided_bitemporal_m3c2(
                 t1_vapc_out_file,
                 t2_vapc_out_file,
                 m3c2_out_file,
@@ -114,7 +122,7 @@ def main() -> None:
                 else:
                     os.rename(m3c2_out_file,m3c2_out_file.replace(".laz", "_bk.laz"))
                     
-                    add_original_points_to_m3c2(m3c2_out_file.replace(".laz", "_bk.laz"),
+                    ChangeAnalysisM3C2.add_original_points_to_m3c2(m3c2_out_file.replace(".laz", "_bk.laz"),
                                                 m3c2_out_file,
                                                 t1_vapc_out_file.replace(".laz", "_bk.laz"),
                                                 t2_vapc_out_file.replace(".laz", "_bk.laz"),
@@ -146,6 +154,13 @@ def main() -> None:
             change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder)
             change_prj.project_change()
 
+    loader.stop()
+    end = datetime.datetime.now()
+
+    t = (end.second - now.second)
+    t_minute = np.floor(t/60)
+    t_second = (t/60 - t_minute)*60
+    print(f"Executed in {t_minute:02.0f} min {t_second:02.0f} sec")
 
 if __name__ == "__main__":
     main()

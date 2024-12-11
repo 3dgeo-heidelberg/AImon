@@ -5,8 +5,7 @@ from scipy.sparse import csr_matrix
 from sklearn.cluster import DBSCAN
 from scipy.spatial import cKDTree
 from scipy.sparse.csgraph import connected_components
-from vapc import DataHandler
-from vapc import timeit,trace
+from vapc import DataHandler, timeit,trace
 import os
 
 @trace
@@ -146,10 +145,10 @@ def cluster(
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
     if os.path.isfile(m3c2_clustered):
-        print("Result for %s already computed."%m3c2_clustered)
+        #print("Result for %s already computed."%m3c2_clustered)
         return True
     if os.path.isfile(os.path.join(outdir,"change_events.json")):
-        print("Change events already computed.")
+        #print("Change events already computed.")
         return True
     elif config["cluster_settings"]["cluster_method"].lower() == "connected_components" or config["cluster_settings"]["cluster_method"].lower() == "cc":
         return compute_clusters_connected_components(m3c2_out_file,m3c2_clustered,config)
