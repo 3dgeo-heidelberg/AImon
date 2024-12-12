@@ -14,7 +14,7 @@ import vapc
 import datetime
 
 
-def parse_args():
+def fn_parse_args():
     """
     Parse command-line arguments.
 
@@ -25,16 +25,6 @@ def parse_args():
     """
 
     parser = argparse.ArgumentParser(description="Use processing pipeline.")
-    parser.add_argument("config_folder", help="Configuration of the processing pipeline.")
-    parser.add_argument('filenames', nargs='+', help='List of filenames')
-    return parser.parse_args()
-
-def main() -> None:
-    """
-    Main function to execute the full workflow.
-    """
-
-    loader = Loader("Computing... ", "Finished", 0.35).start()
 
     # In case you debug
     if sys.gettrace() is not None:
@@ -44,20 +34,32 @@ def main() -> None:
             args_config_folder = ""
         # In case it's Ubuntu (Will)
         else:
-            args_filenames=['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155654.laz']
+            args_filenames = ['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155654.laz']
             args_config_folder = "/home/william/Documents/GitHub/m4dvap/config"
+
+        parser.add_argument('-c', '--config_folder', default=args_config_folder, help='Configuration of the processing pipeline.')
+        parser.add_argument('-f', '--filenames', default=args_filenames, nargs='+', help='List of filenames')
     # If not in debug mode, parse command-line arguments
     else:
-        args = parse_args()
-        args_filenames = args.filenames
-        args_config_folder = args.config_folder
+        parser.add_argument('-c', '--config_folder', help="Configuration of the processing pipeline.")
+        parser.add_argument('-f', '--filenames', nargs='+', help='List of filenames')
+
+    return parser.parse_args()
+
+def main() -> None:
+    """
+    Main function to execute the full workflow.
+    """
+
+    loader = Loader("Computing... ", "Finished", 0.35).start()
+    args = fn_parse_args()
    
     # Iterate over all pairs of input files and all configuration files
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y_%m_%d_%H-%M-%S")
-    for i, t1_file in enumerate(args_filenames[:-1]):
-        t2_file = args_filenames[i+1]
-        for config_file in glob.glob(f"{args_config_folder}/*.json"):
+    for i, t1_file in enumerate(args.filenames[:-1]):
+        t2_file = args.filenames[i+1]
+        for config_file in glob.glob(f"{args.config_folder}/*.json"):
             (
             configuration,
             t1_vapc_out_file,
@@ -158,7 +160,7 @@ def main() -> None:
     end = datetime.datetime.now()
 
     t = (end.second - now.second)
-    t_minute = np.floor(t/60)
+    t_minute = int(t/60)
     t_second = (t/60 - t_minute)*60
     print(f"Executed in {t_minute:02.0f} min {t_second:02.0f} sec")
 

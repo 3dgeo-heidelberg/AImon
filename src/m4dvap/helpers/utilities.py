@@ -279,6 +279,7 @@ class Loader:
     def _animate(self):
         for c in cycle(self.steps):
             if self.done:
+                print("\n")
                 break
             print(f"\r{self.desc} {c}", flush=True, end="")
             time.sleep(self.timeout)
