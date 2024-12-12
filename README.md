@@ -1,8 +1,8 @@
-# ChangeDetPipeline
+# m4dvap: Modular 4-Dimensional Visualization and Analysis for Point clouds
 
 ## Overview
 
-ChangeDetPipeline is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data.
+m4dvap is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data.
 
 ## Features
 
@@ -24,8 +24,8 @@ ChangeDetPipeline is a comprehensive tool designed for processing and projecting
 1. **Clone the Repository**
 
 ```bash
-$ git clone https://github.com/yourusername/ChangeDetPipeline.git
-$ cd ChangeDetPipeline
+$ git clone https://github.com/yourusername/m4dvap.git
+$ cd m4dvap
 
 # Install a Conda Environment
 $ conda env create -f environment.yml
@@ -37,7 +37,7 @@ $ conda activate m4dvap
 
 # Key Functions
 ## main.py
-Serves as the entry point for the ChangeDetPipeline processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
+Serves as the entry point for the m4dvap processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
 
 Usage:
 
