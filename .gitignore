@@ -1,4 +1,9 @@
 *.ply
 *.las
 *.laz
+*.pyc
 tmp/*
+*.log
+*.geojson
+*.json
+out/*
