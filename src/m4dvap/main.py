@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 import argparse
 import glob
-from helpers.utilities import setup_configuration, Loader
+from helpers.utilities import setup_configuration, get_min_sec, Loader
 from helpers.change_analysis_m3c2 import ChangeAnalysisM3C2
 from helpers.cluster import cluster
 from helpers.change_events import convert_cluster_to_change_events,merge_change_events
@@ -55,11 +55,11 @@ def main() -> None:
     args = fn_parse_args()
    
     # Iterate over all pairs of input files and all configuration files
-    now = datetime.datetime.now()
-    timestamp = now.strftime("%Y_%m_%d_%H-%M-%S")
+    start = datetime.datetime.now()
+    timestamp = start.strftime("%Y_%m_%d_%H-%M-%S")
     for i, t1_file in enumerate(args.filenames[:-1]):
         t2_file = args.filenames[i+1]
-        for config_file in glob.glob(f"{args.config_folder}/*.json"):
+        for config_file in glob.glob(os.path.join(args.config_folder, "*.json")):
             (
             configuration,
             t1_vapc_out_file,
@@ -157,11 +157,9 @@ def main() -> None:
             change_prj.project_change()
 
     loader.stop()
-    end = datetime.datetime.now()
 
-    t = (end.second - now.second)
-    t_minute = int(t/60)
-    t_second = (t/60 - t_minute)*60
+    end = datetime.datetime.now()
+    t_minute, t_second = get_min_sec(start, end)
     print(f"Executed in {t_minute:02.0f} min {t_second:02.0f} sec")
 
 if __name__ == "__main__":

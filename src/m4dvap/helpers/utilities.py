@@ -177,6 +177,12 @@ def date_between(my_date, t_min, t_max):
         in_between = False
     return in_between
 
+def get_min_sec(start, end):
+    t = (end.second - start.second)
+    t_minute = int(t/60)
+    t_second = int((t/60 - t_minute)*60)
+    return t_minute, t_second
+
 def get_event_color(df_legend_colors, event_type):
     color = df_legend_colors.loc[df_legend_colors["event_type"] == event_type]["color"]
     color = list(color)[0]

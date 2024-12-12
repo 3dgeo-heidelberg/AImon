@@ -7,3 +7,4 @@ tmp/*
 *.geojson
 *.json
 out/*
+/data
