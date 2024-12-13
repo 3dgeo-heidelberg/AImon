@@ -24,7 +24,7 @@ m4dvap is a comprehensive tool designed for processing and projecting point clou
 1. **Clone the Repository**
 
 ```bash
-$ git clone https://github.com/yourusername/m4dvap.git
+$ git clone https://github.com/3dgeo-heidelberg/m4dvap.git
 $ cd m4dvap
 
 # Install a Conda Environment
