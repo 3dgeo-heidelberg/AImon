@@ -53,7 +53,6 @@ def main() -> None:
 
     loader = Loader("Computing... ", "Finished", 0.35).start()
     args = fn_parse_args()
-   
     # Iterate over all pairs of input files and all configuration files
     start = datetime.datetime.now()
     timestamp = start.strftime("%Y_%m_%d_%H-%M-%S")
@@ -155,7 +154,6 @@ def main() -> None:
             # Project the 3D change events point cloud to pixel and UTM 32N coordinates
             change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder)
             change_prj.project_change()
-
     loader.stop()
 
     end = datetime.datetime.now()

@@ -42,5 +42,5 @@ Serves as the entry point for the m4dvap processing workflow. It orchestrates th
 Usage:
 
 ```
-python main.py "config/Trier_2d_projection_config.json" "path/to/t1_file.las" "path/to/t2_file.las"
+python main.py -c "config" -f "path/to/t1_file.las" "path/to/t2_file.las"
 ```
