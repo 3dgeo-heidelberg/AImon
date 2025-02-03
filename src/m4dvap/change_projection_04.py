@@ -87,7 +87,8 @@ class ProjectChange:
                 't_max': 'str',
                 'change_magnitudes_mean': 'float',
                 'volumes_from_convex_hulls': 'float',
-                'filepath': 'str'
+                'cluster_point_cloud': 'str',
+                'cluster_point_cloud_chull': 'str'
                 }
             }
         # Open the shapefile to be able to write each polygon in it
@@ -120,7 +121,8 @@ class ProjectChange:
                     't_max': str(change_event['t_min']),
                     'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
                     'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
-                    'filepath': str(change_event['filepath'])
+                    'cluster_point_cloud': str(change_event['cluster_point_cloud']),
+                    'cluster_point_cloud_chull': str(change_event['cluster_point_cloud_chull'])
                 }
             })
 
@@ -174,7 +176,8 @@ class ProjectChange:
                     't_max': str(change_event['t_min']),
                     'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
                     'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
-                    'filepath': str(change_event['filepath'])
+                    'cluster_point_cloud': str(change_event['cluster_point_cloud']),
+                    'cluster_point_cloud_chull': str(change_event['cluster_point_cloud_chull'])
                 }
             })
         geojson.close()
