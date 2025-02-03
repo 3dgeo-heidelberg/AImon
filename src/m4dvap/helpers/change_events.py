@@ -89,6 +89,27 @@ def get_change(points, stat):
     else:
         print("Stat unknown")
 
+def hull_of_points_to_obj(points, obj_file):
+    if len(points) < 4:
+        return None
+    hull = ConvexHull(points)
+    
+    unique_indices = np.unique(hull.simplices)
+    # Create a mapping from original index to new index (starting at 1 for OBJ format).
+    index_mapping = {old_idx: new_idx + 1 for new_idx, old_idx in enumerate(unique_indices)}
+    
+    with open(obj_file, "w") as file:
+        # Write only the convex hull vertices.
+        for old_idx in unique_indices:
+            x, y, z = points[old_idx]
+            file.write("v {:.6f} {:.6f} {:.6f}\n".format(x, y, z))
+        
+        # Write faces, re-mapping vertex indices to the new ones.
+        for simplex in hull.simplices:
+            # Map the original indices to the new ones.
+            mapped_indices = [index_mapping[idx] for idx in simplex]
+            file.write("f {} {} {}\n".format(*mapped_indices))
+    return hull
 
 def get_conv_hull_points(df):
     """
@@ -188,9 +209,12 @@ def convert_cluster_to_change_events(m3c2_clustered, configuration):
     if not os.path.isdir(outfolder):
         os.makedirs(outfolder)
     pc_folder = os.path.join(outfolder,"point_clouds")
+    obj_folder = os.path.join(outfolder,"convex_hulls")
     ce_file = os.path.join(outfolder,"change_events.json")
     if not os.path.isdir(pc_folder):
         os.makedirs(pc_folder) 
+    if not os.path.isdir(obj_folder):
+        os.makedirs(obj_folder) 
     if os.path.isfile(ce_file):
         #print("Change events already computed.")
         return
@@ -201,10 +225,13 @@ def convert_cluster_to_change_events(m3c2_clustered, configuration):
     clusters = np.unique(df["cluster_id"])    
     change_events = []
     for cluster in clusters:
+        cluster_point_cloud = os.path.join(pc_folder,"%s.laz"%cluster)
+        cluster_point_cloud_chull = os.path.join(obj_folder,"%s.obj"%cluster)
         cluster_df = df[df["cluster_id"] == cluster]
         change_event = change_event_template.copy()
         change_event["object_id"] = str(cluster)
-        change_event["filepath"] = m3c2_clustered
+        change_event["cluster_point_cloud"] = cluster_point_cloud
+        change_event["cluster_point_cloud_chull"] = cluster_point_cloud_chull
         change_event["number_of_points"] = [len(cluster_df)]
         timedict = extract_time_info(m3c2_clustered)
         change_event.update(timedict)
@@ -228,7 +255,10 @@ def convert_cluster_to_change_events(m3c2_clustered, configuration):
         # Save point cloud
         dh_pc = DataHandler("")
         dh_pc.df = cluster_df
-        dh_pc.save_as_las(os.path.join(pc_folder,"%s.laz"%cluster))
+        dh_pc.save_as_las(cluster_point_cloud)
+
+        #Save convex hull
+        hull_of_points_to_obj(cluster_df[["X","Y","Z"]].values,cluster_point_cloud_chull)
     with open(ce_file, 'w') as f:
         json.dump(change_events, f, indent=4)
     #delete clustered m3c2 file as it is not needed anymore and split to point clouds
