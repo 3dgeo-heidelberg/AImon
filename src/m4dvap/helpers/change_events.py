@@ -92,23 +92,54 @@ def get_change(points, stat):
 def hull_of_points_to_obj(points, obj_file):
     if len(points) < 4:
         return None
+
+    # Compute the convex hull from the points.
     hull = ConvexHull(points)
     
-    unique_indices = np.unique(hull.simplices)
-    # Create a mapping from original index to new index (starting at 1 for OBJ format).
+    # Compute the centroid of the convex hull using only the hull vertices.
+    hull_centroid = np.mean(points[hull.vertices], axis=0)
+    
+    # Prepare a list to hold faces with corrected orientation.
+    faces = []
+    
+    # Process each face (simplex) from the convex hull.
+    for simplex in hull.simplices:
+        # Get the three vertices of the face.
+        pts = points[simplex]
+        # Compute the centroid of the face.
+        face_center = pts.mean(axis=0)
+        # Compute a normal using the cross product of two edges.
+        v1 = pts[1] - pts[0]
+        v2 = pts[2] - pts[0]
+        normal = np.cross(v1, v2)
+        # Check the orientation:
+        # For a convex shape, the outward normal should form an angle < 90° with the
+        # vector from the hull centroid to the face center.
+        if np.dot(normal, face_center - hull_centroid) < 0:
+            # If the dot product is negative, the face normal is inward;
+            # reverse the vertex order.
+            simplex = simplex[::-1]
+        faces.append(simplex)
+    
+    # Extract the unique vertex indices used in the faces.
+    faces_arr = np.array(faces)
+    unique_indices = np.unique(faces_arr)
+    
+    # Create a mapping from the original indices to new indices starting at 1 (OBJ convention).
     index_mapping = {old_idx: new_idx + 1 for new_idx, old_idx in enumerate(unique_indices)}
     
+    # Write the OBJ file.
     with open(obj_file, "w") as file:
-        # Write only the convex hull vertices.
+        # Write vertices. Only vertices that are used by the hull faces are written.
         for old_idx in unique_indices:
             x, y, z = points[old_idx]
             file.write("v {:.6f} {:.6f} {:.6f}\n".format(x, y, z))
         
-        # Write faces, re-mapping vertex indices to the new ones.
-        for simplex in hull.simplices:
-            # Map the original indices to the new ones.
-            mapped_indices = [index_mapping[idx] for idx in simplex]
+        # Write faces with the re-mapped indices.
+        for face in faces:
+            mapped_indices = [index_mapping[idx] for idx in face]
             file.write("f {} {} {}\n".format(*mapped_indices))
+    
     return hull
 
 def get_conv_hull_points(df):
@@ -184,7 +215,8 @@ def convert_cluster_to_change_events(m3c2_clustered, configuration):
     change_event_template = {
                 "object_id": "object_id",
                 "event_type": "undefined",
-                "filepath": "path_file",
+                "cluster_point_cloud": "path_file",
+                "cluster_point_cloud_chull": "path_file",
                 "start_date": "YYMMDD_HHMM",
                 "number_of_points": "LIST",
                 "t_min": "LIST",
