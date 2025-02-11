@@ -12,7 +12,7 @@ from pc_projection_03 import PCloudProjection
 from change_projection_04 import ProjectChange
 import vapc
 import datetime
-
+import time
 
 def fn_parse_args():
     """
@@ -80,6 +80,7 @@ def main() -> None:
                 logging.disable(logging.CRITICAL)
 
             #BI-VAPC - Change detetction module
+            s = time.time()
             compute_bitemporal_vapc(
                 t1_file,
                 t2_file,
@@ -88,6 +89,9 @@ def main() -> None:
                 configuration
                 )
             
+            # e = time.time()
+            # print(f"BI-VAPC executed in {e-s:.2f} seconds")
+            # break
             #Optional subsampling for M3C2
             if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
                 for tx_vapc_out_file in [t1_vapc_out_file, t2_vapc_out_file]:
@@ -143,7 +147,10 @@ def main() -> None:
                 m3c2_clustered,
                 configuration
                 )
-
+            
+            e = time.time()
+            print(f"BI-VAPC executed in {e-s:.2f} seconds")
+            break
             # #Merge change events to change event collection
             merge_change_events(change_event_folder)    # Outputs the change events JSON file path
 

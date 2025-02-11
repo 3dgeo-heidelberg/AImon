@@ -237,7 +237,7 @@ class BI_TEMPORAL_Vapc:
     
     @trace
     @timeit
-    def compute_chi_squared_mahalanobis(self, alpha = 0.005):
+    def compute_chi_squared_mahalanobis_old(self, alpha = 0.005):
         """
         Mahalanobis distance for significance testing:
         Calculates the Mahalanobis distance for a given data point x from the mean of the dataset.
@@ -252,6 +252,68 @@ class BI_TEMPORAL_Vapc:
                                               axis = 1)
             self.chi_squared_mh= True
             self.df_merged["mahalanobi_significance"] = self.df_merged["mahalanobi_significance"].astype(int)
+
+    @trace
+    @timeit
+    def compute_chi_squared_mahalanobis(self, alpha=0.005):
+        """
+        Vectorized Mahalanobis chi-squared significance testing.
+        This method replaces the row-by-row computation. It expects that:
+          - The first epoch’s center-of-gravity is in columns 'cog_x_x', 'cog_y_x', 'cog_z_x'
+          - The second epoch’s center-of-gravity is in 'cog_x_y', 'cog_y_y', 'cog_z_y'
+          - The covariance matrix entries for the first epoch are in columns with names starting with 'cov_'
+            and ending with '_x'
+          - For the second epoch, the covariance entries are in columns ending with '_y'
+        """
+        if not self.chi_squared_mh:
+            df = self.df_merged
+
+            # Extract the center-of-gravity coordinates as (N, 3) arrays:
+            x1 = df[['cog_x_x', 'cog_y_x', 'cog_z_x']].to_numpy()
+            x2 = df[['cog_x_y', 'cog_y_y', 'cog_z_y']].to_numpy()
+
+            # Extract covariance matrix entries.
+            # IMPORTANT: Ensure the covariance columns are ordered correctly (e.g. row-major order)
+            cov_cols_x = sorted([col for col in df.columns if col.startswith('cov_') and col.endswith('_x')])
+            cov_cols_y = sorted([col for col in df.columns if col.startswith('cov_') and col.endswith('_y')])
+            cov_x = df[cov_cols_x].to_numpy().reshape(-1, 3, 3)
+            cov_y = df[cov_cols_y].to_numpy().reshape(-1, 3, 3)
+
+            # Avoid singular matrices by adding a tiny value to the diagonal.
+            eps = 1e-10
+            cov_x = cov_x + np.eye(3) * eps
+            cov_y = cov_y + np.eye(3) * eps
+
+            # Batch inversion of the covariance matrices:
+            inv_cov_x = np.linalg.inv(cov_x)
+            inv_cov_y = np.linalg.inv(cov_y)
+
+            # Compute the differences between the centers:
+            diff = x1 - x2  # shape: (N, 3)
+
+            # Compute the squared Mahalanobis distances:
+            # d1: distance from x1 relative to x2’s covariance; d2: distance from x2 relative to x1’s covariance.
+            d1 = np.einsum('ij,ijk,ik->i', diff, inv_cov_y, diff)
+            d2 = np.einsum('ij,ijk,ik->i', -diff, inv_cov_x, -diff)
+
+            # Compute p-values from the chi-squared distribution (with 3 degrees of freedom):
+            p_val1 = 1 - chi2.cdf(d1, df=3)
+            p_val2 = 1 - chi2.cdf(d2, df=3)
+
+            # Decide which test to use per row (adjust logic as needed):
+            is_outlier1 = p_val1 < alpha
+            is_outlier2 = p_val2 < alpha
+
+            # Use test 1 if it flags an outlier; otherwise test 2.
+            significance = np.where(is_outlier1, 1, np.where(is_outlier2, 1, 0))
+            p_value = np.where(is_outlier1, p_val1, p_val2)
+
+            # Add the results to the DataFrame:
+            df['mahalanobi_significance'] = significance.astype(int)
+            df['p_value'] = p_value
+
+            self.df_merged = df
+            self.chi_squared_mh = True
 
     def compute_distance(self):
         if not self.distance:
@@ -546,15 +608,18 @@ def extract_by_mask(pc_file,vapc_mask,pc_file_masked,buffer_size = 2):
                 #print(buffer_size)
                 dh = DataHandler([pc_file])
                 dh.load_las_files()
-
+                print("a")
                 vapc_pc = Vapc(float(vapc_mask.voxel_size))
                 
                 vapc_pc.get_data_from_data_handler(dh)
+                print("b")
 
                 vapc_mask.compute_voxel_buffer(buffer_size = int(buffer_size))
+                print("c")
                 vapc_mask.df = vapc_mask.buffer_df
                 #Select by mask
                 vapc_pc.select_by_mask(vapc_mask,"voxel_index")
+                print("d")
                 #Undo offset
                 # vapc_pc.compute_offset()
                 #Save Point Cloud
