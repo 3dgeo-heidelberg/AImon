@@ -81,9 +81,11 @@ def compute_bitemporal_vapc(t1_file,
     vapcs[1].compute_voxel_index()
 
     # Unique to df1
-    unique_df1 = vapcs[0].df[~vapcs[0].df['voxel_index'].isin(vapcs[1].df['voxel_index'])]
+    #unique_df1 = vapcs[0].df[~vapcs[0].df['voxel_index'].isin(vapcs[1].df['voxel_index'])]
+    unique_df1 = vapcs[0].df[~vapcs[0].df.index.isin(vapcs[1].df.index)]
     # Unique to df2
-    unique_df2 = vapcs[1].df[~vapcs[1].df['voxel_index'].isin(vapcs[0].df['voxel_index'])]
+    #unique_df2 = vapcs[1].df[~vapcs[1].df['voxel_index'].isin(vapcs[0].df['voxel_index'])]
+    unique_df2 = vapcs[1].df[~vapcs[1].df.index.isin(vapcs[0].df.index)]
 
 
 

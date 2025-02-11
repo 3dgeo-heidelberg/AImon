@@ -34,8 +34,8 @@ def fn_parse_args():
             args_config_folder = ""
         # In case it's Ubuntu (Will)
         else:
-            args_filenames = ['/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155554.laz', '/home/william/Documents/GitHub/m4dvap/data/ScanPos002 - SINGLESCANS - 241002_155654.laz']
-            args_config_folder = "/home/william/Documents/GitHub/m4dvap/config"
+            args_filenames = ['/home/william/Documents/Work/m4dvap_tests/HighRes_ScanPos310 - SINGLESCANS - 240822_063028.laz', '/home/william/Documents/Work/m4dvap_tests/HighRes_ScanPos313 - SINGLESCANS - 240828_063004.laz']
+            args_config_folder = "/home/william/Documents/Work/m4dvap_tests/"
 
         parser.add_argument('-c', '--config_folder', default=args_config_folder, help='Configuration of the processing pipeline.')
         parser.add_argument('-f', '--filenames', default=args_filenames, nargs='+', help='List of filenames')
@@ -89,9 +89,9 @@ def main() -> None:
                 configuration
                 )
             
-            # e = time.time()
-            # print(f"BI-VAPC executed in {e-s:.2f} seconds")
-            # break
+            e = time.time()
+            print(f"BI-VAPC executed in {e-s:.2f} seconds")
+            break
             #Optional subsampling for M3C2
             if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
                 for tx_vapc_out_file in [t1_vapc_out_file, t2_vapc_out_file]:
@@ -119,7 +119,9 @@ def main() -> None:
                 m3c2_out_file,
                 configuration
                 )
-            
+            e = time.time()
+            print(f"BI-VAPC executed in {e-s:.2f} seconds")
+            break
             #Add original points to M3C2 result
             if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
                 if os.path.exists(m3c2_out_file.replace(".laz", "_bk.laz")):
@@ -150,7 +152,7 @@ def main() -> None:
             
             e = time.time()
             print(f"BI-VAPC executed in {e-s:.2f} seconds")
-            break
+            
             # #Merge change events to change event collection
             merge_change_events(change_event_folder)    # Outputs the change events JSON file path
 
