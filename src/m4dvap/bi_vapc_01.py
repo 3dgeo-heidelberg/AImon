@@ -80,12 +80,15 @@ def compute_bitemporal_vapc(t1_file,
     vapcs[0].compute_voxel_index()
     vapcs[1].compute_voxel_index()
 
-    # Unique to df1
     #unique_df1 = vapcs[0].df[~vapcs[0].df['voxel_index'].isin(vapcs[1].df['voxel_index'])]
-    unique_df1 = vapcs[0].df[~vapcs[0].df.index.isin(vapcs[1].df.index)]
+    #unique_df1 = vapcs[0].df[~vapcs[0].df.index.isin(vapcs[1].df.index)]
+    unique_df1 = vapcs[0].df.loc[vapcs[0].df.index.difference(vapcs[1].df.index)]
+
     # Unique to df2
     #unique_df2 = vapcs[1].df[~vapcs[1].df['voxel_index'].isin(vapcs[0].df['voxel_index'])]
-    unique_df2 = vapcs[1].df[~vapcs[1].df.index.isin(vapcs[0].df.index)]
+    #unique_df2 = vapcs[1].df[~vapcs[1].df.index.isin(vapcs[0].df.index)]
+    unique_df2 = vapcs[1].df.loc[vapcs[1].df.index.difference(vapcs[0].df.index)]
+    # unique_df2 = vapcs[1].df.loc[vapcs[1].df.index.difference(vapcs[0].df.index.tolist())]
 
 
 
@@ -94,7 +97,7 @@ def compute_bitemporal_vapc(t1_file,
     # Compute Bi-temporal changes:
     compute_bi_temporal_statistics(bi_vapc,bi_temporal_vapc_config)
     bi_vapc.clean_merged_vapc()
-
+    write_bi_temporal_to_laz(r"C:\Users\nc298\repos\m4dvap\out\bivapcsnd.laz",bi_vapc,voxel_size=6,coords_of="first")
     # Return to single Vapc after computations are done
     vapc = Vapc(vapc_config["voxel_size"],
                 origin= vapc_config["origin"],
@@ -126,8 +129,14 @@ def compute_bitemporal_vapc(t1_file,
     unique_df2['change_type'] = 2  # Unique to epoch 2
     # Add voxels from delta octree
     vapc.df = pd.concat([vapc.df,unique_df1,unique_df2])
-
-
+    vapc.df = vapc.df[['X', 'Y', 'Z','change_type',"mahalanobi_significance","distance"]]
+    vapc.voxelized = False
+    vapc.voxel_index = False
+    vapc.compute_voxel_index()
+    #issue starts here somewhere
+    dh_temp = DataHandler("")
+    dh_temp.df = vapc.df
+    dh_temp.save_as_las(r"C:\Users\nc298\repos\m4dvap\out\bef_mask.laz")
     extract_by_mask(t1_file,copy.deepcopy(vapc),t1_out_file,buffer_size = vapc_mask_config["buffer_size"])
     extract_by_mask(t2_file,copy.deepcopy(vapc),t2_out_file,buffer_size = vapc_mask_config["buffer_size"])
 
@@ -610,20 +619,16 @@ def extract_by_mask(pc_file,vapc_mask,pc_file_masked,buffer_size = 2):
                 #print(buffer_size)
                 dh = DataHandler([pc_file])
                 dh.load_las_files()
-                print("a")
                 vapc_pc = Vapc(float(vapc_mask.voxel_size))
                 
                 vapc_pc.get_data_from_data_handler(dh)
-                print("b")
 
                 vapc_mask.compute_voxel_buffer(buffer_size = int(buffer_size))
-                print("c")
+                vapc_mask.voxel_index = False
                 vapc_mask.df = vapc_mask.buffer_df
                 #Select by mask
-                vapc_pc.select_by_mask(vapc_mask,"voxel_index")
-                print("d")
-                #Undo offset
-                # vapc_pc.compute_offset()
+                vapc_pc.select_by_mask(vapc_mask)
+
                 #Save Point Cloud
                 dh.df = vapc_pc.df
                 dh.save_as_las(pc_file_masked)
