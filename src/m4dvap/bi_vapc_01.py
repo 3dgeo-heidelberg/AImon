@@ -2,7 +2,6 @@ from functools import partial
 import numpy as np
 import pandas as pd
 from scipy.spatial import KDTree
-from sklearn.neighbors import BallTree
 from vapc.utilities import *
 from scipy.stats import chi2
 from vapc import DataHandler
@@ -525,22 +524,6 @@ def mahalanobis_distance(x, mean, cov):
     x_minus_mean = x - mean
     return np.sqrt(x_minus_mean.T @ np.linalg.inv(cov) @ x_minus_mean)
 
-# def chi_squared_mahalanobis(alpha,df):
-#     x1,x2,cov_x1,cov_x2 = get_cogs_and_covs_from_row(df)
-#     p_value1 = 1 - chi2.cdf(mahalanobis_distance(x1, x2, cov_x2), len(x2))
-#     outlier1 = p_value1 < alpha
-#     p_value2 = 1 - chi2.cdf(mahalanobis_distance(x2, x1, cov_x1), len(x1))
-#     outlier2 = p_value2 < alpha
-    
-#     if outlier1:
-#         res_series = pd.Series([outlier1,p_value1],
-#                      index=["mahalanobi_significance","p_value"])
-#         return pd.concat([df,res_series])
-#     else:
-#         res_series = pd.Series([outlier2,p_value2],
-#                      index=["mahalanobi_significance","p_value"])
-#         return pd.concat([df,res_series])
-    
 def chi_squared_mahalanobis(alpha,df):
     x1,x2,cov_x1,cov_x2 = get_cogs_and_covs_from_row(df)
     p_value1 = 1 - chi2.cdf(mahalanobis_distance(x1, x2, cov_x2)**2, len(x2))
