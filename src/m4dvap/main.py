@@ -91,10 +91,10 @@ def main() -> None:
             
             e = time.time()
             print(f"BI-VAPC executed in {e-s:.2f} seconds")
-            break
             #Optional subsampling for M3C2
             if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:
                 for tx_vapc_out_file in [t1_vapc_out_file, t2_vapc_out_file]:
+                    continue #not used right now
                     if os.path.isfile(tx_vapc_out_file.replace(".laz", "_bk.laz")):
                         continue
                     vapc_command = {
@@ -119,8 +119,8 @@ def main() -> None:
                 m3c2_out_file,
                 configuration
                 )
-            e = time.time()
-            print(f"BI-VAPC executed in {e-s:.2f} seconds")
+            e2 = time.time()
+            print(f"M3C2 executed in {e2-e:.2f} seconds")
             break
             #Add original points to M3C2 result
             if configuration["m3c2_settings"]["subsampling"]["voxel_size"] != 0:

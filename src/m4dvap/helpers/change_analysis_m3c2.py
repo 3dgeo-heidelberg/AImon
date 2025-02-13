@@ -46,7 +46,10 @@ class ChangeAnalysisM3C2:
         """
         epoch_refernce = py4dgeo.Epoch(reference)
         epoch_target = py4dgeo.Epoch(target)
-        epoch_corepoints = py4dgeo.Epoch(corepoints)
+        if corepoints is False:
+            epoch_corepoints = reference
+        else:
+            epoch_corepoints = py4dgeo.Epoch(corepoints)
         m3c2 = py4dgeo.M3C2(
             epochs=(epoch_refernce, epoch_target),
             corepoints=epoch_corepoints.cloud[::],
@@ -180,7 +183,7 @@ class ChangeAnalysisM3C2:
         """
 
         m3c2_config = config["m3c2_settings"]["m3c2"]
-        corepoint_config = config["m3c2_settings"]["corepoints"]
+        corepoint_config = config["m3c2_settings"]["subsampling"]
 
         
         # Mask point clouds based on significant change detected within voxels
@@ -194,7 +197,7 @@ class ChangeAnalysisM3C2:
             return
         
         vapc_config = {
-                "voxel_size":corepoint_config["subsample_distance_m"],
+                "voxel_size":corepoint_config["voxel_size"],
                 "origin":[0,0,0],
                 "attributes":{
                     "intensity":"mean"
@@ -221,8 +224,11 @@ class ChangeAnalysisM3C2:
             vapc.get_data_from_data_handler(data_handler)
             xyzs.append(np.array(vapc.df[["X","Y","Z"]]))
             
-            vapc.reduce_to_voxels()
-            corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
+            if corepoint_config["use_corepoints"]:
+                vapc.reduce_to_voxels()
+                corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
+            else:
+                corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
         #Compute M3C2
         try:
             for i,cp in enumerate(corepoints):
