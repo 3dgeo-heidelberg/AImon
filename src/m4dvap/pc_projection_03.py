@@ -323,17 +323,8 @@ if __name__ == "__main__":
     config = utilities.read_json_file(config_file)"""
 
     prj = PCloudProjection(
-        project=config["pc_projection"]["project"],
-        pc_path=config["pc_projection"]["pc_path"],
-        make_range_image=config["pc_projection"]["make_range_image"],
-        make_color_image=config["pc_projection"]["make_color_image"],
-        top_view=config["pc_projection"]["top_view"],
-        outfolder=config["pc_projection"]["outfolder"],
-        resolution_cm = config["pc_projection"]["resolution_cm"],
-        camera_position = config["pc_projection"]["camera_position"],
-        rgb_light_intensity = config["pc_projection"]["rgb_light_intensity"],
-        range_light_intensity = config["pc_projection"]["range_light_intensity"],
-        sigma = config["pc_projection"]["sigma"]
+        configuration=config,
+        project_name=config["project_setting"]["project_name"],
+        projected_image_folder=config["project_setting"]["output_folder"]
     )
     prj.project_pc()
-
