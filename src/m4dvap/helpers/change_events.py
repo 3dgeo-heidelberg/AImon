@@ -294,7 +294,7 @@ def convert_cluster_to_change_events(m3c2_clustered, configuration):
     with open(ce_file, 'w') as f:
         json.dump(change_events, f, indent=4)
     #delete clustered m3c2 file as it is not needed anymore and split to point clouds
-    os.remove(m3c2_clustered)
+    # os.remove(m3c2_clustered)
 
 
 
@@ -311,7 +311,7 @@ def merge_change_events(change_event_folder):
         None
     """
     merged_file = os.path.join(change_event_folder, "change_events.json")
-    processed_file = os.path.join(change_event_folder, "processed_folders.json")
+    processed_file = os.path.join(change_event_folder, "processed_folders.csv")
     existing_object_ids = set()
     processed_folders = set()
 
@@ -326,7 +326,7 @@ def merge_change_events(change_event_folder):
     # Load processed folders if the file exists
     if os.path.isfile(processed_file):
         with open(processed_file, 'r') as f:
-            processed_folders = set(json.load(f))
+            processed_folders = set(f.readlines())
     
     for folder in os.listdir(change_event_folder):
         folder_path = os.path.join(change_event_folder, folder)
@@ -360,5 +360,5 @@ def merge_change_events(change_event_folder):
 
     # Save the list of processed folders
     with open(processed_file, 'w') as f:
-        json.dump(list(processed_folders), f, indent=4)
+        f.writelines(processed_folders)
     return merged_file
