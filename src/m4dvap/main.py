@@ -11,7 +11,7 @@ from change_projection_04 import ProjectChange
 
 from helpers.utilities import setup_configuration, get_min_sec, Loader
 from helpers.cluster import cluster
-from helpers.change_events import convert_cluster_to_change_events,merge_change_events
+from helpers.change_events import process_m3c2_file_into_change_events
 # from bi_vapc_01 import compute_bitemporal_vapc
 
 import vapc
@@ -120,14 +120,11 @@ def main() -> None:
                 ) is False:
             return
         
-        #Change events of current clusters
-        convert_cluster_to_change_events(
-            m3c2_clustered,
-            configuration
-            )
-                
-        # Merge change events to change event collection
-        merge_change_events(change_event_folder)    # Outputs the change events JSON file path
+
+        
+        #Process clustered M3C2 file into change events
+        process_m3c2_file_into_change_events(m3c2_clustered)
+
 
         # Project the RBG point cloud to image
         pc_prj = PCloudProjection(configuration, project_name, projected_image_folder)
