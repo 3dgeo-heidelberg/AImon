@@ -95,8 +95,6 @@ def get_delta_t(t1_file,
     #print(f"Time difference between the two epochs: {delta_seconds} seconds")
     return delta_seconds
 
-
-
 def setup_configuration(config_file,t1_file,t2_file, timestamp):
     """
     Sets up the configuration for the change detection pipeline.
@@ -302,3 +300,40 @@ class Loader:
     def __exit__(self, exc_type, exc_value, tb):
         # handle exceptions with those variables ^
         self.stop()
+
+
+def build_pipeline_command(folder_path, config_file, default_cmd, use_every_xth_file = 1):
+    """
+    Scans the specified folder for las or laz files, orders them alphabetically,
+    prints a command string with the default command followed by each las or laz file's full path,
+    and returns the list of las or laz filenames.
+    
+    Parameters:
+        folder_path (str): The path to the folder to scan.
+        default_cmd (str): The command prefix to use.
+        
+    Returns:
+        list: A sorted list of las or laz filenames found in the folder.
+    """
+    # List all files in the folder
+    files = os.listdir(folder_path)
+  
+    file_paths = []
+    # Build full file paths for each las or laz file
+    counter = 0
+    for file in files:
+        if file.endswith('.last') or file.endswith('.laz'):
+            counter += 1
+            # Skip files based on the use_every_xth_file parameter
+            if counter % use_every_xth_file != 0:
+                continue
+            full_path = os.path.join(folder_path, file)
+            file_paths.append(full_path)
+    
+    # Create the command string with each file path in quotes
+    command_str = default_cmd + " " + "-c \"%s\""%config_file
+    command_str = command_str + " -f " + " ".join(f'"{fp}"' for fp in file_paths)
+    
+    # Print the command string
+    print(len(file_paths), "files found")
+    print(command_str)
