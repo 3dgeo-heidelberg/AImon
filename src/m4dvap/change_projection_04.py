@@ -96,7 +96,6 @@ class ProjectChange:
         # Open the shapefile to be able to write each polygon in it
         geojson = fiona.open(self.geojson_name, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(4979), 'binary')
         geojson_gis = fiona.open(self.geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(25832))
-        print(change_events.events)
         for change_event in change_events.events:
             
             #if 'undefined' in str(change_event['event_type']): continue
