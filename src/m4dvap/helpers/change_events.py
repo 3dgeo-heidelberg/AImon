@@ -294,6 +294,9 @@ class ChangeEventCollection:
         """
         if not any(ev.object_id == event.object_id for ev in self.events):
             self.events.append(event)
+            # print("Added event:", event.object_id)
+        # else:
+            # print("Event already exists:", event.object_id)
 
     def to_list(self):
         """
@@ -314,7 +317,6 @@ class ChangeEventCollection:
         Load a collection of change events from a JSON file.
         """
         if os.path.exists(filename):
-            print("File exists")
             with open(filename, 'r') as f:
                 data = json.load(f)
             # events = []
@@ -332,6 +334,7 @@ class ChangeEventCollection:
         """
         new_collection = ChangeEventCollection.load_from_file(filename)
         for event in new_collection.events:
+            print("Adding:",event.object_id)
             self.add_event(event)
 
     def merge_from_folder(self, folder):
@@ -411,11 +414,15 @@ def process_m3c2_file_into_change_events(m3c2_clustered):
             coll = ChangeEventCollection.load_from_file(ce_filename)
 
         # Load existing merged change events file and attach new events or create a new one
+        print(ce_filename)
+        print(merged_ce_file)
         if os.path.isfile(merged_ce_file):
+            print("in merge")
             collection = ChangeEventCollection.load_from_file(merged_ce_file)
             # Suppose you have another JSON file with new events
-            collection.attach_from_file(ce_filename)
+            for event in coll.events:
+                collection.add_event(event)
             # Save the updated collection
-            collection.save_to_file(ce_filename)
+            collection.save_to_file(merged_ce_file)
         else:
             coll.save_to_file(merged_ce_file)
