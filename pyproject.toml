@@ -35,7 +35,8 @@ dependencies = [
   "vapc @ git+https://github.com/3dgeo-heidelberg/vapc.git@main",
   "py4dgeo",
   "PySide6",
-  "opencv-python"
+  "opencv-python",
+  "pyproj"
 ]
 
 
