@@ -1,12 +1,15 @@
+import os
+import json
+import numpy as np
+import pandas as pd
+
 import joblib
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import jaccard_score, f1_score, accuracy_score, matthews_corrcoef, cohen_kappa_score
-import pandas as pd
-import json
-import os
-import numpy as np
+from sklearn.preprocessing import StandardScaler
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -42,7 +45,10 @@ def apply_trained_model_to_unlabelled_data(model, unlabelled_file, output_file):
     X_unlabelled = features_unlabelled_df_without_id.values
     y_unlabelled_pred = model.predict(X_unlabelled)
     features_unlabelled_df['event_type'] = y_unlabelled_pred
+    unlabelled_coll = map_label_to_unlabelled_collection(unlabelled_coll, features_unlabelled_df)
+    save_events_to_json(unlabelled_coll, output_file)
 
+def map_label_to_unlabelled_collection(unlabelled_coll, features_unlabelled_df):
     # Mapping from object_id to the chosen cluster label and saving of results
     label_mapping = dict(zip(features_unlabelled_df['object_id'], features_unlabelled_df['event_type']))
 
@@ -54,8 +60,9 @@ def apply_trained_model_to_unlabelled_data(model, unlabelled_file, output_file):
         else:
             # Mark events dropped due to missing features as None
             event['event_type'] = None
+    return unlabelled_coll
 
-    # Save the updated events to a new JSON file.
+def save_events_to_json(unlabelled_coll, output_file):    # Save the updated events to a new JSON file.
     with open(output_file, 'w') as f:
         json.dump(unlabelled_coll, f, indent=4)    
 
@@ -219,3 +226,91 @@ def extract_features(events):
         rows.append(row)
     df = pd.DataFrame(rows)
     return df
+
+
+
+
+
+####################### UMAP ###########################
+def extract_features_umap(events):
+    """
+    Convert the change events into a feature matrix.
+    This example assumes each event contains an "object_id".
+    The features include:
+      - Basic event info (e.g., delta_t_hours, number_of_points)
+      - Change magnitude statistics (mean, std, min, max, median, quant90, quant95, quant99)
+      - Convex hull properties (hull surface area, volume, and ratio)
+      - Geometric features from both epochs
+    """
+    rows = []
+    for event in events:
+        row = {}
+        # Basic features
+        # row['delta_t_hours'] = event.get('delta_t_hours', np.nan)
+        # row['number_of_points'] = event.get('number_of_points', np.nan)
+        
+        # Change magnitude statistics
+        change_mags = event.get('change_magnitudes', {})
+        for stat in ['mean', 'std', 'min', 'max', 'median', 'quant90', 'quant95', 'quant99']:
+            row[f'change_{stat}'] = change_mags.get(stat, 0)
+
+        # Convex hull properties
+        convex_hull = event.get('convex_hull', {})
+        # row['hull_surface_area'] = convex_hull.get('surface_area', 0)
+        # row['hull_volume'] = convex_hull.get('volume', 0)
+        row['hull_surf_vol_ratio'] = convex_hull.get('surface_area_to_volume_ratio', 0)
+        
+        # Geometric features from both epochs (if available)
+        geom = event.get('geometric_features_both_epochs', {})
+        for feat in ['sum_of_eigenvalues', 'omnivariance', 'eigentropy', 'anisotropy',
+                     'planarity', 'linearity', 'surface_variation', 'sphericity', 'verticality']:
+            row[f'geom_{feat}'] = geom.get(feat, 0)
+
+        geo_epoch_1 = event.get('geometric_features_epoch_1', {})
+        for feat in ['sum_of_eigenvalues', 'omnivariance', 'eigentropy', 'anisotropy',
+                     'planarity', 'linearity', 'surface_variation', 'sphericity', 'verticality']:
+            row[f'geo_epoch_1_{feat}'] = geo_epoch_1.get(feat, 0)
+
+        geo_epoch_2 = event.get('geometric_features_epoch_2', {})
+        for feat in ['sum_of_eigenvalues', 'omnivariance', 'eigentropy', 'anisotropy',
+                     'planarity', 'linearity', 'surface_variation', 'sphericity', 'verticality']:
+            row[f'geo_epoch_2_{feat}'] = geo_epoch_2.get(feat, 0)
+        
+        # Keep the unique identifier
+        row['object_id'] = event.get('object_id')
+        row["event_type"] = event.get('event_type', "undefined")
+        
+        rows.append(row)
+    df = pd.DataFrame(rows)
+    return df
+def plot_umap_clusters(X_umap, labels):
+    plt.figure(figsize=(5, 4))
+    unique_labels = np.unique(labels)
+    for label in unique_labels:
+        mask = labels == label
+        plt.scatter(X_umap[mask, 0], X_umap[mask, 1], label=f'Cluster {label}', s=1)
+    plt.legend()
+    plt.xlabel('UMAP Component 1')
+    plt.ylabel('UMAP Component 2')
+    plt.show()
+
+def load_and_prepare_data_for_UMAP(change_events_file):
+    """
+    Load and prepare data for UMAP dimensionality reduction.
+    """
+    # Load the change events
+    events = load_change_events(change_events_file)# Extract features into a DataFrame
+    features_df = extract_features_umap(events)
+
+    # Handle missing values by dropping them
+    features_df = features_df.dropna()
+    if features_df.empty:
+        raise ValueError("No complete data available after dropping missing values.")
+    # Separate the identifier from features
+    features_df_without_id = features_df.drop(columns=["object_id","event_type"])
+
+    # Standardize the feature set for clustering
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(features_df_without_id.values)
+
+    return features_df_without_id, features_df, X_scaled, events

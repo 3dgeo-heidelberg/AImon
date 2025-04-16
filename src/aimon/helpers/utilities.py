@@ -325,7 +325,7 @@ def build_pipeline_command(folder_path, config_file, default_cmd, use_every_xth_
         if file.endswith('.last') or file.endswith('.laz'):
             counter += 1
             # Skip files based on the use_every_xth_file parameter
-            if counter % use_every_xth_file != 0:
+            if counter % use_every_xth_file != 0 and counter != 1:
                 continue
             full_path = os.path.join(folder_path, file)
             file_paths.append(full_path)
@@ -337,3 +337,4 @@ def build_pipeline_command(folder_path, config_file, default_cmd, use_every_xth_
     # Print the command string
     print(len(file_paths), "files found")
     print(command_str)
+    return command_str
