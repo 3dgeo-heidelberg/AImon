@@ -24,7 +24,7 @@ AImon is a comprehensive tool designed for processing and projecting point cloud
 To avoid negative interactions between installed packages and version conflicts, you should create a conda environment for each new project. You do so by executing:
 ```bash
 # First, create new environment
-$ conda create --name aimon python=3.11
+$ conda create --name aimon python=3.11 -y
 
 # Then activate the environment using:
 $ conda activate aimon
