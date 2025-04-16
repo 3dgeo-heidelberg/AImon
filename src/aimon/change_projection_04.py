@@ -9,6 +9,9 @@ import fiona
 from aimon.helpers import utilities
 from aimon.helpers.change_events import ChangeEventCollection
 import json
+from xml.etree.ElementTree import Element, SubElement, tostring
+import xml.dom.minidom
+from pyproj import Transformer
 
 class ProjectChange:
     """
@@ -224,9 +227,6 @@ class ProjectChange:
         self.kml_name_gis = f"{os.path.abspath('.')}/{self.kml_name_gis}"
         geojson_data = utilities.read_json_file(self.geojson_name_gis)
 
-        from xml.etree.ElementTree import Element, SubElement, tostring
-        import xml.dom.minidom
-        from pyproj import Transformer
         transformer = Transformer.from_crs(f"EPSG:{self.epsg}", "EPSG:4326", always_xy=True)
         #############################
 
