@@ -298,6 +298,18 @@ class ChangeEventCollection:
         # else:
             # print("Event already exists:", event.object_id)
 
+    
+    def add_event_type_label(self, object_id, event_type):
+        """
+        Add a change event if its object_id is not already present.
+        """
+        # Check where ev.object_id is object_id, add event_type to that event
+        for ev in self.events:
+            if ev.object_id == object_id:
+                ev.event_type = event_type
+                # print("Added event type:", event_type, "to event:", object_id)
+                return
+
     def to_list(self):
         """
         Convert the collection to a list of dictionaries.
@@ -334,7 +346,7 @@ class ChangeEventCollection:
         """
         new_collection = ChangeEventCollection.load_from_file(filename)
         for event in new_collection.events:
-            print("Adding:",event.object_id)
+            # print("Adding:",event.object_id)
             self.add_event(event)
 
     def merge_from_folder(self, folder):
@@ -404,20 +416,21 @@ def process_m3c2_file_into_change_events(m3c2_clustered):
         if not os.path.isfile(ce_filename):
             try:
                 coll = process_m3c2_file(m3c2_clustered)
-                print("Processed change events:")
-                print(coll)
+                # print("Processed change events:")
+                # print(coll)
             except Exception as e:
                 print("Error processing m3c2 file:", e)
                 coll = ChangeEventCollection()
                 coll.save_to_file(ce_filename)
         else:
-            coll = ChangeEventCollection.load_from_file(ce_filename)
+            return True
+            # coll = ChangeEventCollection.load_from_file(ce_filename)
 
         # Load existing merged change events file and attach new events or create a new one
-        print(ce_filename)
-        print(merged_ce_file)
+        # print(ce_filename)
+        # print(merged_ce_file)
         if os.path.isfile(merged_ce_file):
-            print("in merge")
+            # print("in merge")
             collection = ChangeEventCollection.load_from_file(merged_ce_file)
             # Suppose you have another JSON file with new events
             for event in coll.events:

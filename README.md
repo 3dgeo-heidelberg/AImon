@@ -16,7 +16,7 @@ m4dvap is a comprehensive tool designed for processing and projecting point clou
 
 ### Prerequisites
 
-- **Python 3.10+**
+- **Python 3.11+**
 - **Conda** (for environment management)
 
 ### Setting Up the Conda Environment
@@ -32,6 +32,36 @@ $ conda env create -f environment.yml
 
 # Activate environment 
 $ conda activate m4dvap
+
+```
+
+## Creating Conda Environments
+To avoid negative interactions between installed packages and version conflicts, you should create a conda environment for each new project. You do so by executing:
+```bash
+# First, create new environment
+$ conda create --name aimon python=3.11
+
+# Then activate the environment using:
+$ conda activate aimon
+
+```
+
+Using AImon requires Python 3.11 or higher.
+Clone and run this application:
+
+```bash
+
+# Clone this repository
+$ git clone https://github.com/3dgeo-heidelberg/aimon.git
+
+# Go into the repository
+$ cd aimon
+
+# Installing the release version using pip
+$ python -m pip install .
+
+#OR if editable needed
+$ python -m pip install -v --editable .
 
 ```
 

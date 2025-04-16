@@ -1,0 +1,44 @@
+# This section provides general project metadata that is used across
+# a variety of build tools. Notably, the version specified here is the
+# single source of truth for vapc's version
+
+[project]
+name = "AImon"
+version = "0.0.1"
+description = "AImon"
+readme = "README.md"
+maintainers = [
+    {   name = "William Albert", email = "albert@uni-heidelberg.de",
+        name = "Ronald Tabernig", email = "ronald.tabernig@uni-heidelberg.de" },
+]
+requires-python = ">=3.9"
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Intended Audience :: Science/Research",
+]
+dependencies = [
+  "python=3.11"
+  "numpy"
+  "pandas"
+  "scipy"
+  "scikit-learn"
+  "laspy[lazrs]"
+  "rasterio"
+  "matplotlib"
+  "plyfile"
+  "shapely"
+  "fiona"
+  "pip"
+]
+
+
+# We restrict ourselves to recent Python versions.
+
+# filterwarnings = [
+#     "ignore:The localize method is no longer necessary, as this time zone supports the fold attribute",
+#     "ignore:distutils Version classes are deprecated. Use packaging.version instead.",
+# ]

@@ -114,11 +114,10 @@ def main() -> None:
 
 
         #Cluster Changes
-        if cluster(m3c2_out_file, 
+        cluster(m3c2_out_file, 
                 m3c2_clustered,
                 configuration
-                ) is False:
-            return
+                )
         
 
         
@@ -126,13 +125,13 @@ def main() -> None:
         process_m3c2_file_into_change_events(m3c2_clustered)
 
 
-        # Project the RBG point cloud to image
-        pc_prj = PCloudProjection(configuration, project_name, projected_image_folder)
-        pc_prj.project_pc()
-        
-        # Project the 3D change events point cloud to pixel and UTM 32N coordinates
-        change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder)
-        change_prj.project_change()
+    # Project the RBG point cloud to image
+    pc_prj = PCloudProjection(configuration, project_name, projected_image_folder)
+    pc_prj.project_pc()
+    
+    # Project the 3D change events point cloud to pixel and UTM 32N coordinates
+    change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder)
+    change_prj.project_change()
     loader.stop()
 
 
