@@ -8,11 +8,15 @@
 
 ###########################################
 
+import sys
+import json
 import os
 import numpy as np
 import py4dgeo
-from helpers.utilities import read_json_file
+from functools import partial
+from .utilities import read_json_file
 from vapc import Vapc, DataHandler, timeit, trace
+from multiprocessing import Pool
 import pandas as pd
 
 
@@ -245,6 +249,7 @@ class ChangeAnalysisM3C2:
                 #Filter for change bigger then level of detection 
                 rel_change_mask = np.abs(m3c2_distances) >= uncertainties["lodetection"]
                 # Add points with significant change to the output
+                print(m3c2_distances[rel_change_mask])
                 distances.append(m3c2_distances[rel_change_mask])
                 lo_detections.append(uncertainties["lodetection"][rel_change_mask])
                 spread1.append(uncertainties["spread1"][rel_change_mask])
