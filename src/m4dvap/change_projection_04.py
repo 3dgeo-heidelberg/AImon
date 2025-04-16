@@ -7,6 +7,7 @@ import rasterio
 from shapely.geometry import mapping, Polygon
 import fiona
 from helpers import utilities
+from helpers.change_events import ChangeEventCollection
 import json
 
 class ProjectChange:
@@ -72,8 +73,9 @@ class ProjectChange:
         top_view = json.loads(image_metadata_loaded['top_view'].lower()) # Using json.loads() method to convert the string "True"/"False" to a boolean
         
         # Get change events dictionnary in json file
-        change_events = utilities.read_json_file(self.path_change_events)
-        
+        # change_events = utilities.read_json_file(self.path_change_events)
+        change_events = ChangeEventCollection()
+        change_events = change_events.load_from_file(self.path_change_events)
         # Create the schema for the attributes of the geojson
         schema = {
             'geometry': 'Polygon',
@@ -87,18 +89,19 @@ class ProjectChange:
                 't_max': 'str',
                 'change_magnitudes_mean': 'float',
                 'volumes_from_convex_hulls': 'float',
-                'filepath': 'str'
+                'cluster_point_cloud': 'str',
+                'cluster_point_cloud_chull': 'str'
                 }
             }
         # Open the shapefile to be able to write each polygon in it
         geojson = fiona.open(self.geojson_name, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(4979), 'binary')
         geojson_gis = fiona.open(self.geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(25832))
-
-        for change_event in change_events:
+        for change_event in change_events.events:
+            
             #if 'undefined' in str(change_event['event_type']): continue
 
             # Fetch contour points in WGS84 coordinate system
-            change_event_pts_og = change_event['points_builing_convex_hulls'][0]
+            change_event_pts_og = change_event.convex_hull["points_building"]
             change_event_pts_og = np.asarray(change_event_pts_og)
             
             # Handle the empty array, if any
@@ -111,16 +114,17 @@ class ProjectChange:
             geojson_gis.write({
                 'geometry': mapping(self.polygon_gis),
                 'properties': {
-                    'event_type': str(change_event['event_type'][0]),
-                    'object_id': str(change_event['object_id']),
+                    'event_type': str(change_event.event_type),
+                    'object_id': str(change_event.object_id),
                     'X_centroid': float(self.centroid_gis[0]),
                     'Y_centroid': float(self.centroid_gis[1]),
                     'Z_centroid': float(self.centroid_gis[2]),
-                    't_min': str(change_event['t_min']),
-                    't_max': str(change_event['t_min']),
-                    'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
-                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
-                    'filepath': str(change_event['filepath'])
+                    't_min': str(change_event.t_min),
+                    't_max': str(change_event.t_max),
+                    'change_magnitudes_mean': float(change_event.change_magnitudes["mean"]),
+                    'volumes_from_convex_hulls': float(change_event.convex_hull["volume"]),
+                    'cluster_point_cloud': str(change_event.cluster_point_cloud),
+                    'cluster_point_cloud_chull': str(change_event.cluster_point_cloud_chull)
                 }
             })
 
@@ -165,16 +169,17 @@ class ProjectChange:
             geojson.write({
                 'geometry': mapping(polygon),
                 'properties': {
-                    'event_type': str(change_event['event_type'][0]),
-                    'object_id': str(change_event['object_id']),
+                    'event_type': str(change_event.event_type),
+                    'object_id': str(change_event.object_id),
                     'X_centroid': float(centroid[0]),
                     'Y_centroid': float(centroid[1]),
                     'Z_centroid': float(centroid[2]),
-                    't_min': str(change_event['t_min']),
-                    't_max': str(change_event['t_min']),
-                    'change_magnitudes_mean': float(change_event['change_magnitudes_mean'][0]),
-                    'volumes_from_convex_hulls': float(change_event['volumes_from_convex_hulls'][0]),
-                    'filepath': str(change_event['filepath'])
+                    't_min': str(change_event.t_min),
+                    't_max': str(change_event.t_max),
+                    'change_magnitudes_mean': float(change_event.change_magnitudes["mean"]),
+                    'volumes_from_convex_hulls': float(change_event.convex_hull["volume"]),
+                    'cluster_point_cloud': str(change_event.cluster_point_cloud),
+                    'cluster_point_cloud_chull': str(change_event.cluster_point_cloud_chull)
                 }
             })
         geojson.close()

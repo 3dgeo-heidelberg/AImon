@@ -46,7 +46,10 @@ class ChangeAnalysisM3C2:
         """
         epoch_refernce = py4dgeo.Epoch(reference)
         epoch_target = py4dgeo.Epoch(target)
-        epoch_corepoints = py4dgeo.Epoch(corepoints)
+        if corepoints is False:
+            epoch_corepoints = reference
+        else:
+            epoch_corepoints = py4dgeo.Epoch(corepoints)
         m3c2 = py4dgeo.M3C2(
             epochs=(epoch_refernce, epoch_target),
             corepoints=epoch_corepoints.cloud[::],
@@ -57,7 +60,9 @@ class ChangeAnalysisM3C2:
         )
         # Run the distance computation
         m3c2_distances, uncertainties = m3c2.run()
-        return m3c2_distances, uncertainties
+        normal_directions = m3c2.directions()
+        normal_radii = m3c2.directions_radii()
+        return m3c2_distances, uncertainties, normal_directions, normal_radii
 
     @timeit
     @trace
@@ -178,7 +183,15 @@ class ChangeAnalysisM3C2:
             - Results are saved in LAS format if significant changes are detected.
             - If an error occurs during computation, a no-change file is created with the error message.
         """
+        outfile_m3c2_no_change = outfile_m3c2[:-4]+".txt"
 
+        if os.path.isfile(outfile_m3c2):
+            #print("Result for %s already computed."%outfile_m3c2)
+            return
+        if os.path.isfile(outfile_m3c2_no_change):
+            #print("Result for %s already computed."%outfile_m3c2)
+            return
+        
         m3c2_config = config["m3c2_settings"]["m3c2"]
         corepoint_config = config["m3c2_settings"]["corepoints"]
 
@@ -187,20 +200,13 @@ class ChangeAnalysisM3C2:
         if not os.path.isfile(t1_file_vapc) or not os.path.isfile(t2_file_vapc):
             return
 
-        outfile_m3c2_no_change = outfile_m3c2[:-4]+".txt"
 
         if os.path.isfile(outfile_m3c2) or os.path.isfile(outfile_m3c2_no_change):
             #print("Result for %s already computed."%outfile_m3c2)
             return
         
         vapc_config = {
-                "voxel_size":corepoint_config["subsample_distance_m"],
-                "origin":[0,0,0],
-                "attributes":{
-                    "intensity":"mean"
-                },
-                "compute":[
-                ],
+                "voxel_size":corepoint_config["point_spacing_m"],
                 "return_at":"closest_to_center_of_gravity"				
             }
         
@@ -208,47 +214,81 @@ class ChangeAnalysisM3C2:
         corepoints = []
         distances = []
         lo_detections = []
+        nx = []
+        ny = []
+        nz = []
+        n_radius = []
+        spread1 = []
+        spread2 =[]
+        num_samples1 = []
+        num_samples2 = []
         epoch_ids = []
+
         for i,masked_pc in enumerate([t1_file_vapc,t2_file_vapc]):
+            # Load xyz data
             data_handler = DataHandler(masked_pc
                                         )
             data_handler.load_las_files()
-            vapc = Vapc(vapc_config["voxel_size"],
-                        vapc_config["origin"],
-                        vapc_config["attributes"],
-                        vapc_config["compute"],
-                        vapc_config["return_at"])
+            vapc = Vapc(voxel_size = vapc_config["voxel_size"],
+                        return_at= vapc_config["return_at"])
             vapc.get_data_from_data_handler(data_handler)
             xyzs.append(np.array(vapc.df[["X","Y","Z"]]))
             
-            vapc.reduce_to_voxels()
-            corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
-        #Compute M3C2
+            # Optionally get corepoints for M3C2 by reducing to 
+            # closest to center of gravity per voxels
+            if corepoint_config["use"]:
+                vapc.reduce_to_voxels()
+                corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
+            else:
+                corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
+        # Compute M3C2
         try:
+            # Compute M3C2 for both epochs in both directions.
             for i,cp in enumerate(corepoints):
-                m3c2_distances, uncertainties = ChangeAnalysisM3C2.compute_m3c2(xyzs[i],xyzs[-i-1],cp,m3c2_config)
+                m3c2_distances, uncertainties,normal_directions, normal_radii = ChangeAnalysisM3C2.compute_m3c2(xyzs[i],xyzs[-i-1],cp,m3c2_config)
                 #Filter for change bigger then level of detection 
                 rel_change_mask = np.abs(m3c2_distances) >= uncertainties["lodetection"]
-                distance = m3c2_distances[rel_change_mask]
-                distances.append(distance)
+                # Add points with significant change to the output
+                print(m3c2_distances[rel_change_mask])
+                distances.append(m3c2_distances[rel_change_mask])
                 lo_detections.append(uncertainties["lodetection"][rel_change_mask])
-                ep = np.ones(shape = (distance.shape[0],1))*i
+                spread1.append(uncertainties["spread1"][rel_change_mask])
+                spread2.append(uncertainties["spread2"][rel_change_mask])
+                num_samples1.append(uncertainties["num_samples1"][rel_change_mask])
+                num_samples2.append(uncertainties["num_samples2"][rel_change_mask])
+                nx.append(normal_directions.T[0][rel_change_mask])
+                ny.append(normal_directions.T[1][rel_change_mask])
+                nz.append(normal_directions.T[2][rel_change_mask])
+                n_radius.append(normal_radii[rel_change_mask])
+                ep = np.ones(shape = (m3c2_distances[rel_change_mask].shape[0],1))*i
                 epoch_ids.append(ep)
                 corepoints[i] = cp[rel_change_mask]
         except Exception as error:
             with open(outfile_m3c2_no_change,"w") as ef:
                 ef.write("%s"%error)
-
+            return
+        # Save the results
         dh = DataHandler("")
         corepoints = np.vstack(corepoints)
+        # Distances
         distances = np.concatenate(distances)
+        # Level of detection
         lo_detections = np.concatenate(lo_detections)
+        spread1 = np.concatenate(spread1)
+        spread2 = np.concatenate(spread2)
+        num_samples1 = np.concatenate(num_samples1)
+        num_samples2 = np.concatenate(num_samples2)
+        # Normals
+        nx = np.concatenate(nx)
+        ny = np.concatenate(ny)
+        nz = np.concatenate(nz)
+        n_radius = np.concatenate(n_radius)
+
         epoch_ids = np.concatenate(epoch_ids)
-        dh.df = pd.DataFrame(np.c_[corepoints,distances,lo_detections,epoch_ids
-                            ], columns= ["X","Y","Z","M3C2_distance","M3C2_lodetection","epoch"])
+        dh.df = pd.DataFrame(np.c_[corepoints,distances,lo_detections,epoch_ids,nx,ny,nz,n_radius,spread1,spread2,num_samples1,num_samples2
+                            ], columns= ["X","Y","Z","M3C2_distance","M3C2_lodetection","epoch","nx","ny","nz","n_radius","spread1","spread2","num_samples1","num_samples2"])
         dh.save_as_las(outfile_m3c2)
         return dh.df
-
 
     @timeit
     @trace

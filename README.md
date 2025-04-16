@@ -16,7 +16,7 @@ m4dvap is a comprehensive tool designed for processing and projecting point clou
 
 ### Prerequisites
 
-- **Python 3.10+**
+- **Python 3.11+**
 - **Conda** (for environment management)
 
 ### Setting Up the Conda Environment
@@ -24,7 +24,7 @@ m4dvap is a comprehensive tool designed for processing and projecting point clou
 1. **Clone the Repository**
 
 ```bash
-$ git clone https://github.com/yourusername/m4dvap.git
+$ git clone https://github.com/3dgeo-heidelberg/m4dvap.git
 $ cd m4dvap
 
 # Install a Conda Environment
@@ -35,6 +35,36 @@ $ conda activate m4dvap
 
 ```
 
+## Creating Conda Environments
+To avoid negative interactions between installed packages and version conflicts, you should create a conda environment for each new project. You do so by executing:
+```bash
+# First, create new environment
+$ conda create --name aimon python=3.11
+
+# Then activate the environment using:
+$ conda activate aimon
+
+```
+
+Using AImon requires Python 3.11 or higher.
+Clone and run this application:
+
+```bash
+
+# Clone this repository
+$ git clone https://github.com/3dgeo-heidelberg/aimon.git
+
+# Go into the repository
+$ cd aimon
+
+# Installing the release version using pip
+$ python -m pip install .
+
+#OR if editable needed
+$ python -m pip install -v --editable .
+
+```
+
 # Key Functions
 ## main.py
 Serves as the entry point for the m4dvap processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
@@ -42,5 +72,5 @@ Serves as the entry point for the m4dvap processing workflow. It orchestrates th
 Usage:
 
 ```
-python main.py "config/Trier_2d_projection_config.json" "path/to/t1_file.las" "path/to/t2_file.las"
+python main.py -c "config" -f "path/to/t1_file.las" "path/to/t2_file.las"
 ```
