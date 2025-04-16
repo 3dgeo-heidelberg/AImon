@@ -1,8 +1,7 @@
-# m4dvap: Modular 4-Dimensional Visualization and Analysis for Point clouds
-
+# AImon5.0
 ## Overview
 
-m4dvap is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data.
+AImon is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data.
 
 ## Features
 
@@ -18,20 +17,6 @@ m4dvap is a comprehensive tool designed for processing and projecting point clou
 
 - **Python 3.11+**
 - **Conda** (for environment management)
-
-### Setting Up the Conda Environment
-
-1. **Clone the Repository**
-
-```bash
-$ git clone https://github.com/3dgeo-heidelberg/m4dvap.git
-$ cd m4dvap
-
-# Install a Conda Environment
-$ conda env create -f environment.yml
-
-# Activate environment 
-$ conda activate m4dvap
 
 ```
 
