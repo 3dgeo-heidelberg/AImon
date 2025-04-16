@@ -46,31 +46,6 @@ class ProjectChange:
 
 
     def project_change(self):
-        # Load EXIF data from an image
-        try:
-            # Retrieve the metadata
-            #self.bg_img_path = os.path.join(os.getcwd(), self.bg_img_path)
-            with rasterio.open(self.bg_img_path) as src:
-                image_metadata_loaded = dict(src.tags().items())
-        except:
-            print("Missing some information, cannot project change into image")
-            return
-
-        # Get metadata of the image. Necessary for the projection of the change event points
-        pc_mean_x = float(image_metadata_loaded['pc_mean_x'])
-        pc_mean_y = float(image_metadata_loaded['pc_mean_y'])
-        pc_mean_z = float(image_metadata_loaded['pc_mean_z'])
-        camera_position_x = float(image_metadata_loaded['camera_position_x'])
-        camera_position_y = float(image_metadata_loaded['camera_position_y'])
-        camera_position_z = float(image_metadata_loaded['camera_position_z'])
-        h_img_res = float(image_metadata_loaded['h_img_res'])
-        v_img_res = float(image_metadata_loaded['v_img_res'])
-        h_fov_x = float(image_metadata_loaded['h_fov_x'])
-        h_fov_y = float(image_metadata_loaded['h_fov_y'])
-        v_fov_x = float(image_metadata_loaded['v_fov_x'])
-        v_fov_y = float(image_metadata_loaded['v_fov_y'])
-        res = float(image_metadata_loaded['res'])
-        top_view = json.loads(image_metadata_loaded['top_view'].lower()) # Using json.loads() method to convert the string "True"/"False" to a boolean
         
         # Get change events dictionnary in json file
         # change_events = utilities.read_json_file(self.path_change_events)
@@ -127,7 +102,45 @@ class ProjectChange:
                     'cluster_point_cloud_chull': str(change_event.cluster_point_cloud_chull)
                 }
             })
+        geojson_gis.close()
 
+        # Load EXIF data from an image
+        try:
+            # Retrieve the metadata
+            #self.bg_img_path = os.path.join(os.getcwd(), self.bg_img_path)
+            with rasterio.open(self.bg_img_path) as src:
+                image_metadata_loaded = dict(src.tags().items())
+        except:
+            print("Missing some information, cannot project change into image")
+            return
+
+        # Get metadata of the image. Necessary for the projection of the change event points
+        pc_mean_x = float(image_metadata_loaded['pc_mean_x'])
+        pc_mean_y = float(image_metadata_loaded['pc_mean_y'])
+        pc_mean_z = float(image_metadata_loaded['pc_mean_z'])
+        camera_position_x = float(image_metadata_loaded['camera_position_x'])
+        camera_position_y = float(image_metadata_loaded['camera_position_y'])
+        camera_position_z = float(image_metadata_loaded['camera_position_z'])
+        h_img_res = float(image_metadata_loaded['h_img_res'])
+        v_img_res = float(image_metadata_loaded['v_img_res'])
+        h_fov_x = float(image_metadata_loaded['h_fov_x'])
+        h_fov_y = float(image_metadata_loaded['h_fov_y'])
+        v_fov_x = float(image_metadata_loaded['v_fov_x'])
+        v_fov_y = float(image_metadata_loaded['v_fov_y'])
+        res = float(image_metadata_loaded['res'])
+        top_view = json.loads(image_metadata_loaded['top_view'].lower()) # Using json.loads() method to convert the string "True"/"False" to a boolean
+        
+        for change_event in change_events.events:
+            #if 'undefined' in str(change_event['event_type']): continue
+
+            # Fetch contour points in WGS84 coordinate system
+            change_event_pts_og = change_event.convex_hull["points_building"]
+            change_event_pts_og = np.asarray(change_event_pts_og)
+            
+            # Handle the empty array, if any
+            if change_event_pts_og.shape[0] == 0:
+                continue
+            
             
             # If top_view is True, rotate the change events the same way the point cloud was rotated to make the top view
             if top_view:
@@ -183,7 +196,6 @@ class ProjectChange:
                 }
             })
         geojson.close()
-        geojson_gis.close()
 
         #self.geojson2kml()
 
