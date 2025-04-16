@@ -4,6 +4,8 @@
 *.pyc
 tmp/*
 *.log
+*.obj
+*AImon.egg-info
 *.geojson
 *.json
 out/*

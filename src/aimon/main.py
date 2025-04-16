@@ -39,8 +39,8 @@ def fn_parse_args():
             args_config_file = ""
         # In case it's Ubuntu (Will)
         else:
-            args_filenames = ['/home/william/Documents/Work/m4dvap_tests/HighRes_ScanPos310 - SINGLESCANS - 240822_063028.laz', '/home/william/Documents/Work/m4dvap_tests/HighRes_ScanPos313 - SINGLESCANS - 240828_063004.laz']
-            args_config_file = "/home/william/Documents/Work/m4dvap_tests/"
+            args_filenames = ["/home/william/Documents/DATA/Obergurgl/obergurgl_pls/ScanPos007 - SINGLESCANS - 210622_121528.laz", "/home/william/Documents/DATA/Obergurgl/obergurgl_pls/ScanPos007 - SINGLESCANS - 210622_151528.laz"]
+            args_config_file = "/home/william/Documents/DATA/Obergurgl/aimon_configs/Obergurgl_dev.json"
 
         parser.add_argument('-c', '--config_file', default=args_config_file, help='Configuration of the processing pipeline.')
         parser.add_argument('-f', '--filenames', default=args_filenames, nargs='+', help='List of filenames')
@@ -130,7 +130,8 @@ def main() -> None:
     pc_prj.project_pc()
     
     # Project the 3D change events point cloud to pixel and UTM 32N coordinates
-    change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder)
+    epsg = int(configuration['pc_projection']['epsg'])
+    change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder, epsg)
     change_prj.project_change()
     loader.stop()
 
