@@ -198,7 +198,7 @@ class ProjectChange:
             })
         geojson.close()
 
-        #self.geojson2kml()
+        self.geojson2kml()
 
 
     def project_gis_layer(self, change_event_pts_og):
@@ -219,59 +219,46 @@ class ProjectChange:
         self.centroid_gis = np.mean(change_event_pts_og, axis=0)
 
 
-    # TODO: make it work
     def geojson2kml(self):
         self.kml_name_gis = self.geojson_name_gis.replace('.geojson', ".kml")
         self.kml_name_gis = f"{os.path.abspath('.')}/{self.kml_name_gis}"
         geojson_data = utilities.read_json_file(self.geojson_name_gis)
 
-        from xml.etree.ElementTree import Element, SubElement, tostring, ElementTree
+        from xml.etree.ElementTree import Element, SubElement, tostring
         import xml.dom.minidom
+        from pyproj import Transformer
+        transformer = Transformer.from_crs(f"EPSG:{self.epsg}", "EPSG:4326", always_xy=True)
         #############################
-        
-        # Helper function to create XML elements
-        def create_simple_field(parent, name, field_type):
-            simple_field = SubElement(parent, "SimpleField", name=name, type=field_type)
-            return simple_field
 
         # Initialize KML structure
         kml = Element('kml', xmlns="http://www.opengis.net/kml/2.2")
         document = SubElement(kml, 'Document', id="root_doc")
 
-        # Schema definition
-        schema = SubElement(document, 'Schema', name="trier_change_events_gis", id="trier_change_events_gis")
-        fields = [
-            ("event_type", "string"),
-            ("object_id", "string"),
-            ("X_centroid", "float"),
-            ("Y_centroid", "float"),
-            ("Z_centroid", "float")
-        ]
-        for name, field_type in fields:
-            create_simple_field(schema, name, field_type)
-
         # Folder for Placemarks
         folder = SubElement(document, 'Folder')
         folder_name = SubElement(folder, 'name')
-        folder_name.text = "trier_change_events_gis"
+        folder_name.text = "change_events_gis"
+
+        # Fetch fields
+        field_names = list(geojson_data['features'][0]['properties'].keys())
+        fields = []
 
         # Generate Placemarks from GeoJSON
         for feature in geojson_data.get("features", []):
             properties = feature.get("properties", {})
             geometry = feature.get("geometry", {})
             
-            # Extract values from properties
-            event_type = properties.get("event_type", "Unknown")
-            object_id = properties.get("object_id", "Unknown")
-            x_centroid = str(properties.get("X_centroid", 0))
-            y_centroid = str(properties.get("Y_centroid", 0))
-            z_centroid = str(properties.get("Z_centroid", 0))
+            for field in field_names:
+                propertie = str(properties.get(field, "string"))
+                fields.append((field, propertie))
             
             # Extract coordinates
             coordinates = ""
             if geometry.get("type") == "Polygon":
                 for ring in geometry.get("coordinates", []):
-                    coordinates += " ".join(f"{lon},{lat}" for lon, lat in ring) + " "
+                    for lon, lat in ring:
+                        lon, lat = transformer.transform(lon, lat)
+                        coordinates += f"{lon},{lat} "
             
             # Create Placemark
             placemark = SubElement(folder, 'Placemark')
@@ -286,16 +273,10 @@ class ProjectChange:
             fill.text = "0"
             
             extended_data = SubElement(placemark, 'ExtendedData')
-            schema_data = SubElement(extended_data, 'SchemaData', schemaUrl="#trier_change_events_gis")
+            schema_data = SubElement(extended_data, 'SchemaData', schemaUrl="#change_events_gis")
             
             # Add properties to SchemaData
-            for name, value in [
-                ("event_type", event_type),
-                ("object_id", object_id),
-                ("X_centroid", x_centroid),
-                ("Y_centroid", y_centroid),
-                ("Z_centroid", z_centroid)
-            ]:
+            for name, value in fields:
                 simple_data = SubElement(schema_data, 'SimpleData', name=name)
                 simple_data.text = value
 
@@ -321,9 +302,6 @@ if __name__ == "__main__":
     parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
     args = parser.parse_args()
     config = utilities.read_json_file(args.config)
-
-    """config_file = r"config/Trier_2d_projection_config.json"
-    config = utilities.read_json_file(config_file)"""
 
     img = ProjectChange(
         project = config["pc_projection"]["project"],
