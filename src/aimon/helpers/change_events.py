@@ -6,6 +6,27 @@ import numpy as np
 from datetime import datetime
 from scipy.spatial import ConvexHull
 from vapc import DataHandler
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#Rule based classification and filtering
+from aimon.helpers.classification import extract_features_all,classify_event
+
+#Random forest classification
+import joblib
+from aimon.helpers.classification import save_model, load_model, extract_features_for_random_forest
+from sklearn.ensemble    import RandomForestClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics        import (
+    classification_report,
+    jaccard_score,
+    accuracy_score,
+    f1_score,
+    matthews_corrcoef,
+    cohen_kappa_score,
+    confusion_matrix,
+    ConfusionMatrixDisplay
+)
 
 ###########################################################################
 # Helper Functions
@@ -257,6 +278,27 @@ class ChangeEvent:
             "geometric_features_epoch_2": self.geometric_features_epoch_2,
             "geometric_features_both_epochs": self.geometric_features_both_epochs
         }
+    
+    def matches(self, conditions):
+        """
+        Return True if this event satisfies every feature threshold
+        in the `conditions` dict, e.g.:
+           {"change_mean": {"min": 0.1},
+            "hull_volume": {"max": 50}}
+        """
+        # Build a one‑row features DataFrame
+        df = extract_features_all([self])
+        row = df.iloc[0].to_dict()
+
+        for feature, thr in conditions.items():
+            val = row.get(feature, float("nan"))
+            if pd.isna(val):
+                return False
+            if "min" in thr and val < thr["min"]:
+                return False
+            if "max" in thr and val > thr["max"]:
+                return False
+        return True
 
     @classmethod
     def from_dict(cls, d):
@@ -316,6 +358,10 @@ class ChangeEventCollection:
         """
         return [event.to_dict() for event in self.events]
 
+    def to_dataframe(self):
+        self.df = extract_features_all(self.events)
+        return self.df
+    
     def save_to_file(self, filename):
         """
         Save the change event collection as a JSON file.
@@ -362,6 +408,192 @@ class ChangeEventCollection:
                     new_coll = ChangeEventCollection.load_from_file(file_path)
                     for event in new_coll.events:
                         self.add_event(event)
+
+
+    def filter_events_rule_based(self,
+                                 filter_rule
+                                ):
+        """
+        Filter each ChangeEvent in this collection according
+        to the provided rules, and write the remaining change events back into
+        a new ChangeEventCollection.
+        
+        filter_rules should be a dict of the form:
+        
+          {
+            "filter1": {
+               "change_mean":   {"min": 0.1, "max": 1.0},
+               "hull_volume":   {"max": 50},
+               …
+          }
+        """
+        # Start with all events, then pare down
+        filtered = self.events
+        filtered = [ev for ev in filtered if ev.matches(filter_rule)]
+        return filtered
+
+
+    def classify_events_rule_based(self, classification_rules):
+        """
+        Classify each ChangeEvent in this collection according
+        to the provided rules, and write the label back into
+        each event.event_type.  Returns the feature‐matrix DataFrame.
+        
+        classification_rules should be a dict of the form:
+        
+          {
+            "labelA": {
+               "change_mean":   {"min": 0.1, "max": 1.0},
+               "hull_volume":   {"max": 50},
+               …
+            },
+            "labelB": { … }
+            …
+          }
+        """
+        # 1) build a feature‐matrix DataFrame from the events
+        features_df = extract_features_all(self.events)
+
+        # 2) classify each row & update the corresponding ChangeEvent
+        for _, row in features_df.iterrows():
+            object_id = row["object_id"]
+            label = classify_event(row, classification_rules)
+            self.add_event_type_label(object_id, label)
+            # Update the event in the features_df
+            features_df.at[_, "event_type"] = label
+        return features_df
+    
+    def train_random_forest(
+        self,
+        ignore_labels: list[str] = None,
+        param_grid: dict         = None,
+        test_size: float         = 0.2,
+        random_state: int        = 42
+    ) -> RandomForestClassifier:
+        """
+        Train a RandomForestClassifier on this.collection.events.
+        - ignore_labels: drop any events whose .event_type is in this list
+        - param_grid:     sklearn‐style hyperparam grid for GridSearchCV
+        Returns the best‐estimator.
+        """
+        # 1) optionally filter out unwanted labels
+        events = [e for e in self.events
+                  if not ignore_labels or e.event_type not in ignore_labels]
+
+        # 2) extract features & labels; assumes extract_features_all yields 'event_type'
+        df = extract_features_for_random_forest(events)
+        X = df.drop(columns=["object_id", "event_type"])
+        y = df["event_type"]
+
+        # 3) train/test split (stratify to keep class balance)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y,
+            test_size=test_size,
+            random_state=random_state,
+            stratify=y
+        )
+
+        # 4) default param_grid if none provided
+        if param_grid is None:
+            param_grid = {
+                "n_estimators":       [100, 200],
+                "max_depth":          [None, 10, 20],
+                "min_samples_split":  [2, 5]
+            }
+
+        # 5) grid‑search
+        grid = GridSearchCV(
+            RandomForestClassifier(random_state=random_state),
+            param_grid,
+            cv=5,
+            n_jobs=-1,
+            scoring="f1_macro"
+        )
+        grid.fit(X_train, y_train)
+
+        best_rf = grid.best_estimator_
+        print(f"Best params: {grid.best_params_}")
+        print("Train  F1:", grid.score(X_train, y_train))
+        print("Test   F1:", grid.score(X_test, y_test))
+
+        # 6) classification report
+        y_pred = best_rf.predict(X_test)
+        print("\nClassification Report:")
+        print(classification_report(y_test, y_pred))
+
+        # 7) confusion matrix
+        cm = confusion_matrix(y_test, y_pred, labels=best_rf.classes_)
+        disp = ConfusionMatrixDisplay(cm, display_labels=best_rf.classes_)
+        disp.plot(cmap=plt.cm.Blues)
+        plt.title("Confusion Matrix")
+        plt.show()
+
+        # 8) feature importance
+        importances = best_rf.feature_importances_
+        indices = np.argsort(importances)[::-1]
+        feat_names = X.columns
+        plt.figure()
+        plt.title("Feature Importances")
+        plt.bar(range(len(indices)), importances[indices], align="center")
+        plt.xticks(range(len(indices)),
+                   [feat_names[i] for i in indices],
+                   rotation=90)
+        plt.tight_layout()
+        plt.show()
+
+        # 9) extra metrics
+        jaccard = jaccard_score(y_test, y_pred, average='macro')
+        accuracy = accuracy_score(y_test, y_pred)
+        f1       = f1_score(y_test, y_pred, average='macro')
+        mcc      = matthews_corrcoef(y_test, y_pred)
+        kappa    = cohen_kappa_score(y_test, y_pred)
+
+        print(f"Jaccard Score:                  {jaccard:.3f}")
+        print(f"Accuracy Score:                 {accuracy:.3f}")
+        print(f"F1 Score (macro):               {f1:.3f}")
+        print(f"Matthews Corr. Coef.:           {mcc:.3f}")
+        print(f"Cohen's Kappa:                  {kappa:.3f}")
+        self.model = best_rf
+
+        
+    def save_model(self, file_path: str):
+        """
+        Save the trained model to disk using joblib.
+        """
+        if not hasattr(self, 'model'):
+            raise ValueError("Model not trained yet. Please train the model before saving.")
+        
+        joblib.dump(self.model, file_path)
+        print(f"Model saved to {file_path}")
+
+    def load_model(self,file_path: str):
+        """
+        Load a machine learning model from disk using joblib.
+        """
+        self.model = joblib.load(file_path)
+        print(f"Model loaded from {file_path}")
+
+    def apply_random_forest(
+        self,
+        model: str = None):
+        """
+        Given either a fitted model or a filepath, predict new event_types for
+        every event in this collection (in‑place).
+        """
+        # 1) load the model if we were given a path
+        if isinstance(model, str):
+            model = load_model(model)
+        else:
+            model = self.model
+
+        # 2) re‑extract features
+        df = extract_features_for_random_forest(self.events)
+        X = df.drop(columns=["object_id", "event_type"])
+        preds = model.predict(X)
+
+        # 3) map them back into each ChangeEvent
+        for ev, label in zip(self.events, preds):
+            ev.event_type = label
 
     def __repr__(self):
         return f"<ChangeEventCollection size={len(self.events)}>"
