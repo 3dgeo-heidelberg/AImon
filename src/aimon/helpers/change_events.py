@@ -12,6 +12,11 @@ import matplotlib.pyplot as plt
 #Rule based classification and filtering
 from aimon.helpers.classification import extract_features_all,classify_event
 
+###### Dimensionality Reduction ######
+from aimon.helpers.classification import extract_features_umap
+from sklearn.mixture import GaussianMixture
+import umap.umap_ as umap  # UMAP for dimensionality reduction
+
 #Random forest classification
 import joblib
 from aimon.helpers.classification import save_model, load_model, extract_features_for_random_forest
@@ -284,12 +289,13 @@ class ChangeEvent:
         Return True if this event satisfies every feature threshold
         in the `conditions` dict, e.g.:
            {"change_mean": {"min": 0.1},
-            "hull_volume": {"max": 50}}
+            "hull_volume": {"max": 50},
+            "event_type": {"exact": "undefined"}}.
         """
         # Build a one‑row features DataFrame
-        df = extract_features_all([self])
-        row = df.iloc[0].to_dict()
-
+        # df = extract_features_all([self])
+        # row = df.iloc[0].to_dict()
+        row = self.to_dict()
         for feature, thr in conditions.items():
             val = row.get(feature, float("nan"))
             if pd.isna(val):
@@ -297,6 +303,12 @@ class ChangeEvent:
             if "min" in thr and val < thr["min"]:
                 return False
             if "max" in thr and val > thr["max"]:
+                return False
+            if "exact" in thr and val != thr["exact"]:
+                return False
+            if "in" in thr and val not in thr["in"]:
+                return False
+            if "not_in" in thr and val in thr["not_in"]:
                 return False
         return True
 
@@ -421,7 +433,7 @@ class ChangeEventCollection:
         filter_rules should be a dict of the form:
         
           {
-            "filter1": {
+            "filter": {
                "change_mean":   {"min": 0.1, "max": 1.0},
                "hull_volume":   {"max": 50},
                …
@@ -595,6 +607,232 @@ class ChangeEventCollection:
         for ev, label in zip(self.events, preds):
             ev.event_type = label
 
+
+    
+    ######### UMAP ##########
+
+    def prep_data_for_umap(self, 
+                           ignore_features = ["object_id","event_type","delta_t_hours","hull_surface_area","hull_volume"],
+                           supervised_label = None):
+        if not hasattr(self, 'df'):
+            self.to_dataframe()
+
+        # Handle missing values by dropping them
+        self.df = self.df.dropna()
+        if self.df.empty:
+            raise ValueError("No complete data available after dropping missing values.")
+    
+        X = self.df
+        
+        if supervised_label is not None:
+            # Check if the supervised label exists in the DataFrame
+            if supervised_label not in X.columns:
+                raise ValueError(f"Supervised label '{supervised_label}' not found in DataFrame columns.")
+
+            y = X[supervised_label]
+            y = y.astype("category").cat.codes  # Convert to categorical codes
+            # Dict to map labels to integers
+            self.y_label_map = {code:label  for label, code in zip(X[supervised_label].unique(), y.unique())}
+
+        # 1) optionally filter out unwanted features
+        for col in ignore_features+[supervised_label]:
+            if col in X.columns:
+                X = X.drop(columns=[col])
+
+        self.X_umap = X.values
+        self.y_umap = y.values if supervised_label is not None else None
+
+    def fit_UMAP(
+        self,
+        n_neighbors,
+        min_dist,
+        n_components,
+        metric = "euclidean",
+        random_state = 3,
+    ):
+        """
+        Train a RandomForestClassifier on this.collection.events.
+        - ignore_labels: drop any events whose .event_type is in this list
+        - param_grid:     sklearn‐style hyperparam grid for GridSearchCV
+        Returns the best‐estimator.
+        """
+
+        if not hasattr(self, 'X_umap'):
+            raise ValueError("Data not prepared for UMAP. Please call prep_data_for_umap() first.")
+
+        # Standardize the feature set
+        # scaler = StandardScaler()
+        # X_scaled = scaler.fit_transform(features_df_without_id.values)
+
+        # UMAP
+        reducer = umap.UMAP(n_neighbors=n_neighbors,
+                            min_dist=min_dist,
+                            n_components=n_components, 
+                            random_state=random_state,
+                            metric=metric)
+
+        # Fit UMAP to the data
+        if self.y_umap is not None:
+            # If supervised label is provided, fit UMAP with labels
+            reducer.fit(self.X_umap, self.y_umap)
+        else:
+            # If no labels are provided, fit UMAP without labels
+            reducer.fit(self.X_umap)
+        self.umap_reducer = reducer
+
+    def transform_UMAP(self):
+        if not hasattr(self, 'umap_reducer'):
+            raise ValueError("UMAP not fitted. Please call fit_UMAP() first.")
+        # Transform the data using the fitted UMAP model
+        self.X_umap_transformed = self.umap_reducer.transform(self.X_umap)
+
+
+    def plot_UMAP(self, save_path=None):
+        if not hasattr(self, 'X_umap_transformed'):
+            raise ValueError("UMAP not transformed. Please call transform_UMAP() first.")
+        if self.y_umap is None:
+            plt.scatter(self.X_umap_transformed[:, 0], self.X_umap_transformed[:, 1], s=.5, alpha=1)
+        else:
+            for label in np.unique(self.y_umap):
+                plt.scatter(self.X_umap_transformed[self.y_umap == label, 0], self.X_umap_transformed[self.y_umap == label, 1], label=self.y_label_map[label], s=.5, alpha=1)
+        plt.title("UMAP projection of the change events")
+        plt.xlabel("UMAP 1")
+        plt.ylabel("UMAP 2")
+        if self.y_umap is not None:
+            plt.legend()
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+
+    def save_UMAP_model(self, file_path: str):
+        """
+        Save the trained UMAP model to disk using joblib.
+        """
+        if not hasattr(self, 'umap_reducer'):
+            raise ValueError("UMAP not trained yet. Please train the model before saving.")
+        
+        joblib.dump(self.umap_reducer, file_path)
+        print(f"UMAP model saved to {file_path}")
+
+    def load_UMAP_model(self, file_path: str):
+        """
+        Load a UMAP model from disk using joblib.
+        """
+        self.umap_reducer = joblib.load(file_path)
+        print(f"UMAP model loaded from {file_path}")
+
+
+    def plot_feature_expression_heatmap(
+        self,
+        normalize: str = "minmax",
+        cmap: str = "Reds",
+        figsize: tuple = (10, 10),
+        fontsize_xtick: int = 6,
+        fontsize_ytick: int = 12,
+        cbar_label: str = "Normalized value",
+        exclude = {"object_id", "event_type", "delta_t_hours", "hull_surface_area", "hull_volume","number_of_points"}
+    ):
+        """
+        Draw a heatmap of each event (rows) across every feature (columns),
+        with per‑feature normalization, one y‑tick per event_type,
+        and horizontal lines marking each class boundary.
+
+        Parameters
+        ----------
+        normalize : {'minmax', 'zscore', None}
+            How to normalize each feature (column).  
+            'minmax' → (x - min)/(max - min)  
+            'zscore' → (x - μ)/σ  
+            None     → leave raw values
+
+        cmap : str
+            A matplotlib colormap name.
+
+        figsize : (width, height)
+            Figure size in inches.
+
+        fontsize_xtick, fontsize_ytick : int
+            Font sizes for the tick labels.
+
+        cbar_label : str
+            Label for the colorbar.
+        """
+        import numpy as _np
+        import matplotlib.pyplot as _plt
+
+        # 1) build or refresh the DataFrame
+        if not hasattr(self, "df"):
+            self.to_dataframe()
+        df = self.df.dropna()
+
+        # 2) select numeric features, excluding IDs and known non‑features
+        numeric_cols = df.select_dtypes(include=[_np.number]).columns
+        feature_cols = [c for c in numeric_cols if c not in exclude]
+        if not feature_cols:
+            raise ValueError("No feature columns found to plot.")
+
+        X = df[feature_cols].values
+        classes = df["event_type"].values
+
+        # 3) normalize per feature (axis=0)
+        if normalize == "minmax":
+            mins = X.min(axis=0, keepdims=True)
+            maxs = X.max(axis=0, keepdims=True)
+            X_norm = (X - mins) / (maxs - mins + 1e-8)
+        elif normalize == "zscore":
+            means = X.mean(axis=0, keepdims=True)
+            stds = X.std(axis=0, keepdims=True)
+            X_norm = (X - means) / (stds + 1e-8)
+        elif normalize is None:
+            X_norm = X
+        else:
+            raise ValueError(f"Unsupported normalize: {normalize!r}")
+
+        # 4) sort events by class for grouping
+        order = _np.argsort(classes)
+        X_plot = X_norm[order]
+        class_plot = classes[order]
+
+        # 5) compute block boundaries & tick positions
+        #    mask marks where each new class block starts
+        mask = _np.r_[True, class_plot[1:] != class_plot[:-1]]
+        starts = _np.nonzero(mask)[0]
+        ends = _np.r_[starts[1:], len(class_plot)]
+        midpoints = (starts + ends - 1) / 2
+        labels = class_plot[starts]
+
+        # 6) plot
+        _plt.figure(figsize=figsize)
+        im = _plt.imshow(X_plot, aspect="auto", origin="lower", cmap=cmap)
+
+        ax = _plt.gca()
+        for boundary in ends[:-1]:
+            ax.hlines(boundary - 0.5,
+                      xmin=-0.5,
+                      xmax=len(feature_cols) - 0.5,
+                      colors="black",
+                      linewidth=1)
+
+        _plt.xticks(
+            _np.arange(len(feature_cols)),
+            feature_cols,
+            rotation=90,
+            fontsize=fontsize_xtick
+        )
+        _plt.yticks(midpoints, labels, fontsize=fontsize_ytick, rotation=90)
+
+        _plt.xlabel("Feature")
+        _plt.ylabel("Event (grouped by class)")
+        _plt.title(
+            f"Feature Expression across Events\n(normalized per feature: {normalize})"
+        )
+
+        cbar = _plt.colorbar(im, orientation="vertical", pad=0.01)
+        cbar.set_label(cbar_label)
+
+        _plt.tight_layout()
+        _plt.show()
+
+
     def __repr__(self):
         return f"<ChangeEventCollection size={len(self.events)}>"
 
@@ -671,3 +909,5 @@ def process_m3c2_file_into_change_events(m3c2_clustered):
             collection.save_to_file(merged_ce_file)
         else:
             coll.save_to_file(merged_ce_file)
+
+

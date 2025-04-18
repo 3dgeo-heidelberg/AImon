@@ -315,11 +315,11 @@ def load_and_prepare_data_for_UMAP(change_events_file):
     # Separate the identifier from features
     features_df_without_id = features_df.drop(columns=["object_id","event_type"])
 
-    # Standardize the feature set for clustering
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(features_df_without_id.values)
+    # # Standardize the feature set for clustering
+    # scaler = StandardScaler()
+    # X_scaled = scaler.fit_transform(features_df_without_id.values)
 
-    return features_df_without_id, features_df, X_scaled, events
+    return features_df_without_id, features_df, events
 
 
 
