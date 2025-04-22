@@ -285,31 +285,19 @@ class ChangeEvent:
         }
     
     def matches(self, conditions):
-        """
-        Return True if this event satisfies every feature threshold
-        in the `conditions` dict, e.g.:
-           {"change_mean": {"min": 0.1},
-            "hull_volume": {"max": 50},
-            "event_type": {"exact": "undefined"}}.
-        """
-        # Build a one‑row features DataFrame
-        # df = extract_features_all([self])
-        # row = df.iloc[0].to_dict()
-        row = self.to_dict()
+        # build a one‑row DataFrame so that features like "change_mean" and "hull_volume"
+        # really exist as columns
+        df = extract_features_all([self])
+        row = df.iloc[0].to_dict()
+
         for feature, thr in conditions.items():
             val = row.get(feature, float("nan"))
-            if pd.isna(val):
-                return False
-            if "min" in thr and val < thr["min"]:
-                return False
-            if "max" in thr and val > thr["max"]:
-                return False
-            if "exact" in thr and val != thr["exact"]:
-                return False
-            if "in" in thr and val not in thr["in"]:
-                return False
-            if "not_in" in thr and val in thr["not_in"]:
-                return False
+            if pd.isna(val):                   return False
+            if "min"   in thr and val < thr["min"]:  return False
+            if "max"   in thr and val > thr["max"]:  return False
+            if "exact" in thr and val != thr["exact"]:return False
+            if "in"    in thr and val not in thr["in"]:     return False
+            if "not_in"in thr and val in thr["not_in"]:     return False
         return True
 
     @classmethod
