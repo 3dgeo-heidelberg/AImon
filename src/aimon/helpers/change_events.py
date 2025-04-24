@@ -15,7 +15,10 @@ from aimon.helpers.classification import extract_features_all,classify_event
 ###### Dimensionality Reduction ######
 from aimon.helpers.classification import extract_features_umap
 from sklearn.mixture import GaussianMixture
-import umap.umap_ as umap  # UMAP for dimensionality reduction
+try:
+    import umap.umap_ as umap  # UMAP for dimensionality reduction
+except:
+    pass
 
 #Random forest classification
 import joblib

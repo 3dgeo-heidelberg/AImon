@@ -48,7 +48,6 @@ class PCloudProjection:
         self.camera_position = configuration["pc_projection"]["camera_position"]
         self.rgb_light_intensity = configuration["pc_projection"]["rgb_light_intensity"]
         self.range_light_intensity = configuration["pc_projection"]["range_light_intensity"]
-        self.sigma = configuration["pc_projection"]["sigma"]
         ### INITIALIZING VARIABLES ###
         ##############################
 
@@ -140,7 +139,6 @@ class PCloudProjection:
                 "pc_mean_z": self.mean_z,
                 "rgb_light_intensity": self.rgb_light_intensity,
                 "range_light_intensity": self.range_light_intensity,
-                "sigma": self.sigma,
                 "h_img_res": self.h_img_res,
                 "v_img_res": self.v_img_res,
                 "h_fov_x": self.h_fov[0],
