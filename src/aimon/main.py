@@ -131,7 +131,7 @@ def main() -> None:
     
     # Project the 3D change events point cloud to pixel and UTM 32N coordinates
     epsg = int(configuration['pc_projection']['epsg'])
-    change_prj = ProjectChange(change_event_file, project_name,projected_image_folder,projected_events_folder, epsg)
+    change_prj = ProjectChange(change_event_file, project_name, projected_image_folder, projected_events_folder, epsg)
     change_prj.project_change()
     loader.stop()
 

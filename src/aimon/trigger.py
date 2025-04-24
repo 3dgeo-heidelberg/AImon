@@ -15,13 +15,6 @@ options = webdriver.ChromeOptions()
 options.add_argument("--headless")  # Run in background (optional)
 options.add_argument("--disable-gpu")  # Helps with some issues
 
-# File extensions the user is searching for
-ext = [".las", ".laz", ".ply", ".txt", ".xyz"]
-
-DOWNLOAD_DIR = r"/home/william/Downloads/"
-FOLDER_URL = r'https://heibox.uni-heidelberg.de/d/8c6f08c92a1f48978fb4/files/'
-CHECK_INTERVAL = 3
-
 def get_file_list():
     try:
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -46,7 +39,7 @@ def get_file_list():
     return list_files
 
 
-def download(download_page_link):
+def download(download_page_link, last_file, new_file):
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get(download_page_link)
     # Wait until the wrapper div is populated
@@ -57,52 +50,49 @@ def download(download_page_link):
     pc_link = file.get_attribute("href")  # Get the full URL
     print(f"Downloading the point cloud: {pc_link}")
 
-    with urlopen(pc_link) as in_stream, open('/home/william/Downloads/new_point_cloud.las', 'wb') as out_file:
+
+    # Check if the file already exists
+    if os.path.exists(last_file):
+        # If it exists, change its name to last_point_cloud.las
+        os.rename(new_file, last_file)
+
+    with urlopen(pc_link) as in_stream, open(new_file, 'wb') as out_file:
         copyfileobj(in_stream, out_file)
 
     #urlretrieve(pc_link)
 
-# Get the initial file list
-previous_files = get_file_list()
+def main(json_path, last_file, new_file):
+    # Get the initial file list
+    previous_files = get_file_list()
 
-while True:
-    time.sleep(CHECK_INTERVAL)
-    current_files = get_file_list()
-    
-    # Detect new files
-    added_file = set(current_files) - set(previous_files)
-    deleted_file = set(previous_files) - set(current_files)
-    
-    added_file = current_files[0]
-    if added_file:
-        print(f"Added file detected: {added_file}")
-        # Trigger some function
-        download(added_file)
-    if deleted_file:
-        print(f"Deleted file detected: {deleted_file}")
+    while True:
+        time.sleep(CHECK_INTERVAL)
+        current_files = get_file_list()
+        
+        # Detect new files
+        added_file = set(current_files) - set(previous_files)
+        deleted_file = set(previous_files) - set(current_files)
+        
+        added_file = current_files[0]
+        if added_file:
+            print(f"Added file detected: {added_file}")
+            # Trigger some function
+            download(added_file, last_file, new_file)
+            os.system(f"python main.py -c \"{json_path}\" -f \"{last_file}\" \"{new_file}\"")
+        if deleted_file:
+            print(f"Deleted file detected: {deleted_file}")
 
-    previous_files = current_files
-    #break
+        previous_files = current_files
+        #break
 
-###############################################
+if __name__ == "__main__":
+    ext = [".las", ".laz", ".ply", ".txt", ".xyz"] # File extensions the user is searching for
+    download_dir = r"/home/william/Downloads/" # Directory to download the files to
+    FOLDER_URL = r'https://heibox.uni-heidelberg.de/d/8c6f08c92a1f48978fb4/files/' # URL to the server containing the files (heiBOX/Bibliothèques/3DGeo_Exchange/Will)
+    CHECK_INTERVAL = 3  # seconds
 
-# class ExampleHandler(FileSystemEventHandler):
-#     def on_created(self, event): # when file is created
-#         t = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-#         print(f"File created: {event.src_path}\n{t}")
+    json_path = r"/home/william/Documents/DATA/Obergurgl/aimon_configs/Obergurgl_dev.json" # Path to the json file
+    last_file = os.path.join(download_dir, "last_point_cloud.las")
+    new_file = os.path.join(download_dir, "new_point_cloud.las")
 
-#     def on_deleted(self, event): # when file is deleted
-#         t = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-#         print(f"File deleted: {event.src_path}\n{t}")
-
-# observer = Observer()
-# observer.schedule(ExampleHandler(), path=FOLDER_URL)
-# observer.start()
-
-# # sleep until keyboard interrupt, then stop + rejoin the observer
-# try:
-#     while True:
-#         time.sleep(1)
-# except KeyboardInterrupt:
-#     observer.stop()
-# observer.join()
+    main(json_path, last_file, new_file)
