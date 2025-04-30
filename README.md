@@ -21,6 +21,12 @@ The aim of the joint research project is to further close the gap between resear
 
 ## 🔨 Methods provided by AImon<sup>5.0</sup>
 
+<img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
+
+- **WP X.0**
+- **WP X.1**
+- ...
+
 - **Point Cloud Projection**: Generate range and color images from point cloud data.
 - **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
 - **Change Event Management**: Convert clusters into change events.
@@ -28,14 +34,12 @@ The aim of the joint research project is to further close the gap between resear
 - **Visualization**: Projected images and change events visualization.
 
 ## 🎮 Examples
-|                                                                                                                                                                               |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Example 1: Rule based classification of change events <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="img/AImon_logo.png" width=500></a>                     |
-| Example 2: Unsupervised classification of change events <br> <a href="demo/classification_of_change_events_unsupervised.ipynb"><img src="img/AImon_logo.png" width=500></a>                   |
-| Example 3: Random forest classification of change events <br> <a href="demo/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="img/AImon_logo.png" width=500></a> |
-| Example 4: Rule based filtering of change events <br> <a href="demo/filtering_of_change_events_rule_based.ipynb"><img src="img/AImon_logo.png" width=500></a>                          |
+|                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Example 1: Rule based classification of change events <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br><br> <a href="demo/filtering_of_change_events_rule_based.ipynb"><img src="img/filtered_rule_based.png" width=500></a>                                              |
+| Example 3: Manually labelled dataset for random forest training <br> <a href="demo/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="demo/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="img/classified_using_random_forest.png" width=500></a> |
 <!--
-| [![Example #](img/...)](link)          |
+| Example 5: Unsupervised classification of change events <br> <a href="demo/classification_of_change_events_unsupervised.ipynb"><img src="img/AImon_logo.png" width=500></a>                                       |
 -->
 
 ## 💻 Installation with a Conda environment
