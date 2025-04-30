@@ -1,4 +1,4 @@
-# AImon5.0
+# Welcome to AImon5.0
 <img src="img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
 
 <!--[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)-->
@@ -58,11 +58,49 @@ cd aimon
 
 
 # Key Functions
-## main.py
-Serves as the entry point for the m4dvap processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
+## Using main.py file
+Serves as the entry point for the AImon processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
 
-Usage:
+Usage from the main repository folder:
+```bash
+python cd src/aimon/main.py -c "<path/to/config_file.json>" -f "<path/to/t1_point_cloud.las>" "<path/to/t2_point_cloud.las>"
+```
+
+## 🐍 Documentation of software usage
+As a starting point, please have a look to the [Jupyter Notebooks](demo) available in the repository 
+
+
+## 📑 Citation
+Please cite AImon5.0 when using it in your research and reference the appropriate release version.
+
+<!-- TODO: All releases of py4dgeo are listed on Zenodo where you will find the citation information including DOI. -->
 
 ```
-python main.py -c "config" -f "path/to/t1_file.las" "path/to/t2_file.las"
-```
+article{AImon5.0,
+author = {AImon5.0 Development Core Team}
+title = {AImon5.0: tool for 3D point cloud processing and projection},
+journal = {},
+year = {2025},
+number = {},
+volume = {},
+doi = {},
+url = {https://github.com/3dgeo-heidelberg/AImon},
+}
+ ```
+
+## 💟 Funding / Acknowledgements
+TODO: Add funding and acknoledgment
+
+## 🔔 Contact / Bugs / Feature Requests
+You think you have found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
+
+Scientific requests can be directed to the [3DGeo Research Group Heidelberg](https://uni-heidelberg.de/3dgeo) and its respective members.
+
+## 📜 License
+See [LICENSE.md](LICENSE.md).
+
+
+## 📚 Literature
+* Paper 1
+* Paper 2
+* ...
