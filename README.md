@@ -107,6 +107,7 @@ url = {https://github.com/3dgeo-heidelberg/AImon},
 ## 💟 Funding / Acknowledgements
 TODO: Add funding and acknoledgment
 
+I just add some text here to test stuff
 ## 🔔 Contact / Bugs / Feature Requests
 You think you have found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
 
