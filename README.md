@@ -1,5 +1,5 @@
 # Welcome to AImon<sup>5.0</sup>
-<img src="img/AImon_waves.png?raw=true" alt="logo" style="width:500px;"/>
+<img src="img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -20,13 +20,16 @@ The aim of the joint research project is to further close the gap between resear
 <!-- AImon<sup>5.0</sup> is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data. -->
 
 ## 🔨 Methods provided by AImon<sup>5.0</sup>
+The following methods.... were provided by the 3DGEO lab (add link)
 
 <img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 
+TODO: Work packages as "research target/aim/goals"
 - **WP X.0**
 - **WP X.1**
 - ...
 
+### Possible applications:
 - **Point Cloud Projection**: Generate range and color images from point cloud data.
 - **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
 - **Change Event Management**: Convert clusters into change events.
