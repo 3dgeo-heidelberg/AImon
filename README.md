@@ -14,30 +14,29 @@ A key tool for integrated risk management is access to relevant 4D geospatial in
 
 This interface will connect stakeholder expertise with autonomous PLS systems and data archives using AI and 4D analysis. It will enable the operational use of PLS for risk monitoring - detecting and tracking relevant events such as slope activity in real time. For the first time, stakeholders will be able to use PLS for continuous hazard monitoring.
 
-The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use.
+The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in [Trier (Germany)](https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9) (Fig 1), at the [Trierer Augenscheiner](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) (Fig 2).
 
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="img/Trier_map.png?raw=true" width=400></a>                                |<img src="img/Trier_pic.png?raw=true" alt="Trier Map" style="width:500px;"/> <br/> The [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site was the [**Trierer Augenscheiner (Germany)**](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) located on the red dot (left). |
+| <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="img/Trier_map.png?raw=true" width=300></a>                                |<img src="img/Trier_pic.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
 
 
 
 The methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigate and combine two complementary concepts that can integrate expert knowledge into automated data analysis: 
 
-1. Top-down approach via a knowledge- and rule-based classification of changes. In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. rockfall) are defined in their sequence. A methodology and data management for fast and accurate searches must be developed and evaluated;
+1. <u>Top-down approach via a knowledge- and rule-based classification of changes</u>: In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. rockfall) are defined in their sequence. A methodology and data management for fast and accurate searches must be developed and evaluated;
 
-2. Data-driven approach using AI: Machine learning methods find relevant change events after a user-controlled training phase and present them to the experts for evaluation. The users do not know in advance how the events, possibly also overlaid processes, are represented in the data, but can evaluate relevant from non-relevant events and thus train an AI model.
+2. <u>Data-driven approach using AI</u>: Machine learning methods find relevant change events after a user-controlled training phase and present them to the experts for evaluation. The users do not know in advance how the events, possibly also overlaid processes, are represented in the data, but can evaluate relevant from non-relevant events and thus train an AI model.
 
 For this second approach, research must be carried out into how the state-of-the-art point cloud-based deep learning models can be trained quickly and as automatically as possible in the background and how the hyperparameters can be optimized. For the visualization of the detected and classified changes, it must be determined - in coordination with end users and the PLS operator - which abstraction levels and visualization forms are best suited for certain tasks and also specified reaction times. In contrast to visualization in 2D and 3D (e.g. in GIS or dashboards), fundamental research must be carried out for the visualization of 4D processes in PLS data due to a lack of existing methods.
 
-<!-- AImon<sup>5.0</sup> is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data. -->
 
 ## 🔨 Methods developed as part of the AImon<sup>5.0</sup> project
 The following methods were developed by the [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group.
 
 <img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 
-TODO: Work packages as "Research target"
+
 - **Research target 1 - Hierarchical classification of detected change:**  Developing new methods and tools to automatically extract relevant change information from the two last point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
     - 1.1: Rule based change classification
     - 1.2: Hierarchical Analysis
@@ -45,8 +44,10 @@ TODO: Work packages as "Research target"
     - 1.4: Derivation of adaptive workflows
     - 1.5: Continuous integration py4dgeo
 
-- **Research target 2: Visualization of classified change events**: Development of new methodologies and tools for the visualization of the detected terrain changes from WP 5 and WP 6 for use by end users.
-- ...
+- **Research target 2: Visualization of classified change events**: Development of new methodologies and tools for the visualization of the detected terrain changes from WP 5 and WP 6 for use by end users. Three different steps:
+    - 2.1: Selection of relevant changes
+    - 2.2: 2D GIS layer
+    - 2.3: 3D objects
 
 ### Possible applications:
 - **Point Cloud Projection**: Generate range and color images from point cloud data.
