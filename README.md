@@ -1,5 +1,5 @@
 # Welcome to AImon<sup>5.0</sup>
-<img src="img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
+<img src="docs/img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -18,7 +18,7 @@ The goal of this project is to bridge the gap between research and practice. Whi
 
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="img/Trier_map.png?raw=true" width=300></a>                                |<img src="img/Trier_pic.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
+| <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="docs/img/Trier_map.png?raw=true" width=300></a>                                |<img src="docs/img/Trier_pic.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
 
 
 
@@ -34,7 +34,7 @@ For this second approach, research must be carried out into how the state-of-the
 ## 🔨 Methods developed as part of the AImon<sup>5.0</sup> project
 The following methods were developed by the [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group.
 
-<img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
+<img src="docs/img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 
 
 - **Research target 1 - Hierarchical classification of detected change:**  Developing new methods and tools to automatically extract relevant change information from the two last point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
@@ -59,8 +59,8 @@ The following methods were developed by the [3DGEO](https://www.geog.uni-heidelb
 ## 🎮 Examples
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Example 1: Rule based classification of change events <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br><br> <a href="demo/filtering_of_change_events_rule_based.ipynb"><img src="img/filtered_rule_based.png" width=500></a>                                              |
-| Example 3: Manually labelled dataset for random forest training <br> <a href="demo/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="demo/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="img/classified_using_random_forest.png" width=500></a> |
+| Example 1: Rule based classification of change events <br> <a href="docs/classification_of_change_events_rule_based.ipynb"><img src="docs/img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br><br> <a href="docs/filtering_of_change_events_rule_based.ipynb"><img src="docs/img/filtered_rule_based.png" width=500></a>                                              |
+| Example 3: Manually labelled dataset for random forest training <br> <a href="docs/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="docs/img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="docs/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="docs/img/classified_using_random_forest.png" width=500></a> |
 <!--
 | Example 5: Unsupervised classification of change events <br> <a href="demo/classification_of_change_events_unsupervised.ipynb"><img src="img/AImon_logo.png" width=500></a>                                       |
 -->
@@ -106,7 +106,7 @@ python cd src/aimon/main.py -c "<path/to/config_file.json>" -f "<path/to/t1_poin
 ```
 
 ## 🐍 Documentation of software usage
-As a starting point, please have a look to the [Jupyter Notebooks](demo) available in the repository 
+As a starting point, please have a look to the [Jupyter Notebooks](docs) available in the repository 
 
 
 ## 📑 Citation

@@ -1,0 +1,37 @@
+site_name: AImon
+repo_url: https://github.com/3dgeo-heidelberg/aimon
+docs_dir: ../docs
+site_dir: ../site
+
+theme:
+  logo: img/AImon_logo.png
+  favicon: img/3dgeo.ico
+  name: material
+  custom_dir: overrides
+  palette:
+    primary: red
+    accent: light-red
+  features:
+    - search.highlight
+    - content.code.copy
+    - navigation.top
+    - navigation.footer
+use_directory_urls: false
+extra_css:
+  - css/custom.css
+plugins:
+  - mkdocs-jupyter:
+      include_source: True
+      include_requirejs: true
+      ignore_h1_titles: True
+  - search
+markdown_extensions:
+  - attr_list
+  - abbr
+
+nav:
+- 'Home': 'index.md'
+- 'Rule-based classification of change events': 'classification_of_change_events_rule_based.ipynb'
+- 'Classification of change events using random forest classifier': 'classification_of_change_events_using_random_forest_classifier.ipynb'
+- 'Unsupervised classification of change events': 'classification_of_change_events_unsupervised.ipynb'
+- 'Rule-based filtering of change events': 'filtering_of_change_events_rule_based.ipynb'
