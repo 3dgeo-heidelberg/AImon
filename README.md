@@ -16,7 +16,13 @@ This interface will connect stakeholder expertise with autonomous PLS systems an
 
 The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use.
 
-The [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigate and combine two complementary concepts that can integrate expert knowledge into automated data analysis: 
+|                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="img/Trier_map.png?raw=true" width=400></a>                                |<img src="img/Trier_pic.png?raw=true" alt="Trier Map" style="width:500px;"/> <br/> The [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site was the [**Trierer Augenscheiner (Germany)**](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) located on the red dot (left). |
+
+
+
+The methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigate and combine two complementary concepts that can integrate expert knowledge into automated data analysis: 
 
 1. Top-down approach via a knowledge- and rule-based classification of changes. In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. rockfall) are defined in their sequence. A methodology and data management for fast and accurate searches must be developed and evaluated;
 
@@ -26,14 +32,20 @@ For this second approach, research must be carried out into how the state-of-the
 
 <!-- AImon<sup>5.0</sup> is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data. -->
 
-## 🔨 Methods provided by AImon<sup>5.0</sup>
-The following methods.... were provided by the 3DGEO lab (add link)
+## 🔨 Methods developed as part of the AImon<sup>5.0</sup> project
+The following methods were developed by the [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group.
 
 <img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 
-TODO: Work packages as "research target/aim/goals"
-- **WP X.0**
-- **WP X.1**
+TODO: Work packages as "Research target"
+- **Research target 1 - Hierarchical classification of detected change:**  Developing new methods and tools to automatically extract relevant change information from the two last point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
+    - 1.1: Rule based change classification
+    - 1.2: Hierarchical Analysis
+    - 1.3: ML/DL Change Classification
+    - 1.4: Derivation of adaptive workflows
+    - 1.5: Continuous integration py4dgeo
+
+- **Research target 2: Visualization of classified change events**: Development of new methodologies and tools for the visualization of the detected terrain changes from WP 5 and WP 6 for use by end users.
 - ...
 
 ### Possible applications:
