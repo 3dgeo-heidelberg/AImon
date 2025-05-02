@@ -4,13 +4,13 @@ docs_dir: ../docs
 site_dir: ../site
 
 theme:
-  logo: img/AImon_logo.png
+  logo: img/3DGeo_globe_256.png
   favicon: img/3dgeo.ico
   name: material
   custom_dir: overrides
   palette:
-    primary: red
-    accent: light-red
+    primary: custom
+    accent: custom
   features:
     - search.highlight
     - content.code.copy
@@ -19,6 +19,7 @@ theme:
 use_directory_urls: false
 extra_css:
   - css/custom.css
+  - style.css
 plugins:
   - mkdocs-jupyter:
       include_source: True

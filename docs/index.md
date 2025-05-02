@@ -1,10 +1,13 @@
+<img src="img/3DGeo_Logo_300dpi.png" alt="3DGeo Logo" title="3DGeo Logo" width=150 style="float: right;">
+<br>
+
 # Welcome to AImon<sup>5.0</sup>
-<img src="docs/img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
+<img src="img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Research project definition
-### Project title
+## 📑 Research project definition
+### Official project title
 Integrated, quality-assured real-time assistance system for risk management of infrastructures and natural hazards using autonomous 4D detection, 3D-metrology and artificial intelligence.
 
 ### Overall objective of the project
@@ -14,11 +17,11 @@ A key tool for integrated risk management is access to relevant 4D geospatial in
 
 This interface will connect stakeholder expertise with autonomous PLS systems and data archives using AI and 4D analysis. It will enable the operational use of PLS for risk monitoring - detecting and tracking relevant events such as slope activity in real time. For the first time, stakeholders will be able to use PLS for continuous hazard monitoring.
 
-The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in [Trier (Germany)](https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9) (Fig 1), at the [Trierer Augenscheiner](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) (Fig 2).
+The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The [3DGEO research group](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in [Trier (Germany)](https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9) (Fig 1), at the [Trierer Augenscheiner](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) (Fig 2).
 
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <br> <a href="demo/classification_of_change_events_rule_based.ipynb"><img src="docs/img/Trier_map.png?raw=true" width=300></a>                                |<img src="docs/img/Trier_pic.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
+| <img src="img/Trier_map.png?raw=true" width=300></a>                                |<img src="img/Trier_pic.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
 
 
 
@@ -31,10 +34,10 @@ The methods are particularly suitable for operational use and adapted in order t
 For this second approach, research must be carried out into how the state-of-the-art point cloud-based deep learning models can be trained quickly and as automatically as possible in the background and how the hyperparameters can be optimized. For the visualization of the detected and classified changes, it must be determined - in coordination with end users and the PLS operator - which abstraction levels and visualization forms are best suited for certain tasks and also specified reaction times. In contrast to visualization in 2D and 3D (e.g. in GIS or dashboards), fundamental research must be carried out for the visualization of 4D processes in PLS data due to a lack of existing methods.
 
 
-## 🔨 Methods developed as part of the AImon<sup>5.0</sup> project
-The following methods were developed by the [3DGEO](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group.
+## ⚙️ Methods developed as part of the AImon<sup>5.0</sup> project
+The following methods were developed by the [3DGEO research group](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html).
 
-<img src="docs/img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
+<img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 
 
 - **Research target 1 - Hierarchical classification of detected change:**  Developing new methods and tools to automatically extract relevant change information from the two last point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
@@ -59,8 +62,8 @@ The following methods were developed by the [3DGEO](https://www.geog.uni-heidelb
 ## 🎮 Examples
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Example 1: Rule based classification of change events <br> <a href="docs/classification_of_change_events_rule_based.ipynb"><img src="docs/img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br><br> <a href="docs/filtering_of_change_events_rule_based.ipynb"><img src="docs/img/filtered_rule_based.png" width=500></a>                                              |
-| Example 3: Manually labelled dataset for random forest training <br> <a href="docs/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="docs/img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="docs/classification_of_change_events_using_random_forest_classifier.ipynb"><img src="docs/img/classified_using_random_forest.png" width=500></a> |
+| Example 1: Rule based classification of change events <br> <a href="classification_of_change_events_rule_based.ipynb"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br> <a href="filtering_of_change_events_rule_based.ipynb"><img src="img/filtered_rule_based.png" width=500></a>                                              |
+| Example 3: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.ipynb"><img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.ipynb"><img src="img/classified_using_random_forest.png" width=500></a> |
 <!--
 | Example 5: Unsupervised classification of change events <br> <a href="demo/classification_of_change_events_unsupervised.ipynb"><img src="img/AImon_logo.png" width=500></a>                                       |
 -->
@@ -96,8 +99,8 @@ cd aimon
     ```
 
 
-# Key Functions
-## Using main.py file
+## 🛠️ Key Functions
+### Using main.py file
 Serves as the entry point for the AImon<sup>5.0</sup> processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
 
 Usage from the main repository folder:
@@ -134,7 +137,7 @@ I just add some text here to test stuff
 ## 🔔 Contact / Bugs / Feature Requests
 You think you have found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
 
-Scientific requests can be directed to the [3DGeo Research Group Heidelberg](https://uni-heidelberg.de/3dgeo) and its respective members.
+Scientific requests can be directed to the [3DGeo Research Group Heidelberg](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) and its respective members.
 
 ## 📜 License
 See [LICENSE.md](LICENSE.md).
