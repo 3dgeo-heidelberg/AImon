@@ -18,7 +18,7 @@ theme:
     - navigation.footer
 use_directory_urls: false
 extra_css:
-  - css/custom.css
+  - customs.css
   - style.css
 plugins:
   - mkdocs-jupyter:
@@ -31,8 +31,10 @@ markdown_extensions:
   - abbr
 
 nav:
-- 'Home': 'index.md'
-- 'Rule-based classification of change events': 'classification_of_change_events_rule_based.ipynb'
-- 'Classification of change events using random forest classifier': 'classification_of_change_events_using_random_forest_classifier.ipynb'
-- 'Unsupervised classification of change events': 'classification_of_change_events_unsupervised.ipynb'
-- 'Rule-based filtering of change events': 'filtering_of_change_events_rule_based.ipynb'
+  - Home: index.md
+  - Notebook examples:
+    - Rule-based classification of change events: classification_of_change_events_rule_based.ipynb
+    - Rule-based filtering of change events: filtering_of_change_events_rule_based.ipynb
+    - Random forest classification of change events: classification_of_change_events_using_random_forest_classifier.ipynb
+    - Unsupervised classification of change events: classification_of_change_events_unsupervised.ipynb
+    - 3D point cloud projection to range image: visualization.html

@@ -12,3 +12,4 @@ tmp/*
 *.json
 out/*
 /data
+site/*

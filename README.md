@@ -1,4 +1,4 @@
-# AImon
+# AImon<sup>5.0</sup>
 
 ## About
 
