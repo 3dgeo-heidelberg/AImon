@@ -30,23 +30,19 @@ class ProjectChange:
         - project_gis_layer: Helper function to handle GIS layer projection.
     """
 
-    def __init__(self, change_event_file, project_name, projected_image_folder, projected_events_folder, epsg=4979):
+    def __init__(self, change_event_file, project_name, projected_image_path, projected_events_folder, epsg=4979, create_kml=False):
         ##############################
         ### INITIALIZING VARIABLES ###
         self.project = project_name
-        self.bg_img_folder = projected_image_folder
+        self.bg_img_path = projected_image_path
         self.path_change_events = change_event_file
         self.img = None
         self.pts = []
         self.geojson_name = os.path.join(projected_events_folder,"%s_change_events_pixel.geojson"%self.project)
         self.geojson_name_gis = os.path.join(projected_events_folder,"%s_change_events_gis.geojson"%self.project)
         self.epsg = epsg
+        self.create_kml = create_kml
         ##############################
-        if not os.path.isdir(self.bg_img_folder):
-            print("Missing some information, cannot find %s"%self.bg_img_folder)
-            return 
-        else:
-            self.bg_img_path = os.path.join(self.bg_img_folder, os.listdir(self.bg_img_folder)[0])
 
 
     def project_change(self):
@@ -201,7 +197,8 @@ class ProjectChange:
             })
         geojson.close()
 
-        self.geojson2kml()
+        if self.create_kml:
+            self.geojson2kml()
 
 
     def project_gis_layer(self, change_event_pts_og):
