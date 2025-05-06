@@ -43,7 +43,9 @@ dependencies = [
   "mkdocs",
   "mkdocs-material",
   "mkdocs-jupyter",
-  "jupyter_contrib_nbextensions"
+  "jupyter_contrib_nbextensions",
+  "selenium",
+  "webdriver-manager"
 ]
 
 
