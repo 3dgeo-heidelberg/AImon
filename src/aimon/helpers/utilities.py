@@ -10,6 +10,14 @@ from itertools import cycle
 from shutil import get_terminal_size
 from threading import Thread
 
+import geopandas as gpd
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+import rasterio as rio
+from rasterio.plot import show
+import shapely as shp
 
 def read_json_file(file_path):
     """Read JSON data from a file.
@@ -338,3 +346,54 @@ def build_pipeline_command(folder_path, config_file, default_cmd, use_every_xth_
     print(len(file_paths), "files found")
     print(command_str)
     return command_str
+
+
+def plot_change_events(vector, raster, event_type_col=None, colors=None):
+    fig, ax = plt.subplots(1, figsize=(12, 12))
+
+    with rio.open(raster) as rds:
+        show(
+            (rds, (3, 2, 1)),  # Read 3 bands of raster in R G B order (3,2,1)
+            adjust=True,       # Rescale 0.0 - 1.0
+            ax=ax,             # Use existing matplotlib axes
+        )
+
+    # Load vector data
+    gdf = gpd.read_file(vector)
+
+    # Flip Y-axis of geometry (assuming needed)
+    gdf['geometry'] = gdf['geometry'].map(lambda polygon: shp.ops.transform(lambda x, y: (x, -y), polygon))
+
+    if event_type_col is not None:
+        event_types = gdf[event_type_col].unique()
+        if colors is not None:
+            # Use provided colormap
+            if type(colors) == list:
+                if len(event_types) > len(colors):
+                    raise ValueError(f"Only {len(colors)} colors defined but {len(event_types)} classes found.")
+
+                color_map = dict(zip(event_types, colors))
+            else:
+                cmap = cm.get_cmap(colors, len(event_types))
+                colors = [mcolors.to_hex(cmap(i)) for i in range(len(event_types))]
+                color_map = dict(zip(event_types, colors))
+        else:
+            cmap = cm.get_cmap('summer', len(event_types))
+            colors = [mcolors.to_hex(cmap(i)) for i in range(len(event_types))]
+            color_map = dict(zip(event_types, colors))
+
+        gdf['color'] = gdf[event_type_col].map(color_map)
+
+        # Plot colored by class column
+        gdf.plot(ax=ax, color=gdf['color'], edgecolor='black', linewidth=0.5, alpha=0.6)
+
+        # Create dynamic legend
+        legend_elements = [
+            Patch(facecolor=color_map[cls], edgecolor='black', label=str(cls))
+            for cls in event_types
+        ]
+        ax.legend(handles=legend_elements, loc='lower right')
+    else:
+        gdf.boundary.plot(ax=ax)  # Plot just the boundary
+
+    plt.show()
