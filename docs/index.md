@@ -1,7 +1,7 @@
 <img src="img/3DGeo_Logo_300dpi.png" alt="3DGeo Logo" title="3DGeo Logo" width=150 style="float: right;">
 <br>
 
-# Welcome to AImon<sup>5.0</sup>
+# Welcome to AImon5.0
 <a href="https://www.geog.uni-heidelberg.de/en/institute/geoinformatics/3dgeo-research-group/projects-of-the-3dgeo-research-group/aimon50"><img src="img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -23,7 +23,7 @@ The goal of this project is to bridge the gap between research and practice. Whi
 
 |                                                                                                                                                                                                                   |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|<img src="img/study_site.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
+|<img src="img/study_site.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon5.0 project located in Trier in Germany (red dot). |
 
 
 <!-- ### 🧭 Approach Development -->
@@ -73,7 +73,7 @@ A change event is characterized by different attributes, each representing a mea
 
 ## 🛠️ Key Functions
 <!-- ### Using main.py file -->
-Serves as the entry point for the AImon<sup>5.0</sup> processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
+Serves as the entry point for the AImon5.0 processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
 
 Usage from the main repository folder:
 ```bash
@@ -88,7 +88,7 @@ As a starting point, please have a look to the Jupyter Notebooks available liste
 
 <!-- <h3> 📑 Citation </h3> -->
 ### - Citation
-Please cite AImon<sup>5.0</sup> when using it in your research.
+Please cite AImon5.0 when using it in your research.
 
 ```
 article{AImon5.0,

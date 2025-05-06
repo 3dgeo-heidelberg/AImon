@@ -23,6 +23,7 @@ classifiers = [
 dependencies = [
   "numpy",
   "pandas",
+  "geopandas",
   "scipy",
   "scikit-learn",
   "laspy[lazrs]",
@@ -36,7 +37,8 @@ dependencies = [
   "py4dgeo",
   "PySide6",
   "opencv-python",
-  "pyproj"
+  "pyproj",
+  "GitPython"
 ]
 
 

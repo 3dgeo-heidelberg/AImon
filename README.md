@@ -1,4 +1,4 @@
-# AImon<sup>5.0</sup>
+# AImon5.0
 
 ## 📖 About
 
