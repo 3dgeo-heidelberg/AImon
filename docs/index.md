@@ -19,11 +19,11 @@ This interface will connect stakeholder expertise with autonomous PLS systems an
 
 <!-- ### 📌 Study site -->
 ### - Study site
-The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The [3DGEO research group](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in [Trier (Germany)](https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9) (Fig 1), at the [Trierer Augenscheiner](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) (Fig 2).
+The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The [3DGEO research group](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in [Trier (Germany)](https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9) (Fig. 1), at the [Trierer Augenscheiner](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) (Fig. 2).
 
-|                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <img src="img/Trier_map.png?raw=true" width=300></a>                                |<img src="img/Trier_pic.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
+|                                                                                                                                                                                                                   |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|<img src="img/study_site.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon<sup>5.0</sup> project located in Trier in Germany (red dot). |
 
 
 <!-- ### 🧭 Approach Development -->
@@ -40,8 +40,8 @@ For this second approach, research must be carried out into how the state-of-the
 ## ⚙️ Work packages
 The following methods were developed by the [3DGEO research group](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html).
 
-<img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
-
+<img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/> <br>
+A change event is characterized by different attributes, each representing a measurable dimension of the change. The diagram of Fig. 3 highlights the modular structure of change events, emphasizing how temporal and spatial metrics combine to define and categorize observed changes. A classifier assigns an event type to the change based on the characteristics, enabling semantic interpretation of what kind of event occurred (e.g., gravitational mass movement, change in vegetation, etc).
 
 - **Research target 1 - Hierarchical classification of detected change:**  Developing new methods and tools to automatically extract relevant change information from the two last point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
     - 1.1: Rule based change classification
@@ -67,42 +67,12 @@ The following methods were developed by the [3DGEO research group](https://www.g
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Example 1: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
 | Example 3: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"> <img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
-| Example 5: Point cloud projection to range image <br> <a href="visualization.html"><img src="img/Untitled_RangeImage.png" width=500></a>                                       | TODO Example 6: 2D GIS layers representation <br> <a href="xxxxx.html"><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
-| TODO Example 7: 3D objects extraction  <br> <a href="xxxxx.html"><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
+| TODO Example 5: Point cloud projection to range image <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       | TODO Example 6: 2D GIS layers representation <br> <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
+| TODO Example 7: 3D objects extraction  <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
 
 <!--
 | Example 5: Unsupervised classification of change events <br> <a href="classification_of_change_events_unsupervised.ipynb"><img src="img/AImon_logo.png" width=500></a>                                       |
 -->
-
-## 💻 Installation with a Conda environment
-
-To avoid negative interactions between installed packages and version conflicts, a conda environment should be created for each new project. Follow the three next steps:
-
-1. Create a new environment and activate it.
-```bash
-conda create --name aimon python=3.11 -y
-conda activate aimon
-
-```
-
-2. Clone this repository and navigate to the main folder **aimon**
-```bash
-git clone https://github.com/3dgeo-heidelberg/aimon.git
-cd aimon
-```
-
-3. Install the release version using pip
-    1. Regular installation
-
-    ```bash
-    python -m pip install .
-    ```
-
-    2. Editable mode
-
-    ```bash
-    python -m pip install -v --editable .
-    ```
 
 
 ## 🛠️ Key Functions
