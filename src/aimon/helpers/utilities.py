@@ -361,7 +361,7 @@ def plot_change_events(vector, raster, event_type_col=None, colors=None):
     # Load vector data
     gdf = gpd.read_file(vector)
 
-    # Flip Y-axis of geometry (assuming needed)
+    # Flip Y-axis of geometry
     gdf['geometry'] = gdf['geometry'].map(lambda polygon: shp.ops.transform(lambda x, y: (x, -y), polygon))
 
     if event_type_col is not None:

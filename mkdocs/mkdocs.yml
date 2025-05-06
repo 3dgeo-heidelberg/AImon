@@ -37,4 +37,3 @@ nav:
     - Rule-based filtering of change events: filtering_of_change_events_rule_based.ipynb
     - Random forest classification of change events: classification_of_change_events_using_random_forest_classifier.ipynb
     - Unsupervised classification of change events: classification_of_change_events_unsupervised.ipynb
-    - 3D point cloud projection to range image: visualization.html
