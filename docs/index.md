@@ -67,12 +67,8 @@ A change event is characterized by different attributes, each representing a mea
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Example 1: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
 | Example 3: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"> <img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
-| TODO Example 5: Point cloud projection to range image <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       | TODO Example 6: 2D GIS layers representation <br> <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
-| TODO Example 7: 3D objects extraction  <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
-
-<!--
-| Example 5: Unsupervised classification of change events <br> <a href="classification_of_change_events_unsupervised.ipynb"><img src="img/AImon_logo.png" width=500></a>                                       |
--->
+<!-- | TODO Example 5: Point cloud projection to range image <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       | TODO Example 6: 2D GIS layers representation <br> <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
+| TODO Example 7: 3D objects extraction  <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       | -->
 
 
 ## 🛠️ Key Functions
