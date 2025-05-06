@@ -38,7 +38,12 @@ dependencies = [
   "PySide6",
   "opencv-python",
   "pyproj",
-  "GitPython"
+  "GitPython",
+  "notebook<7",
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocs-jupyter",
+  "jupyter_contrib_nbextensions"
 ]
 
 
