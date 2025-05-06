@@ -19,7 +19,7 @@ This interface will connect stakeholder expertise with autonomous PLS systems an
 
 <!-- ### 📌 Study site -->
 ### - Study site
-The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The [3DGEO research group](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in [Trier (Germany)](https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9) (Fig. 1), at the [Trierer Augenscheiner](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) (Fig. 2).
+The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The [3DGEO research group](https://www.geog.uni-heidelberg.de/en/3dgeo) research group developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in [Trier (Germany)](https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9) (Fig. 1), at the [Trierer Augenscheiner](https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7) (Fig. 2).
 
 |                                                                                                                                                                                                                   |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -38,7 +38,7 @@ For this second approach, research must be carried out into how the state-of-the
 
 
 ## ⚙️ Work packages
-The following methods were developed by the [3DGEO research group](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html).
+The following methods were developed by the [3DGEO research group](https://www.geog.uni-heidelberg.de/en/3dgeo).
 
 <img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/> <br>
 A change event is characterized by different attributes, each representing a measurable dimension of the change. The diagram of Fig. 3 highlights the modular structure of change events, emphasizing how temporal and spatial metrics combine to define and categorize observed changes. A classifier assigns an event type to the change based on the characteristics, enabling semantic interpretation of what kind of event occurred (e.g., gravitational mass movement, change in vegetation, etc).
@@ -119,7 +119,7 @@ TODO: Add funding and acknowledgment
 ### - Contact / Bugs / Feature Requests
 You think you have found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
 
-Scientific requests can be directed to the [3DGeo Research Group Heidelberg](https://www.geog.uni-heidelberg.de/3dgeo/index_en.html) and its respective members.
+Scientific requests can be directed to the [3DGeo Research Group Heidelberg](https://www.geog.uni-heidelberg.de/en/3dgeo) and its respective members.
 
 
 <!-- <h3> 📜 License </h3> -->
