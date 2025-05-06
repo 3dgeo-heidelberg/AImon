@@ -1,76 +1,45 @@
-# m4dvap: Modular 4-Dimensional Visualization and Analysis for Point clouds
+# AImon<sup>5.0</sup>
 
-## Overview
+## 📖 About
 
-m4dvap is a comprehensive tool designed for processing and projecting point cloud datasets. It facilitates the generation of range and color images, applies changes based on predefined events, and performs bi-temporal analysis to detect and visualize changes in spatial data.
+The [3DGeo Research Group](https://www.geog.uni-heidelberg.de/en/3dgeo) focuses on advancing geohazard monitoring through the use of 4D geospatial data. With global climate change accelerating environmental risks like landslides and rockfalls, our work leverages autonomous laser scanning (PLS) systems to capture real-time 3D data, enabling proactive risk management. We develop AI-driven methods for continuous hazard monitoring, bridging the gap between research and practical, application-oriented solutions. Our goal is to refine and extend multi-temporal analysis techniques to enhance hazard detection and mitigate the impact on communities and infrastructure. The study site is located in Trier, Germany.
 
-## Features
+## 💻 Installation with a Conda environment
 
-- **Point Cloud Projection**: Generate range and color images from point cloud data.
-- **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
-- **Change Event Management**: Convert clusters into change events.
-- **Data Handling**: Efficiently split, append, and merge LAS/LAZ files.
-- **Visualization**: Projected images and change events visualization.
+To avoid negative interactions between installed packages and version conflicts, a conda environment should be created for each new project. Follow the three next steps:
 
-## Installation
-
-### Prerequisites
-
-- **Python 3.11+**
-- **Conda** (for environment management)
-
-### Setting Up the Conda Environment
-
-1. **Clone the Repository**
-
+1. Create a new environment and activate it.
 ```bash
-$ git clone https://github.com/3dgeo-heidelberg/m4dvap.git
-$ cd m4dvap
-
-# Install a Conda Environment
-$ conda env create -f environment.yml
-
-# Activate environment 
-$ conda activate m4dvap
+conda create --name aimon python=3.11 -y
+conda activate aimon
 
 ```
 
-## Creating Conda Environments
-To avoid negative interactions between installed packages and version conflicts, you should create a conda environment for each new project. You do so by executing:
+2. Clone this repository and navigate to the main folder **aimon**
 ```bash
-# First, create new environment
-$ conda create --name aimon python=3.11
-
-# Then activate the environment using:
-$ conda activate aimon
-
+git clone https://github.com/3dgeo-heidelberg/aimon.git
+cd aimon
 ```
 
-Using AImon requires Python 3.11 or higher.
-Clone and run this application:
+3. Install the release version using pip
+    1. Regular installation
 
-```bash
+    ```
+    python -m pip install .
+    ```
 
-# Clone this repository
-$ git clone https://github.com/3dgeo-heidelberg/aimon.git
+    2. Editable mode
 
-# Go into the repository
-$ cd aimon
+    ```
+    python -m pip install -v --editable .
+    ```
 
-# Installing the release version using pip
-$ python -m pip install .
+## 📜 License
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)\
+This is licensed under the MIT license.
 
-#OR if editable needed
-$ python -m pip install -v --editable .
+## 📧 Contact
 
-```
-
-# Key Functions
-## main.py
-Serves as the entry point for the m4dvap processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
-
-Usage:
-
-```
-python main.py -c "config" -f "path/to/t1_file.las" "path/to/t2_file.las"
-```
+William Albert, albert@uni-heidelberg.de \
+Ronald Tabernig, ronald.tabernig@uni-heidelberg.de \
+[3DGeo Research Group](https://www.geog.uni-heidelberg.de/en/3dgeo), Institute of Geography, Heidelberg University

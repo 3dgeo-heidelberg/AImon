@@ -4,7 +4,13 @@
 *.pyc
 tmp/*
 *.log
+*.obj
+*AImon.egg-info
 *.geojson
+*.kml
+*.kmz
 *.json
 out/*
 /data
+site/*
+*.joblib
