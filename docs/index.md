@@ -2,7 +2,9 @@
 <br>
 
 # Welcome to AImon5.0
-<a href="https://www.geog.uni-heidelberg.de/en/institute/geoinformatics/3dgeo-research-group/projects-of-the-3dgeo-research-group/aimon50"><img src="img/AImon_logo.png?raw=true" alt="logo" style="width:500px;"/>
+<a href="https://www.geog.uni-heidelberg.de/en/institute/geoinformatics/3dgeo-research-group/projects-of-the-3dgeo-research-group/aimon50">
+  <img src="img/AImon_logo.png?raw=true" alt="AImon 5.0 logo" style="width:500px;" />
+</a>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -23,9 +25,7 @@ This interface will connect stakeholder expertise with autonomous PLS systems an
 ### - Study site
 <div style="text-align: justify">
 The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The 
-<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in 
-<a href="https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9">Trier Germany</a> (Fig. 1), at the 
-<a href="https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7">Trierer Augenscheiner</a> (Fig. 2).
+<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in <a href="https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9">Trier, Germany</a> (Fig. 1), at the <a href="https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7">Trierer Augenscheiner</a> (Fig. 2).
 </div>
 
 
@@ -50,24 +50,28 @@ For this second approach, research must be carried out into how the state-of-the
 ## ⚙️ Work packages
 <div style="text-align: justify">
 The following methods were developed by the 
-<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGEO research group</a>.
+<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group</a>.
 
 <img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/> <br>
 A change event is characterized by different attributes, each representing a measurable dimension of the change. The diagram of Fig. 3 highlights the modular structure of change events, emphasizing how temporal and spatial metrics combine to define and categorize observed changes. A classifier assigns an event type to the change based on the characteristics, enabling semantic interpretation of what kind of event occurred (e.g., gravitational mass movement, change in vegetation, etc).
+</div>
 
+**Research target 1 - Hierarchical classification of detected change:**  
+<div style="text-align: justify">Developing new methods and tools to automatically extract relevant change information from the last two point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
+</div>
+- 1.1: Rule-based change classification
+- 1.2: [Hierarchical analysis](https://doi.org/10.5445/IR/1000180377)
+- 1.3: ML/DL change classification
+- 1.4: Derivation of adaptive workflows
+- 1.5: Continuous integration in [py4dgeo](https://github.com/3dgeo-heidelberg/py4dgeo/tree/main)
 
-- **Research target 1 - Hierarchical classification of detected change:**  Developing new methods and tools to automatically extract relevant change information from the two last point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
-    - 1.1: Rule based change classification
-    - 1.2: Hierarchical analysis
-    - 1.3: ML/DL change classification
-    - 1.4: Derivation of adaptive workflows
-    - 1.5: Continuous integration in 
-<a href="https://github.com/3dgeo-heidelberg/py4dgeo/tree/main">py4dgeo</a>
-
-- **Research target 2: Visualization of classified change events**: Development of new methodologies and tools for the visualization of the detected terrain changes from WP 5 and WP 6 for use by end users. Three different steps:
-    - 2.1: Selection of relevant changes
-    - 2.2: 2D GIS layer
-    - 2.3: 3D objects
+**Research target 2: Visualization of classified change events:**
+<div style="text-align: justify">
+Development of new methodologies and tools for the visualization of the detected terrain changes for use by end users. Three different steps:
+</div>
+- 2.1: Selection of relevant changes
+- 2.2: 2D GIS layer
+- 2.3: 3D objects
 
 ### - Possible applications
 - **Point Cloud Projection**: Generate range and color images from point cloud data.
@@ -75,12 +79,12 @@ A change event is characterized by different attributes, each representing a mea
 - **Change Event Management**: Convert clusters into change events.
 - **Data Handling**: Efficiently split, append, and merge LAS/LAZ files.
 - **Visualization**: Projected images and change events visualization.
-</div>
+<!-- </div> -->
 
 ## 🎮 Examples
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Example 1: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
+| Example 1: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule-based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
 | Example 3: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"> <img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
 <!-- | TODO Example 5: Point cloud projection to range image <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       | TODO Example 6: 2D GIS layers representation <br> <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       |
 | TODO Example 7: 3D objects extraction  <br> <a><img src="img/Untitled_RangeImage.png" width=500></a>                                       | -->
@@ -94,7 +98,7 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 
 Usage from the main repository folder:
 ```bash
-python cd src/aimon/main.py -c "<path/to/config_file.json>" -f "<path/to/t1_point_cloud.las>" "<path/to/t2_point_cloud.las>"
+python src/aimon/main.py -c "<path/to/config_file.json>" -f "<path/to/t1_point_cloud.las>" "<path/to/t2_point_cloud.las>"
 ```
 
 
@@ -109,8 +113,8 @@ As a starting point, please have a look to the Jupyter Notebooks available liste
 Please cite AImon5.0 when using it in your research.
 
 ```
-software{AImon5.0,
-author = {AImon5.0 Development Core Team}
+@software{AImon5.0,
+author = {AImon5.0 Development Core Team},
 title = {AImon5.0: tool for 3D point cloud processing and projection},
 journal = {},
 year = {2025},
@@ -131,7 +135,7 @@ TODO: Add papers here
 
 <!-- <h3> 💟 Funding / Acknowledgements </h3> -->
 ### - Funding / Acknowledgements
-TODO: Add funding and acknowledgment
+This work is funded by the BMBF AIMon5.0: Project no. 02WDG1696 and by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation). The Federal Ministry of Education and Research (BMBF) is funding the AIMon5.0 project within the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’.
 
 <!-- <h3> 🔔 Contact / Bugs / Feature Requests </h3> -->
 ### - Contact / Bugs / Feature Requests
