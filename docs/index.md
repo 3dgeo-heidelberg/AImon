@@ -96,11 +96,6 @@ Development of new methodologies and tools for the visualization of the detected
 Serves as the entry point for the AImon5.0 processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
 </div>
 
-Usage from the main repository folder:
-```bash
-python src/aimon/main.py -c "<path/to/config_file.json>" -f "<path/to/t1_point_cloud.las>" "<path/to/t2_point_cloud.las>"
-```
-
 
 ## 📂 References & Credits
 <!-- <h3> 🐍 Documentation of software usage </h3> -->
