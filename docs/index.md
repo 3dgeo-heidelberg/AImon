@@ -12,7 +12,7 @@
 Real-time monitoring of gravitational mass movements for critical infrastructure risk management with AI-assisted 3D metrology
 
 <!-- ### 🎯 Overall objective of the project -->
-### - Overall objective
+### Overall objective
 <div style="text-align: justify">
 Our environment and the Earth's surface are constantly changing, and global warming and climate change are accelerating the pace and magnitude of these changes. As a result, geohazards - triggered by natural events or human activities - are becoming more frequent. For example, intense and prolonged rainfall is increasingly causing landslides and rockfalls that threaten local populations and critical infrastructure such as railways and roads, with serious economic consequences.
 
@@ -22,7 +22,7 @@ This interface will connect stakeholder expertise with autonomous PLS systems an
 </div>
 
 <!-- ### 📌 Study site -->
-### - Study site
+### Study site
 <div style="text-align: justify">
 The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The 
 <a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in <a href="https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9">Trier, Germany</a> (Fig. 1), at the <a href="https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7">Trierer Augenscheiner</a> (Fig. 2).
@@ -35,7 +35,7 @@ The goal of this project is to bridge the gap between research and practice. Whi
 
 
 <!-- ### 🧭 Approach Development -->
-### - Approach Development
+### Approach Development
 <div style="text-align: justify">
 The methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigate and combine two complementary concepts that can integrate expert knowledge into automated data analysis: 
 
@@ -73,7 +73,7 @@ Development of new methodologies and tools for the visualization of the detected
 - 2.2: 2D GIS layer
 - 2.3: 3D objects
 
-### - Possible applications
+### Possible applications
 - **Point Cloud Projection**: Generate range and color images from point cloud data.
 - **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
 - **Change Event Management**: Convert clusters into change events.
@@ -99,12 +99,12 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 
 ## 📂 References & Credits
 <!-- <h3> 🐍 Documentation of software usage </h3> -->
-### - Documentation of software usage
+### Documentation of software usage
 As a starting point, please have a look to the Jupyter Notebooks available listed in the top left corner of the page.
 
 
 <!-- <h3> 📑 Citation </h3> -->
-### - Citation
+### Citation
 Please cite AImon5.0 when using it in your research.
 
 ```
@@ -121,7 +121,7 @@ url = {https://github.com/3dgeo-heidelberg/AImon},
 ```
 
 <!-- <h3> 📚 Literature </h3> -->
-### - Literature
+### Literature
 TODO: Add papers here
 
 * Paper 1
@@ -129,11 +129,11 @@ TODO: Add papers here
 * ...
 
 <!-- <h3> 💟 Funding / Acknowledgements </h3> -->
-### - Funding / Acknowledgements
+### Funding / Acknowledgements
 This work is funded by the BMBF AIMon5.0: Project no. 02WDG1696 and by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation). The Federal Ministry of Education and Research (BMBF) is funding the AIMon5.0 project within the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’.
 
 <!-- <h3> 🔔 Contact / Bugs / Feature Requests </h3> -->
-### - Contact / Bugs / Feature Requests
+### Contact / Bugs / Feature Requests
 <div style="text-align: justify">
 You think you have found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
 
@@ -143,7 +143,7 @@ Scientific requests can be directed to the
 
 
 <!-- <h3> 📜 License </h3> -->
-### - License
+### License
 
 This is licensed under the [MIT license](LICENSE.md).
 
