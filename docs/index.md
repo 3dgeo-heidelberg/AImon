@@ -8,8 +8,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 📑 Research project definition
-Real-time monitoring of gravitational mass movements for critical infrastructure risk management with AI-assisted 3D metrology
+## 📑 Research project
+Modern permanently installed laser scanners can deliver sub‐hourly point clouds, opening the door to early warning of surface deformations. Current workflows struggle to keep pace with such data volumes in near real-time. Vegetation and occlusions in forested or complex terrain further degrade ground‐point coverage, undermining the reliability of change estimates. As a result, there remains a critical need for efficient, robust processing strategies that can detect and quantify subtle surface shifts.
+
+<!-- Real-time monitoring of gravitational mass movements for critical infrastructure risk management with AI-assisted 3D metrology -->
 
 <!-- ### 🎯 Overall objective of the project -->
 ### Overall objective
@@ -35,7 +37,7 @@ The goal of this project is to bridge the gap between research and practice. Whi
 
 
 <!-- ### 🧭 Approach Development -->
-### Approach Development
+### Approach development
 <div style="text-align: justify">
 The methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigate and combine two complementary concepts that can integrate expert knowledge into automated data analysis: 
 
