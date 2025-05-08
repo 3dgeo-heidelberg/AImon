@@ -54,8 +54,8 @@ For this second approach, research must be carried out into how the state-of-the
 The following methods were developed by the 
 <a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group</a>.
 
-<img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/> <br>
-A change event is characterized by different attributes, each representing a measurable dimension of the change. The diagram of Fig. 3 highlights the modular structure of change events, emphasizing how temporal and spatial metrics combine to define and categorize observed changes. A classifier assigns an event type to the change based on the characteristics, enabling semantic interpretation of what kind of event occurred (e.g., gravitational mass movement, change in vegetation, etc).
+A change event is characterized by different attributes, each representing a measurable dimension of the change. The diagram of Fig. 3 highlights the modular structure of change events, emphasizing how temporal and spatial metrics combine to define and categorize observed changes. A classifier assigns an event type to the change based on the characteristics, enabling semantic interpretation of what kind of event occurred (e.g., gravitational mass movement, change in vegetation, etc).<br>
+<img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 </div>
 
 **Research target 1 - Hierarchical classification of detected change:**  
@@ -75,7 +75,7 @@ Development of new methodologies and tools for the visualization of the detected
 - 2.2: 2D GIS layer
 - 2.3: 3D objects
 
-### Possible applications
+## Possible applications
 - **Point Cloud Projection**: Generate range and color images from point cloud data.
 - **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
 - **Change Event Management**: Convert clusters into change events.
@@ -99,14 +99,24 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 </div>
 
 
-## 📂 References & Credits
+<!-- <h3> 📚 Literature </h3> -->
+## 📚 Literature and References
+TODO: Add papers here
+
+* Paper 1
+* Paper 2
+* ...
+
+## 📂 Credits
 <!-- <h3> 🐍 Documentation of software usage </h3> -->
-### Documentation of software usage
+**Software usage**
+
 As a starting point, please have a look to the Jupyter Notebooks available listed in the top left corner of the page.
 
 
 <!-- <h3> 📑 Citation </h3> -->
-### Citation
+**Citation**
+
 Please cite AImon5.0 when using it in your research.
 
 ```
@@ -122,20 +132,14 @@ url = {https://github.com/3dgeo-heidelberg/AImon},
 }
 ```
 
-<!-- <h3> 📚 Literature </h3> -->
-### Literature
-TODO: Add papers here
-
-* Paper 1
-* Paper 2
-* ...
-
 <!-- <h3> 💟 Funding / Acknowledgements </h3> -->
-### Funding / Acknowledgements
+**Funding / Acknowledgements**
+
 This work is funded by the BMBF AIMon5.0: Project no. 02WDG1696 and by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation). The Federal Ministry of Education and Research (BMBF) is funding the AIMon5.0 project within the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’.
 
 <!-- <h3> 🔔 Contact / Bugs / Feature Requests </h3> -->
-### Contact / Bugs / Feature Requests
+**Contact / Bugs / Feature Requests**
+
 <div style="text-align: justify">
 You think you have found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
 
@@ -145,7 +149,7 @@ Scientific requests can be directed to the
 
 
 <!-- <h3> 📜 License </h3> -->
-### License
+**License**
 
 This is licensed under the [MIT license](LICENSE.md).
 
