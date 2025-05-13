@@ -50,7 +50,7 @@ class ChangeAnalysisM3C2:
             epochs=(epoch_refernce, epoch_target),
             corepoints=epoch_corepoints.cloud[::],
             normal_radii=tuple(m3c2_config["normal_radii"]),
-            cyl_radii=(m3c2_config["cyl_radii"],),
+            cyl_radius=(m3c2_config["cyl_radii"],),
             max_distance=m3c2_config["max_distance"],
             registration_error=m3c2_config["registration_error"],
         )
@@ -282,7 +282,12 @@ class ChangeAnalysisM3C2:
         epoch_ids = np.concatenate(epoch_ids)
         dh.df = pd.DataFrame(np.c_[corepoints,distances,lo_detections,epoch_ids,nx,ny,nz,n_radius,spread1,spread2,num_samples1,num_samples2
                             ], columns= ["X","Y","Z","M3C2_distance","M3C2_lodetection","epoch","nx","ny","nz","n_radius","spread1","spread2","num_samples1","num_samples2"])
-        dh.save_as_las(outfile_m3c2)
+        try:
+            dh.save_as_las(outfile_m3c2)
+        except Exception as error:
+            with open(outfile_m3c2_no_change,"w") as ef:
+                ef.write("%s"%error)
+            return
         return dh.df
 
     @timeit
