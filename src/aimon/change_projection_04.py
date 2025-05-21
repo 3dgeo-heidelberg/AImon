@@ -108,7 +108,9 @@ class ProjectChange:
         try:
             # Retrieve the metadata
             #self.bg_img_path = os.path.join(os.getcwd(), self.bg_img_path)
-            with rasterio.open(self.bg_img_path) as src:
+            lst_bg_img = os.listdir(self.bg_img_path)
+            bg_img = os.path.join(self.bg_img_path, lst_bg_img[0])
+            with rasterio.open(bg_img) as src:
                 image_metadata_loaded = dict(src.tags().items())
         except:
             print("Missing some information, cannot project change into image")

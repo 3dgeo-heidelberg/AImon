@@ -201,7 +201,17 @@ class PCloudProjection:
         theta_deg, phi_deg = np.rad2deg(theta), np.rad2deg(phi)
 
         # Discretize angles to image coordinates
+        if np.floor(min(theta_deg)) == -180 and np.floor(max(theta_deg)) == 180:
+            mask = theta_deg < 0
+            theta_deg[mask] += 360
+        
         self.h_fov = (np.floor(min(theta_deg)), np.ceil(max(theta_deg)))
+
+
+        if np.floor(min(phi_deg)) == -180 and np.floor(max(phi_deg)) == 180:
+            mask = phi_deg < 0
+            phi_deg[mask] += 360
+        
         self.v_fov = (np.floor(min(phi_deg)), np.ceil(max(phi_deg)))
 
         self.h_img_res = int((self.h_fov[1] - self.h_fov[0]) / self.h_res)
@@ -231,6 +241,9 @@ class PCloudProjection:
             self.red = self.red[valid_indices]
             self.green = self.green[valid_indices]
             self.blue = self.blue[valid_indices]
+
+        # Shift the point cloud back to its original coordinates
+        self.xyz += self.camera_position
 
 
     def create_shading(self):

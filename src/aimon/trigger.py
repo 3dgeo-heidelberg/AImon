@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from urllib.request import urlretrieve, urlopen
+import subprocess
 
 from shutil import copyfileobj
 
@@ -15,6 +16,7 @@ from shutil import copyfileobj
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")  # Run in background (optional)
 options.add_argument("--disable-gpu")  # Helps with some issues
+
 
 def get_file_list():
     try:
@@ -59,7 +61,11 @@ def download(download_page_link):
     print("Done")
     return download_path
 
+
 def main(json_path):
+    with open(".temp/current_files.txt", "w") as f:
+        f.write("")
+
     # Get the initial file list
     try:
         previous_files = get_file_list()
@@ -68,34 +74,36 @@ def main(json_path):
         last_file = os.path.basename(last_file).split('&')[0]
         last_file = os.path.join(download_dir, last_file)
     except:
-        last_file = []
+        last_file = ['']
 
     while True:
         time.sleep(CHECK_INTERVAL)
         current_files = get_file_list()
         current_files.sort()
+            
         # Detect new files
         added_file = list(set(current_files) - set(previous_files))
-
-        if added_file and last_file != []:
-            print(f"New file detected: {added_file}")
-            new_file = download(added_file[0])
-            os.system(f"python src/aimon/main.py -c '{json_path}' -f '{last_file}' '{new_file}'")
-            to_delete = last_file
-            last_file = new_file
-
-        elif added_file and last_file == []:
-            print(f"New file detected: {added_file}")
-            new_file = download(added_file[0])
-            last_file = new_file
-
-        # if "to_delete" in locals() or "to_delete" in globals():
-        #     os.remove(to_delete)
-        #     if to_delete in globals():
-        #         del globals()[to_delete]
-        #     del to_delete
-
         previous_files = current_files
+
+        if added_file:
+            print(f"New file detected: {added_file}")
+            with open(".temp/current_files.txt", "r") as f:
+                last_file = f.read().split("\n")[-1]
+            last_file = urllib.parse.unquote(last_file)
+            last_file = os.path.basename(last_file).split('&')[0]
+            last_file = os.path.join(download_dir, last_file)
+
+            new_file = download(added_file[0])
+
+        with open(".temp/current_files.txt", "w") as f:
+            f.write('\n'.join(str(i) for i in current_files))
+
+        if added_file and last_file != download_dir:
+            py_script = os.path.join(os.getcwd(), "src/aimon/main.py")
+            cmd = f"{py_script} -c '{json_path}' -f '{last_file}' '{new_file}'"
+            subprocess.run(["python", py_script, "-c", json_path, "-f", last_file, new_file], cwd=os.getcwd())
+            
+        
         #break
 
 if __name__ == "__main__":
@@ -104,6 +112,6 @@ if __name__ == "__main__":
     CHECK_INTERVAL = 3  # seconds
     download_dir = r"/home/william/Downloads/" # Directory to download the files to
 
-    json_path = r"/home/william/Documents/DATA/Obergurgl/aimon_configs/Obergurgl_dev.json" # Path to the json file
+    json_path = r"/home/william/Documents/DATA/TRIER/project_settings_trier.json" # Path to the json file
 
     main(json_path)
