@@ -42,11 +42,11 @@ if __name__ == '__main__':
     ########################################################################################################
 
     #### These are the used files for the simulation. These can be changed to fit your needs. ####
-    survey_template = os.path.join(path_to_helios, r"data_for_aimon\surveys\template.xml")
+    survey_template = os.path.join(path_to_helios, r"data_for_aimon/surveys/template.xml")
     available_scene_files = [
-                os.path.join(path_to_helios,r"data_for_aimon\scenes\S0.xml"),
-                os.path.join(path_to_helios,r"data_for_aimon\scenes\S1.xml"),
-                os.path.join(path_to_helios,r"data_for_aimon\scenes\S2.xml")]
+                os.path.join(path_to_helios,r"data_for_aimon/scenes/S0.xml"),
+                os.path.join(path_to_helios,r"data_for_aimon/scenes/S1.xml"),
+                os.path.join(path_to_helios,r"data_for_aimon/scenes/S2.xml")]
     
     #### This gives the description of the scenes. The first element is the scene number, the second is a description of the scene and the third is the path to the scene file. ####
     # The scene number is used to identify the scenefile in the scenes folder. The description is used for logging purposes.
@@ -161,7 +161,7 @@ if __name__ == '__main__':
                         new_scene_name=scene_file,
                         change_fov=change_fov)
                     
-                    run_lidar_simulation(current_survey, current_survey_laz)
+                    run_lidar_simulation(current_survey, current_survey_laz, path_to_helios)
                     processed_detail_scenes.append(current_survey_laz)
             #Always run a low resolution scan with the old fov, even if change is detected. This ensures that 
             #we have a low resolution overview scan for the change detection in case we miss something with the selected FOV.
@@ -176,7 +176,7 @@ if __name__ == '__main__':
                     output_path=current_survey,
                     new_scene_name=scene_file,
                     change_fov=False)
-                run_lidar_simulation(current_survey, current_survey_laz)
+                run_lidar_simulation(current_survey, current_survey_laz, path_to_helios)
                 processed_overview_scenes.append(current_survey_laz)
         else:
             print(f"No scene description for {current_time}. Skipping simulation.")
@@ -259,4 +259,3 @@ if __name__ == '__main__':
         if m >= 60:
             h += m // 60
             m = m % 60
-

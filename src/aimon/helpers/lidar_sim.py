@@ -14,6 +14,7 @@ def initiate_survey(survey_path):
     print(assets_dir)
     print(output_dir)
 
+    # pyhelios.loggingSilent()
     simBuilder = pyhelios.SimulationBuilder(
         surveyPath=survey_path,
         assetsDir=assets_dir,
@@ -51,7 +52,7 @@ def save_df_to_laz(df, laz_file):
 
 def run_lidar_simulation(path_to_survey, 
                           laz_file,
-                          path_to_helios = r"D:\helios-plusplus-win"):
+                          path_to_helios):
     os.chdir(path_to_helios)
     # Initiate the survey and run the simulation
     simB = initiate_survey(path_to_survey)
