@@ -20,7 +20,11 @@ from aimon.helpers.lidar_sim import run_lidar_simulation, compute_angles, get_mi
 from aimon.voxel_wise_change_detection_01 import compute_bitemporal_vapc
 from aimon.change_analysis_02 import ChangeAnalysisM3C2
 from aimon.helpers.cluster import cluster
+from aimon.helpers.change_events import process_m3c2_file_into_change_events
 import vapc
+#Change projection:
+from aimon.pc_projection_03 import PCloudProjection
+from aimon.change_projection_04 import ProjectChange
 #Mute vapc 
 vapc.enable_trace(False)
 vapc.enable_timeit(False)
@@ -39,6 +43,7 @@ if __name__ == '__main__':
 
     ##########################################   Example usage:   ##########################################
     # python adaptive_pipeline.py --helios_root "D:\helios-plusplus-win" --output_folder "D:\output\test2" --adaptive
+
     ########################################################################################################
 
     #### These are the used files for the simulation. These can be changed to fit your needs. ####
@@ -110,6 +115,21 @@ if __name__ == '__main__':
                 "Z"
             ],
             "min_cluster_size": 25
+        },
+        "pc_projection": {
+            "epsg": 32632,
+            "make_range_image": True,
+            "make_color_image": False,
+            "top_view": False,
+            "save_rot_pc": False,
+            "resolution_cm": 15.0,
+            "camera_position": [
+                26.5,
+                -240.015,
+                135.411
+                ],
+            "rgb_light_intensity": 100,
+            "range_light_intensity": 15,
         }
     }
 
@@ -146,7 +166,6 @@ if __name__ == '__main__':
             # Extract the scene file path
             scene_file = scene_descitption[current_time][2]
             scene_nr = scene_descitption[current_time][0]
-            print(f"Running LiDAR simulation for {current_time} with scene: {scene_file}...")
             # Run the LiDAR simulation with the specified scene file
             if change_fov: # Make a high resolution scan with the new fov if change is detected
                 current_survey = os.path.join(os.path.dirname(survey_template), current_time + "_high_res.xml")
@@ -182,6 +201,13 @@ if __name__ == '__main__':
             print(f"No scene description for {current_time}. Skipping simulation.")
 
         ########################### Start Hierarchical Change Analysis Pipeline ###########################
+        if len(processed_overview_scenes) == 1: # Create shaded range image of the first overview scan
+            configuration["pc_projection"]["pc_path"] = current_survey_laz
+
+            pc_prj = PCloudProjection(configuration=configuration,
+                                      project_name="%s"%os.path.basename(current_survey_laz)[:-4],
+                                      projected_image_folder = os.path.dirname(current_survey_laz))
+            pc_prj.project_pc()
         if len(processed_overview_scenes) > 1:
             if m == 0: # Compare overview scans every full hour
                 t1_file = processed_overview_scenes[-2]
@@ -192,8 +218,10 @@ if __name__ == '__main__':
 
             t1_vapc_out_file = os.path.join(current_time_out_folder, f"{current_time}_t1_vapc.laz")
             t2_vapc_out_file = os.path.join(current_time_out_folder, f"{current_time}_t2_vapc.laz")
-            m3c2_out_file = os.path.join(current_time_out_folder, f"{current_time}_m3c2.laz")
-            m3c2_clustered = os.path.join(current_time_out_folder, f"{current_time}_m3c2_clustered.laz")
+            #This is an intemediate solution
+            t = "250101_"+"".join(os.path.basename(t1_file).split("_")[:2]) + "00__250101_" + "".join(os.path.basename(t2_file).split("_")[:2])+"00"
+            m3c2_out_file = os.path.join(current_time_out_folder, f"{t}_m3c2.laz")
+            m3c2_clustered = os.path.join(current_time_out_folder, f"{t}_m3c2_clustered.laz")
             change_event_folder = os.path.join(current_time_out_folder, f"{current_time}_change_events")
 
             if change_fov:
@@ -207,7 +235,6 @@ if __name__ == '__main__':
                 dh1.save_as_las(t1_file.replace(".laz", "_cropped.laz"))
                 t1_file = t1_file.replace(".laz", "_cropped.laz")
 
-
             #BI-VAPC - Change detetction module
             compute_bitemporal_vapc(
                 t1_file,
@@ -218,7 +245,6 @@ if __name__ == '__main__':
                 )
             
             #Extract areas that are occupied in both epochs
-            
             # mask_file = os.path.join(os.path.dirname(t1_vapc_out_file), "mask.las")
             # if os.path.exists(mask_file):
             #     
@@ -239,6 +265,16 @@ if __name__ == '__main__':
                         )
 
                 if os.path.isfile(m3c2_out_file):
+                    # Create change events, a shaded range image, and .geojson files that show the change events projected into the shaded range image and in original coordinates
+                    process_m3c2_file_into_change_events(m3c2_clustered)
+                    # Project the RBG point cloud to image
+                    change_prj = ProjectChange(change_event_file=os.path.dirname(m3c2_clustered)+"change_events.json",
+                                               project_name="%s"%os.path.basename(current_survey_laz)[:-4],
+                                               projected_image_path=os.path.dirname(current_survey_laz),
+                                               projected_events_folder=os.path.dirname(m3c2_out_file),
+                                               epsg= configuration["pc_projection"]["epsg"])
+                    change_prj.project_change()
+
                     change_detected = True  # Set to True as changes are detected
                     if m == 30 or adaptive_mode is False: # If we are in standard mode we do not update the FOV
                         change_fov = False
