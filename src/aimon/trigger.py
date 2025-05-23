@@ -10,6 +10,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from urllib.request import urlretrieve, urlopen
 import subprocess
 
+from aimon.helpers.utilities import read_json_file, convert_geojson_to_datamodel
+
 from shutil import copyfileobj
 
 # Set up Selenium WebDriver
@@ -62,7 +64,17 @@ def download(download_page_link):
     return download_path
 
 
-def main(json_path):
+def geojson_to_datamodel(geojson_name, datamodel_json_path):
+    # Convert the change events GeoJSON file to a datamodel JSON file
+    loaded_data = read_json_file(geojson_name)
+    datamodel_json = convert_geojson_to_datamodel(loaded_data, "/4dgeo/testing_data/rockfall_monitoring_trier/Trier_RangeImage.png", 1724, 862,)
+
+    # Save the datamodel JSON to a file
+    with open(datamodel_json_path, "w") as outfile:
+        outfile.write(datamodel_json)
+
+
+def main(config_json_path, datamodel_json_path):
     with open(".temp/current_files.txt", "w") as f:
         f.write("")
 
@@ -89,7 +101,7 @@ def main(json_path):
             print(f"New file detected: {added_file}")
             with open(".temp/current_files.txt", "r") as f:
                 last_file = f.read().split("\n")[-1]
-            last_file = urllib.parse.unquote(last_file)
+            last_file = urllib.parse.unquote(last_file) 
             last_file = os.path.basename(last_file).split('&')[0]
             last_file = os.path.join(download_dir, last_file)
 
@@ -100,10 +112,20 @@ def main(json_path):
 
         if added_file and last_file != download_dir:
             py_script = os.path.join(os.getcwd(), "src/aimon/main.py")
-            cmd = f"{py_script} -c '{json_path}' -f '{last_file}' '{new_file}'"
-            subprocess.run(["python", py_script, "-c", json_path, "-f", last_file, new_file], cwd=os.getcwd())
+            cmd = f"python {py_script} -c {config_json_path} -f {last_file} {new_file}"
+            print(f"Executing command line:\n{cmd}")
+            subprocess.call(["python", py_script, "-c", config_json_path, "-f", last_file, new_file], cwd=os.getcwd())
+
+            # Convert the change events GeoJSON file to a datamodel JSON file
+            json_settings = read_json_file(config_json_path)
+            output_folder = json_settings["project_setting"]["output_folder"]
+            project_name = json_settings["project_setting"]["project_name"]
+
+            geojson_name = os.path.join(os.getcwd(), output_folder, project_name, "04_Change_visualisation_UHD_Change_Events", "%s_change_events_pixel.geojson"%project_name)
+            geojson_to_datamodel(geojson_name, datamodel_json_path)
+
+            print("Waiting for another file...")
             
-        
         #break
 
 if __name__ == "__main__":
@@ -112,6 +134,8 @@ if __name__ == "__main__":
     CHECK_INTERVAL = 3  # seconds
     download_dir = r"/home/william/Downloads/" # Directory to download the files to
 
-    json_path = r"/home/william/Documents/DATA/TRIER/project_settings_trier.json" # Path to the json file
+    config_json_path = r"/home/william/Documents/DATA/TRIER/project_settings_trier.json" # Path to the config json file
+    datamodel_json_path = "/home/william/Documents/GitHub/4dgeo/public/testing_data/rockfall_monitoring_trier/sample_rockfall_monitoring_trier.json"
 
-    main(json_path)
+    main(config_json_path, datamodel_json_path)
+

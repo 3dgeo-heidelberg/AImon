@@ -75,7 +75,7 @@ class ProjectChange:
             
             #if 'undefined' in str(change_event['event_type']): continue
 
-            # Fetch contour points in WGS84 coordinate system
+            # Fetch contour points
             change_event_pts_og = change_event.convex_hull["points_building"]
             change_event_pts_og = np.asarray(change_event_pts_og)
             
@@ -161,13 +161,25 @@ class ProjectChange:
             r, theta, phi = utilities.xyz_2_spherical(change_event_pts)
             theta, phi = np.rad2deg(theta), np.rad2deg(phi)
 
+            # Discretize angles to image coordinates
+            if np.floor(max(theta)) - np.floor(min(theta)) > 180:
+                mask = theta < 0
+                theta[mask] += 360
+
+            if np.floor(max(phi)) - np.floor(min(phi)) > 180:
+                mask = phi < 0
+                phi[mask] += 360
+
             # Transformation from spherical coordinates (r, θ, φ) to pixel coordinates (u, v)
             u = np.round((theta - h_fov_x) / res).astype(int)
             v = np.round((phi - v_fov_x) / res).astype(int)
             change_points_uv = np.c_[u, v]
 
             # Create the convex hull
-            hull = ConvexHull(change_points_uv)
+            if len(np.unique(change_points_uv[:, 0])) < 3 or len(np.unique(change_points_uv[:, 1])) < 3:
+                continue
+            else:
+                hull = ConvexHull(change_points_uv)
 
             # Order the points anti-clockwise
             list_points = []
@@ -297,15 +309,21 @@ class ProjectChange:
         #############################
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
-    args = parser.parse_args()
-    config = utilities.read_json_file(args.config)
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
+    # args = parser.parse_args()
+    # config = utilities.read_json_file(args.config)
+
+    config_file = r"/home/william/Documents/DATA/TRIER/project_settings_trier.json"
+    config = utilities.read_json_file(config_file)
+    
+    
 
     img = ProjectChange(
-        project = config["pc_projection"]["project"],
-        bg_img_path = config["change_projection"]["bg_img_path"],
-        path_change_events = config["change_projection"]["path_change_events"]
+        change_event_file = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/02_Change_analysis_UHD_Change_Events/change_events.json",
+        project_name = config["project_setting"]["project_name"],
+        projected_image_path = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/03_Change_visualisation_UHD_Projected_Images",
+        projected_events_folder = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/04_Change_visualisation_UHD_Change_Events"
     )
 
     img.project_change()

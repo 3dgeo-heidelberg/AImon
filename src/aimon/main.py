@@ -1,22 +1,19 @@
-import os, sys, io
-import numpy as np
-from pathlib import Path
+import os, sys
 import argparse
-import glob
 
 from aimon.voxel_wise_change_detection_01 import compute_bitemporal_vapc
 from aimon.change_analysis_02 import ChangeAnalysisM3C2
 from aimon.pc_projection_03 import PCloudProjection
 from aimon.change_projection_04 import ProjectChange
 
-from aimon.helpers.utilities import setup_configuration, get_min_sec, Loader
+from aimon.helpers.utilities import setup_configuration, Loader
 from aimon.helpers.cluster import cluster
 from aimon.helpers.change_events import process_m3c2_file_into_change_events
 # from bi_vapc_01 import compute_bitemporal_vapc
 
 import vapc
 import datetime
-import time
+import json
 
 
 def fn_parse_args():
@@ -51,7 +48,7 @@ def fn_parse_args():
 
     return parser.parse_args()
 
-def main() -> None:
+def main():
     """
     Main function to execute the full workflow.
     """
@@ -133,6 +130,7 @@ def main() -> None:
     epsg = int(configuration['pc_projection']['epsg'])
     change_prj = ProjectChange(change_event_file, project_name, projected_image_folder, projected_events_folder, epsg)
     change_prj.project_change()
+
     loader.stop()
 
 

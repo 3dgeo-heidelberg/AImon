@@ -201,14 +201,14 @@ class PCloudProjection:
         theta_deg, phi_deg = np.rad2deg(theta), np.rad2deg(phi)
 
         # Discretize angles to image coordinates
-        if np.floor(min(theta_deg)) == -180 and np.floor(max(theta_deg)) == 180:
+        if np.floor(min(theta_deg)) == -180 or np.floor(max(theta_deg)) == 180:
             mask = theta_deg < 0
             theta_deg[mask] += 360
         
         self.h_fov = (np.floor(min(theta_deg)), np.ceil(max(theta_deg)))
 
 
-        if np.floor(min(phi_deg)) == -180 and np.floor(max(phi_deg)) == 180:
+        if np.floor(min(phi_deg)) == -180 or np.floor(max(phi_deg)) == 180:
             mask = phi_deg < 0
             phi_deg[mask] += 360
         
@@ -325,17 +325,17 @@ class PCloudProjection:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
-    args = parser.parse_args()
-    config = utilities.read_json_file(args.config)
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
+    # args = parser.parse_args()
+    # config = utilities.read_json_file(args.config)
 
-    """config_file = r"config/Trier_2d_projection_config.json"
-    config = utilities.read_json_file(config_file)"""
+    config_file = r"/home/william/Documents/DATA/TRIER/project_settings_trier.json"
+    config = utilities.read_json_file(config_file)
 
     prj = PCloudProjection(
         configuration=config,
         project_name=config["project_setting"]["project_name"],
-        projected_image_folder=config["project_setting"]["output_folder"]
+        projected_image_folder=os.path.join(config["project_setting"]["output_folder"], "Trier_vs6_av0_999/03_Change_visualisation_UHD_Projected_Images")
     )
     prj.project_pc()

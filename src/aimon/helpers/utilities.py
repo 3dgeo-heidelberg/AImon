@@ -19,6 +19,8 @@ import rasterio as rio
 from rasterio.plot import show
 import shapely as shp
 
+from collections import defaultdict
+
 def read_json_file(file_path):
     """Read JSON data from a file.
 
@@ -397,3 +399,97 @@ def plot_change_events(vector, raster, event_type_col=None, colors=None):
         gdf.boundary.plot(ax=ax)  # Plot just the boundary
 
     plt.show()
+
+
+
+############################
+# For datamodel
+
+class Geometry:
+    def __init__(self, type: str, coordinates: list[list[float]]):
+        self.type = type
+        self.coordinates = np.flip(coordinates[0], axis=1).tolist()  # Reverse the order of coordinates from [X,Y] to [Y,X] to match data model format
+
+class GeoObject:
+    def __init__(self, id: str, type: str, dateTime: str, geometry: Geometry, customEntityData: dict[str, str]):
+        self.id = id
+        self.type = type
+        self.dateTime = dateTime
+        self.geometry = geometry
+        self.customEntityData = customEntityData
+
+class ImageData:
+    def __init__(self, url: str, width: int, height: int):
+        self.url = url
+        self.width = width
+        self.height = height
+
+class Observation:
+    def __init__(self, startDateTime: str, endDateTime: str, geoObjects: list[GeoObject], backgroundImageData: ImageData = {}):
+        self.startDateTime = startDateTime
+        self.endDateTime = endDateTime
+        self.geoObjects = geoObjects
+        self.backgroundImageData = backgroundImageData
+
+class DataModel:
+    def __init__(self, observations: list[Observation]):
+        self.observations = observations
+        
+    def toJSON(self):
+        return json.dumps(
+            self,
+            default=lambda o: o.__dict__,
+            sort_keys=True,
+            indent=4)
+    
+
+def convert_geojson_to_datamodel(geojson: dict, bg_img: str=None, width: int=None, height: int=None) -> DataModel:
+    # Group features by timestamp
+    grouped_features = defaultdict(list)
+    if geojson is None:
+        print("No change events found")
+        return None
+    
+    for feature in geojson.get("features", []):
+        props = feature.get("properties", {})
+        t_min_raw = props.get("t_min")
+        t_max_raw = props.get("t_max")
+        # Convert t_min and t_max to ISO 8601 format
+        t_min = datetime.strptime(t_min_raw, "%y%m%d_%H%M%S").strftime("%Y-%m-%dT%H:%M:%SZ")
+        t_max = datetime.strptime(t_max_raw, "%y%m%d_%H%M%S").strftime("%Y-%m-%dT%H:%M:%SZ")
+        if t_min and t_max:
+            grouped_features[(t_min, t_max)].append(feature)
+
+    observations = []
+    for (t_min, t_max), features in grouped_features.items():
+        geo_objects = []
+        for i, feature in enumerate(features):
+            geometry_data = feature.get("geometry", {})
+            geometry = Geometry(
+                type=geometry_data.get("type", ""),
+                coordinates=geometry_data.get("coordinates", [])
+            )
+            props = feature.get("properties", {})
+            geo_object = GeoObject(
+                id=props.get("object_id", f"obj_{i}"),
+                type=props.get("type", "undefined"),
+                dateTime=t_min,
+                geometry=geometry,
+                customEntityData={k: str(v) for k, v in props.items() if k not in {"object_id", "event_type", "t_min", "t_max", "geometry"}} # Add any properties you want to exclude from customEntityData
+            )
+            geo_objects.append(geo_object)
+
+        image_data = ImageData(bg_img, width, height)  # Replace with actual image data if available
+
+        observation = Observation(
+            startDateTime=t_min,
+            endDateTime=t_max,
+            geoObjects=geo_objects,
+            backgroundImageData=image_data
+        )
+        observations.append(observation)
+
+    data_model = DataModel(observations=observations)
+    datamodel_json = data_model.toJSON()
+
+    return datamodel_json
