@@ -21,6 +21,19 @@ import shapely as shp
 
 from collections import defaultdict
 
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+import urllib
+from urllib.request import urlopen
+from shutil import copyfileobj
+import pyautogui
+import pyperclip
+
+
 def read_json_file(file_path):
     """Read JSON data from a file.
 
@@ -401,8 +414,77 @@ def plot_change_events(vector, raster, event_type_col=None, colors=None):
     plt.show()
 
 
+###############################################
+# Handling online files
 
-############################
+def get_online_file_list(FOLDER_URL, options):
+    try:
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver.get(FOLDER_URL)
+        
+        # Wait until the wrapper div is populated
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "wrapper"))
+        )
+
+        # Extract filenames (modify based on structure)
+        filenames = driver.find_elements(By.TAG_NAME, "a")
+        list_files = []
+        for file in filenames:
+            name = file.text.strip()
+            link = file.get_attribute("href")  # Get the full URL
+            if name and os.path.splitext(name)[-1] in [".las", ".laz", ".ply", ".txt", ".xyz"]:
+                list_files.append(link)
+    finally:
+        driver.quit()  # Close the browser
+    
+    return list_files
+
+
+def download_online_file(download_page_link, download_dir, options):
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.get(download_page_link)
+    # Wait until the wrapper div is populated
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "wrapper"))
+    )
+    file = driver.find_elements(By.TAG_NAME, "a")[-1]
+    pc_link = file.get_attribute("href")  # Get the full URL
+    pc_link_name = urllib.parse.unquote(pc_link)
+    pc_file_name = os.path.basename(pc_link_name).split('&')[0]
+    print(f"Downloading the point cloud: {pc_file_name}")
+
+    download_path = os.path.join(download_dir, pc_file_name)
+    with urlopen(pc_link) as in_stream, open(download_path, 'wb') as out_file:
+        copyfileobj(in_stream, out_file)
+    print("Done")
+    return download_path
+
+
+def upload_file(upload_url, file_path, options):
+    import re
+    import requests
+    from bs4 import BeautifulSoup
+    session = requests.Session()
+    response = session.get(upload_url)
+    html = response.text
+    # csrf_token = session.cookies.get('sfcsrftoken')
+
+    match = re.search(r'csrfToken: "([^"]+)"', html)
+    csrf_token = match.group(1)
+
+    files = {'file': open(file_path, 'rb')}
+    headers = {
+        'Referer': upload_url,
+        'X-CSRFToken': csrf_token
+    }
+
+    upload_response = session.post(upload_url, files=files, headers=headers)
+    # print(upload_response.status_code, upload_response.text)
+
+
+
+###############################################
 # For datamodel
 
 class Geometry:
