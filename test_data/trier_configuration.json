@@ -3,7 +3,7 @@
         "project_name": "Trier_vs6_av0_999",
         "output_folder": "./test_data/out",
         "temporal_format": "%y%m%d_%H%M%S",
-        "silent_mode": true,
+        "silent_mode": false,
         "include_timestamp": true
     },
     "vapc_settings": {
