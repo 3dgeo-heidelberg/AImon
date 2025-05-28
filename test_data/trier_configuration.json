@@ -3,8 +3,8 @@
         "project_name": "Trier_vs6_av0_999",
         "output_folder": "./test_data/out",
         "temporal_format": "%y%m%d_%H%M%S",
-        "silent_mode": false,
-        "include_timestamp": true
+        "silent_mode": true,
+        "include_timestamp": false
     },
     "vapc_settings": {
         "vapc_config": {
@@ -57,7 +57,7 @@
     "pc_projection": {
         "pc_path": "./test_data/240826_000005.laz",
         "make_range_image": true,
-        "make_color_image": true,
+        "make_color_image": false,
         "top_view": false,
         "save_rot_pc": false,
         "resolution_cm": 15.0,
