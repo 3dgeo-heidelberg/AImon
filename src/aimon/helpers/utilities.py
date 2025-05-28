@@ -30,8 +30,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 import urllib
 from urllib.request import urlopen
 from shutil import copyfileobj
-import pyautogui
-import pyperclip
 
 
 def read_json_file(file_path):
