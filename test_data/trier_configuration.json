@@ -62,9 +62,9 @@
         "save_rot_pc": false,
         "resolution_cm": 15.0,
         "camera_position": [
-            0,
-            0,
-            0
+            330599.6068, 
+            5515785.9140, 
+            135.4113
         ],
         "rgb_light_intensity": 100,
         "range_light_intensity": 15,
