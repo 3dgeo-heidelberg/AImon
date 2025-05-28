@@ -55,7 +55,7 @@
         "min_cluster_size": 100
     },
     "pc_projection": {
-        "pc_path": "./test_data/ScanPos001 - SINGLESCANS - 240826_000005.laz",
+        "pc_path": "./test_data/240826_000005.laz",
         "make_range_image": true,
         "make_color_image": true,
         "top_view": false,

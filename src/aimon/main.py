@@ -48,19 +48,31 @@ def fn_parse_args():
 
     return parser.parse_args()
 
+
+
 def main():
     """
     Main function to execute the full workflow.
     """
-
-    loader = Loader("Computing... ", "Finished", 0.35).start()
     args = fn_parse_args()
+    config_file = args.config_file
+    filenames = args.filenames
     # Iterate over all pairs of input files and all configuration files
+    run_pipeline(config_file, filenames)
+
+
+def run_pipeline(config_file, filenames):
+    """ Run the processing pipeline for each pair of input files.
+    Args:
+        config_file (str): Path to the configuration file.
+        filenames (list of str): List of input filenames.
+    """
     start = datetime.datetime.now()
     timestamp = start.strftime("%Y_%m_%d_%H-%M-%S")
-    for i, t1_file in enumerate(args.filenames[:-1]):
-        t2_file = args.filenames[i+1]
-        config_file = args.config_file
+    loader = Loader("Computing... ", "Finished", 0.35).start()
+    for i, t1_file in enumerate(filenames[:-1]):
+        t2_file = filenames[i+1]
+        config_file =config_file
         (
         configuration,
         t1_vapc_out_file,
