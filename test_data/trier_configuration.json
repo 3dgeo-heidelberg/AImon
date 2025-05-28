@@ -1,0 +1,73 @@
+{
+    "project_setting": {
+        "project_name": "Trier_vs6_av0_999",
+        "output_folder": "./test_data/out",
+        "temporal_format": "%y%m%d_%H%M%S",
+        "silent_mode": true,
+        "include_timestamp": true
+    },
+    "vapc_settings": {
+        "vapc_config": {
+            "voxel_size": 6,
+            "origin": [
+                0,
+                0,
+                0
+            ],
+            "attributes": {},
+            "filter": {
+                "filter_attribute": "point_count",
+                "min_max_eq": "greater_than",
+                "filter_value": 30
+            },
+            "compute": [],
+            "return_at": "center_of_gravity"
+        },
+        "bi_temporal_vapc_config": {
+            "signicance_threshold": 0.999
+        },
+        "vapc_mask": {
+            "buffer_size": 0
+        }
+    },
+    "m3c2_settings": {
+        "corepoints": {
+            "use": false,
+            "point_spacing_m": 1
+        },
+        "m3c2": {
+            "normal_radii": [
+                1,2,3
+            ],
+            "cyl_radii": 1,
+            "max_distance": 10.0,
+            "registration_error": 0.02
+        }
+    },
+    "cluster_settings": {
+        "cluster_method": "DBSCAN",
+        "distance_threshold": 1,
+        "cluster_by": [
+            "X",
+            "Y",
+            "Z"
+        ],
+        "min_cluster_size": 100
+    },
+    "pc_projection": {
+        "pc_path": "./test_data/ScanPos001 - SINGLESCANS - 240826_000005.laz",
+        "make_range_image": true,
+        "make_color_image": true,
+        "top_view": false,
+        "save_rot_pc": false,
+        "resolution_cm": 15.0,
+        "camera_position": [
+            0,
+            0,
+            0
+        ],
+        "rgb_light_intensity": 100,
+        "range_light_intensity": 15,
+        "epsg": 32632
+    }
+}
