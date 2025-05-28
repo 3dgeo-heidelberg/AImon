@@ -87,9 +87,20 @@ Development of new methodologies and tools for the visualization of the detected
 ## 🎮 Examples
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Example 1: Main AImon5.0 monitoring pipeline <br>  <br> <a href="main.html"><img src="img/main.png" width=500></a> | Example 2: Adaptive monitoring <br> <a href="adaptive_monitoring.html"><img src="img/adaptive_monitoring.gif" width=500></a> |
+| Example 3: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a> | Example 4: Rule-based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
+| Example 5: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/labelled_change_events.png" width=500></a> | Example 6: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
+
+
+
+
+
+
+<!-- |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Example 1: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule-based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
 | Example 3: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
-| Example 5: Adaptive monitoring <br> <a href="adaptive_monitoring.html"><img src="img/adaptive_monitoring.gif" width=500></a> |
+| Example 5: Adaptive monitoring <br> <a href="adaptive_monitoring.html"><img src="img/adaptive_monitoring.gif" width=500></a> | -->
 
 
 
