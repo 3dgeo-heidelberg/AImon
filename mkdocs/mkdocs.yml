@@ -36,5 +36,4 @@ nav:
     - Rule-based classification of change events: classification_of_change_events_rule_based.ipynb
     - Rule-based filtering of change events: filtering_of_change_events_rule_based.ipynb
     - Random forest classification of change events: classification_of_change_events_using_random_forest_classifier.ipynb
-    - Unsupervised classification of change events: classification_of_change_events_unsupervised.ipynb
     - Adaptive monitoring: adaptive_monitoring.ipynb
