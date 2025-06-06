@@ -8,9 +8,18 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 📑 Research project
+## Main 3DGeo outcomes of the AIMon5.0 project
+- New open-source software [Voxel Analysis for Point Clouds](https://github.com/3dgeo-heidelberg/vapc)
+- Contributions and improvements to the open-source software [py4dgeo](https://github.com/3dgeo-heidelberg/py4dgeo/tree/main)
+- Proof-of-concept [workflow implementation](https://github.com/3dgeo-heidelberg/AImon/tree/main/src/aimon ) and representative [examples](#examples) of potential use cases. Our list of [examples](#examples) is a perfect start to learn how to use our source codes in your own projects
+- Scientific [publications](#publications) and talks at conferences
+
+## 📑 Research project at a glance
 <div style="text-align: justify">
 Modern permanently installed laser scanners can deliver sub‐hourly point clouds, opening the door to early warning of surface deformations. Current workflows struggle to keep pace with such data volumes in near real-time. Vegetation and occlusions in forested or complex terrain further degrade ground‐point coverage, undermining the reliability of change estimates. As a result, there remains a critical need for efficient, robust processing strategies that can detect and quantify subtle surface shifts.
+<br><br>
+The project AIMon5.0 was funded by the Federal Ministry of Research, Technology and Space (BMBF) within
+the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’. Please find more project details on our website <a href="uni-heidelberg.de/aimon.">uni-heidelberg.de/aimon</a>.
 </div>
 
 <!-- Real-time monitoring of gravitational mass movements for critical infrastructure risk management with AI-assisted 3D metrology -->
@@ -18,18 +27,18 @@ Modern permanently installed laser scanners can deliver sub‐hourly point cloud
 <!-- ### 🎯 Overall objective of the project -->
 ### Overall objective
 <div style="text-align: justify">
-Our environment and the Earth's surface are constantly changing, and global warming and climate change are accelerating the pace and magnitude of these changes. As a result, geohazards - triggered by natural events or human activities - are becoming more frequent. For example, intense and prolonged rainfall is increasingly causing landslides and rockfalls that threaten local populations and critical infrastructure such as railways and roads, with serious economic consequences.
+Our environment and the Earth's surface are constantly changing, and global warming and climate change are accelerating the pace and magnitude of these changes. As a result, geohazards - triggered by natural events or human activities - are becoming more frequent. For example, intense and prolonged rainfall or thawing of permafrost in the Alps are increasingly causing landslides and rockfalls that threaten local populations and critical infrastructure such as railways and roads, with serious economic consequences.
 
-A key tool for integrated risk management is access to relevant 4D geospatial information - accurate 3D data with high temporal resolution - acquired through near real-time, permanent or on-demand monitoring. Permanently installed autonomous laser scanning (PLS) systems have shown great potential for monitoring hazard zones, producing billions of measurements daily. Early computational methods exist to analyze this data, but to make it operational, a new interface is needed to bridge application needs with 4D data collection and analysis.
+A key tool for integrated risk management is access to relevant 4D geospatial information - accurate 3D data with high temporal resolution - acquired through near real-time, permanent or on-demand monitoring. Permanently installed autonomous laser scanning (PLS) systems have shown great potential for monitoring hazard zones, producing billions of 3D measurements daily. Early computational methods exist to analyze this data, but to make it operational, a new interface is needed to bridge application needs with 4D data collection and analysis.
 
-This interface will connect stakeholder expertise with autonomous PLS systems and data archives using AI and 4D analysis. It will enable the operational use of PLS for risk monitoring - detecting and tracking relevant events such as slope activity in real time. For the first time, stakeholders will be able to use PLS for continuous hazard monitoring.
+This interface connects stakeholder expertise with autonomous PLS systems and data archives using AI and 4D analysis. It enables the operational use of PLS for risk monitoring - detecting and tracking relevant events such as slope activity in real time. For the first time, stakeholders are able to use PLS for continuous hazard monitoring.
 </div>
 
 <!-- ### 📌 Study site -->
 ### Study site
 <div style="text-align: justify">
-The goal of this project is to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection have been developed, this project focuses on refining and extending them for practical, application-oriented use. The 
-<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> developed computer-based methods for automatic information extraction and visualization from 4D-PLS data. The study site is located in <a href="https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9">Trier, Germany</a> (Fig. 1), at the <a href="https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7">Trierer Augenscheiner</a> (Fig. 2).
+The goal of this project was to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection had been previously developed, this project focused on refining and extending them for practical, application-oriented use. The 
+<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> developed computer-based methods for automatic information extraction and visualization from 4D-PLS data as their main focus in the AIMon project. The study site was located in <a href="https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9">Trier, Germany</a> (Fig. 1), at the <a href="https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7">Trierer Augenscheiner</a> (Fig. 2).
 </div>
 
 
@@ -39,28 +48,29 @@ The goal of this project is to bridge the gap between research and practice. Whi
 
 
 <!-- ### 🧭 Approach Development -->
-### Approach development
+### Method development and implementation
 <div style="text-align: justify">
-The methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigate and combine two complementary concepts that can integrate expert knowledge into automated data analysis:<br>
+The developed methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigated and combined two complementary concepts that can integrate expert knowledge into automated data analysis:<br>
 
-&nbsp;&nbsp;&nbsp;&nbsp; 1. <u>Top-down approach via a knowledge- and rule-based classification of changes</u>: In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. rockfall) are defined in their sequence. A methodology and data management for fast and accurate searches must be developed and evaluated;<br>
-&nbsp;&nbsp;&nbsp;&nbsp; 2. <u>Data-driven approach using AI</u>: Machine learning methods find relevant change events after a user-controlled training phase and present them to the experts for evaluation. The users do not know in advance how the events, possibly also overlaid processes, are represented in the data, but can evaluate relevant from non-relevant events and thus train an AI model.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; 1. <u>Top-down approach via a knowledge- and rule-based classification of changes</u>: In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. abrupt rockfall) are defined in their sequence. A set of new methods and and tools for data management for fast and accurate searches were developed and evaluated;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; 2. <u>Data-driven approach using AI</u>: Machine learning methods find relevant change events after a user-controlled training phase and present them to the experts for evaluation. The users do not know in advance how the events, possibly also overlaid processes, are represented in the raw data. However, the users can distinguish relevant from non-relevant extracted events for their use case and thus train an AI model.<br>
 
-For this second approach, research must be carried out into how the state-of-the-art point cloud-based deep learning models can be trained quickly and as automatically as possible in the background and how the hyperparameters can be optimized. For the visualization of the detected and classified changes, it must be determined - in coordination with end users and the PLS operator - which abstraction levels and visualization forms are best suited for certain tasks and also specified reaction times. In contrast to visualization in 2D and 3D (e.g. in GIS or dashboards), fundamental research must be carried out for the visualization of 4D processes in PLS data due to a lack of existing methods.
+For the second approach, research was carried out to find out how the state-of-the-art point cloud-based deep learning models can be trained quickly and as automatically as possible in the background and how their hyperparameters can be optimized. For the visualization of the detected and classified changes, it was determined - in coordination with end users and the PLS operator - which abstraction levels and visualization forms are best suited for certain tasks and also specified reaction times. In contrast to visualization in 2D and 3D (e.g. in GIS or dashboards), fundamental research was carried out for the visualization of 4D processes in PLS data due to a lack of existing methods and tools.
 </div>
 
 
 ## ⚙️ Work packages
 <div style="text-align: justify">
 The following methods were developed by the 
-<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group</a>.
+<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group</a> within their main work packages.
 
+### New concept of 'change events'
 A change event is characterized by different attributes, each representing a measurable dimension of the change. The diagram of Fig. 3 highlights the modular structure of change events, emphasizing how temporal and spatial metrics combine to define and categorize observed changes. A classifier assigns an event type to the change based on the characteristics, enabling semantic interpretation of what kind of event occurred (e.g., gravitational mass movement, change in vegetation, etc).<br>
 <img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 </div>
 
 **Research target 1 - Hierarchical classification of detected change:**  
-<div style="text-align: justify">Developing new methods and tools to automatically extract relevant change information from the last two point clouds. We analyse different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps:
+<div style="text-align: justify">Developing new methods and tools to automatically extract relevant change information from the last two point clouds. The method analyses different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps comprise:
 </div>
 - 1.1: Rule-based change classification
 - 1.2: [Hierarchical analysis](https://doi.org/10.5445/IR/1000180377)
@@ -70,16 +80,16 @@ A change event is characterized by different attributes, each representing a mea
 
 **Research target 2: Visualization of classified change events:**
 <div style="text-align: justify">
-Development of new methodologies and tools for the visualization of the detected terrain changes for use by end users. Three different steps:
+Development of new concepts and tools for the visualization of the detected terrain changes for use by end users. Three different steps comprise:
 </div>
 - 2.1: Selection of relevant changes
 - 2.2: 2D GIS layer
 - 2.3: 3D objects
 
-## 💡 Possible applications
+## 💡 Implemented methods and their potential applications
 - **Point Cloud Projection**: Generate range and color images from point cloud data.
 - **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
-- **Change Event Management**: Convert clusters into change events.
+- **Change Event Management**: Convert detected clusters into change events.
 - **Data Handling**: Efficiently split, append, and merge LAS/LAZ files.
 - **Visualization**: Projected images and change events visualization.
 <!-- </div> -->
@@ -105,14 +115,14 @@ Development of new methodologies and tools for the visualization of the detected
 
 
 
-## 🛠️ Key functions
+## 🛠️ Full worfklow implementation
 <div style="text-align: justify">
 <!-- ### Using main.py file -->
-Serves as the entry point for the AImon5.0 processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection.
+Serves as the entry point for the AImon5.0 processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection. 
 </div>
 
 
-<!-- <h3> 📚 Publications </h3> -->
+<!-- <h3> 📚 Publications by 3DGeo Heidelberg </h3> -->
 ## 📚 Publications
 <details>
 <summary>Journal and conference</summary>
@@ -237,7 +247,7 @@ As a starting point, please have a look to the Jupyter Notebooks available liste
 <!-- <h3> 📑 Citation </h3> -->
 **Citation**
 
-Please cite AImon5.0 when using it in your research.
+Please cite the AImon5.0 repository when using our software & tools in your research.
 
 ```
 @software{AImon5.0,
@@ -255,13 +265,13 @@ url = {https://github.com/3dgeo-heidelberg/AImon},
 <!-- <h3> 💟 Funding / Acknowledgements </h3> -->
 **Funding / acknowledgements**
 
-This work is funded by the BMBF AIMon5.0: Project no. 02WDG1696 and by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation). The Federal Ministry of Education and Research (BMBF) is funding the AIMon5.0 project within the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’.
+The Federal Ministry of Research, Technology and Space (BMBF) was funding the AIMon5.0 project within the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’.
 
 <!-- <h3> 🔔 Contact / Bugs / Feature Requests </h3> -->
 **Contact / bugs / feature requests**
 
 <div style="text-align: justify">
-You think you have found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
+Have you found a bug or have specific request for a new feature? Please open a new issue in the online code repository on Github. Also for general questions please use the issue system.
 
 Scientific requests can be directed to the 
 <a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> and its respective members.
