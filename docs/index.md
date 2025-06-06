@@ -2,13 +2,13 @@
 <br>
 
 # Welcome to AImon5.0
-<a href="https://www.geog.uni-heidelberg.de/en/institute/geoinformatics/3dgeo-research-group/projects-of-the-3dgeo-research-group/aimon50">
-  <img src="img/AImon_logo.png?raw=true" alt="AImon 5.0 logo" style="width:500px;" />
+<a href="https://www.uni-heidelberg.de/aimon">
+  <img src="img/AImon_logo.png?raw=true" alt="AImon5.0 logo" style="width:500px;" />
 </a>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Main 3DGeo outcomes of the AIMon5.0 project
+## Main 3DGeo outcomes of the AImon5.0 project
 - New open-source software [Voxel Analysis for Point Clouds](https://github.com/3dgeo-heidelberg/vapc)
 - Contributions and improvements to the open-source software [py4dgeo](https://github.com/3dgeo-heidelberg/py4dgeo/tree/main)
 - Proof-of-concept [workflow implementation](https://github.com/3dgeo-heidelberg/AImon/tree/main/src/aimon ) and representative [examples](#examples) of potential use cases. Our list of [examples](#examples) is a perfect start to learn how to use our source codes in your own projects
@@ -18,8 +18,8 @@
 <div style="text-align: justify">
 Modern permanently installed laser scanners can deliver sub‐hourly point clouds, opening the door to early warning of surface deformations. Current workflows struggle to keep pace with such data volumes in near real-time. Vegetation and occlusions in forested or complex terrain further degrade ground‐point coverage, undermining the reliability of change estimates. As a result, there remains a critical need for efficient, robust processing strategies that can detect and quantify subtle surface shifts.
 <br><br>
-The project AIMon5.0 was funded by the Federal Ministry of Research, Technology and Space (BMBF) within
-the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’. Please find more project details on our website <a href="uni-heidelberg.de/aimon.">uni-heidelberg.de/aimon</a>.
+The project AImon5.0 was funded by the Federal Ministry of Research, Technology and Space (BMBF) within
+the funding measure "Digital GreenTech – Environmental Engineering meets Digitalisation" as part of the "Research for Sustainability (FONA) Strategy". Please find more project details on our website <a href="https://www.uni-heidelberg.de/aimon">uni-heidelberg.de/aimon</a>.
 </div>
 
 <!-- Real-time monitoring of gravitational mass movements for critical infrastructure risk management with AI-assisted 3D metrology -->
@@ -38,7 +38,7 @@ This interface connects stakeholder expertise with autonomous PLS systems and da
 ### Study site
 <div style="text-align: justify">
 The goal of this project was to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection had been previously developed, this project focused on refining and extending them for practical, application-oriented use. The 
-<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> developed computer-based methods for automatic information extraction and visualization from 4D-PLS data as their main focus in the AIMon project. The study site was located in <a href="https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9">Trier, Germany</a> (Fig. 1), at the <a href="https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7">Trierer Augenscheiner</a> (Fig. 2).
+<a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group Heidelberg</a> developed computer-based methods for automatic information extraction and visualization from 4D-PLS data as their main focus in the AImon5.0 project. The study site was located in <a href="https://maps.app.goo.gl/1k6VpK1gXzoZ1TLJ9">Trier, Germany</a> (Fig. 1), at the <a href="https://maps.app.goo.gl/JLSZRwxY1ppR6zbr7">Trierer Augenscheiner</a> (Fig. 2).
 </div>
 
 
@@ -52,7 +52,7 @@ The goal of this project was to bridge the gap between research and practice. Wh
 <div style="text-align: justify">
 The developed methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigated and combined two complementary concepts that can integrate expert knowledge into automated data analysis:<br>
 
-&nbsp;&nbsp;&nbsp;&nbsp; 1. <u>Top-down approach via a knowledge- and rule-based classification of changes</u>: In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. abrupt rockfall) are defined in their sequence. A set of new methods and and tools for data management for fast and accurate searches were developed and evaluated;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; 1. <u>Top-down approach via a knowledge- and rule-based classification of changes</u>: In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. abrupt rockfall) are defined in their sequence. A set of new methods and tools for data management for fast and accurate searches were developed and evaluated;<br>
 &nbsp;&nbsp;&nbsp;&nbsp; 2. <u>Data-driven approach using AI</u>: Machine learning methods find relevant change events after a user-controlled training phase and present them to the experts for evaluation. The users do not know in advance how the events, possibly also overlaid processes, are represented in the raw data. However, the users can distinguish relevant from non-relevant extracted events for their use case and thus train an AI model.<br>
 
 For the second approach, research was carried out to find out how the state-of-the-art point cloud-based deep learning models can be trained quickly and as automatically as possible in the background and how their hyperparameters can be optimized. For the visualization of the detected and classified changes, it was determined - in coordination with end users and the PLS operator - which abstraction levels and visualization forms are best suited for certain tasks and also specified reaction times. In contrast to visualization in 2D and 3D (e.g. in GIS or dashboards), fundamental research was carried out for the visualization of 4D processes in PLS data due to a lack of existing methods and tools.
@@ -265,7 +265,7 @@ url = {https://github.com/3dgeo-heidelberg/AImon},
 <!-- <h3> 💟 Funding / Acknowledgements </h3> -->
 **Funding / acknowledgements**
 
-The Federal Ministry of Research, Technology and Space (BMBF) was funding the AIMon5.0 project within the funding measure ’Digital GreenTech – Environmental Engineering meets Digitalisation’ as part of the ’Research for Sustainability (FONA) Strategy’.
+The Federal Ministry of Research, Technology and Space (BMBF) was funding the AImon5.0 project within the funding measure "Digital GreenTech – Environmental Engineering meets Digitalisation" as part of the "Research for Sustainability (FONA) Strategy".
 
 <!-- <h3> 🔔 Contact / Bugs / Feature Requests </h3> -->
 **Contact / bugs / feature requests**
@@ -281,6 +281,6 @@ Scientific requests can be directed to the
 <!-- <h3> 📜 License </h3> -->
 **License**
 
-This is licensed under the [MIT license](LICENSE.md).
+This is licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 
