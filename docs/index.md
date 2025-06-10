@@ -22,9 +22,7 @@ The project AImon5.0 was funded by the Federal Ministry of Research, Technology 
 the funding measure "Digital GreenTech – Environmental Engineering meets Digitalisation" as part of the "Research for Sustainability (FONA) Strategy". Please find more project details on our website <a href="https://www.uni-heidelberg.de/aimon">uni-heidelberg.de/aimon</a>.
 </div>
 
-<!-- Real-time monitoring of gravitational mass movements for critical infrastructure risk management with AI-assisted 3D metrology -->
 
-<!-- ### 🎯 Overall objective of the project -->
 ### Overall objective
 <div style="text-align: justify">
 Our environment and the Earth's surface are constantly changing, and global warming and climate change are accelerating the pace and magnitude of these changes. As a result, geohazards - triggered by natural events or human activities - are becoming more frequent. For example, intense and prolonged rainfall or thawing of permafrost in the Alps are increasingly causing landslides and rockfalls that threaten local populations and critical infrastructure such as railways and roads, with serious economic consequences.
@@ -34,7 +32,7 @@ A key tool for integrated risk management is access to relevant 4D geospatial in
 This interface connects stakeholder expertise with autonomous PLS systems and data archives using AI and 4D analysis. It enables the operational use of PLS for risk monitoring - detecting and tracking relevant events such as slope activity in real time. For the first time, stakeholders are able to use PLS for continuous hazard monitoring.
 </div>
 
-<!-- ### 📌 Study site -->
+
 ### Study site
 <div style="text-align: justify">
 The goal of this project was to bridge the gap between research and practice. While key methods for multi-temporal analysis and subtopics such as uncertainty in change detection had been previously developed, this project focused on refining and extending them for practical, application-oriented use. The 
@@ -47,7 +45,6 @@ The goal of this project was to bridge the gap between research and practice. Wh
 |<img src="img/study_site.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon5.0 project located in Trier in Germany (red dot). |
 
 
-<!-- ### 🧭 Approach Development -->
 ### Method development and implementation
 <div style="text-align: justify">
 The developed methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigated and combined two complementary concepts that can integrate expert knowledge into automated data analysis:<br>
@@ -91,8 +88,9 @@ Development of new concepts and tools for the visualization of the detected terr
 - **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
 - **Change Event Management**: Convert detected clusters into change events.
 - **Data Handling**: Efficiently split, append, and merge LAS/LAZ files.
+- **GIS and KML Layer Generation**: Project 3D change events to 2D GIS and KML polygon layers for QGIS and Google Earth visualization.
 - **Visualization**: Projected images and change events visualization.
-<!-- </div> -->
+
 
 ## 🎮 Examples
 |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
@@ -102,19 +100,6 @@ Development of new concepts and tools for the visualization of the detected terr
 | Example 5: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/labelled_change_events.png" width=500></a> | Example 6: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
 
 
-
-
-
-
-<!-- |                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Example 1: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a>                                | Example 2: Rule-based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
-| Example 3: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/labelled_change_events.png" width=500></a> | Example 4: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
-| Example 5: Adaptive monitoring <br> <a href="adaptive_monitoring.html"><img src="img/adaptive_monitoring.gif" width=500></a> | -->
-
-
-
-
 ## 🛠️ Full worfklow implementation
 <div style="text-align: justify">
 <!-- ### Using main.py file -->
@@ -122,7 +107,6 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 </div>
 
 
-<!-- <h3> 📚 Publications by 3DGeo Heidelberg </h3> -->
 ## 📚 Publications
 <details>
 <summary>Journal and conference</summary>
@@ -238,13 +222,12 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 </details>
 
 ## 📂 Credits
-<!-- <h3> 🐍 Documentation of software usage </h3> -->
+
 **Software usage**
 
 As a starting point, please have a look to the Jupyter Notebooks available listed in the top left corner of the page.
 
 
-<!-- <h3> 📑 Citation </h3> -->
 **Citation**
 
 Please cite the AImon5.0 repository when using our software & tools in your research.
@@ -262,12 +245,12 @@ url = {https://github.com/3dgeo-heidelberg/AImon},
 }
 ```
 
-<!-- <h3> 💟 Funding / Acknowledgements </h3> -->
+
 **Funding / acknowledgements**
 
 The Federal Ministry of Research, Technology and Space (BMBF) was funding the AImon5.0 project within the funding measure "Digital GreenTech – Environmental Engineering meets Digitalisation" as part of the "Research for Sustainability (FONA) Strategy".
 
-<!-- <h3> 🔔 Contact / Bugs / Feature Requests </h3> -->
+
 **Contact / bugs / feature requests**
 
 <div style="text-align: justify">
@@ -278,9 +261,6 @@ Scientific requests can be directed to the
 </div>
 
 
-<!-- <h3> 📜 License </h3> -->
 **License**
 
 This is licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-

@@ -58,6 +58,7 @@
         "pc_path": "./test_data/240826_000005.laz",
         "make_range_image": true,
         "make_color_image": false,
+        "create_kml": true,
         "top_view": false,
         "save_rot_pc": false,
         "resolution_cm": 15.0,
