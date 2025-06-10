@@ -60,7 +60,6 @@
         "make_color_image": false,
         "create_kml": true,
         "top_view": false,
-        "save_rot_pc": false,
         "resolution_cm": 15.0,
         "camera_position": [
             330599.6068, 

@@ -103,9 +103,8 @@ Development of new concepts and tools for the visualization of the detected terr
 ## 🛠️ Full worfklow implementation
 <div style="text-align: justify">
 <!-- ### Using main.py file -->
-Serves as the entry point for the AImon5.0 processing workflow. It orchestrates the execution of various processing stages, including configuration setup, bi-temporal analysis, and change detection. 
+Serves as the entry point for the AImon5.0 processing workflow. It orchestrates the execution of various processing stages, including <a href="configuration_description.html">configuration setup</a>, bi-temporal analysis, and change detection. 
 </div>
-
 
 ## 📚 Publications
 <details>
