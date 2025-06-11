@@ -1,0 +1,1018 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="classification_of_change_events_using_random_forest_classifier.html">
+      
+      
+      
+      <link rel="icon" href="img/3dgeo.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Configuration description - AImon5.0</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="customs.css">
+    
+      <link rel="stylesheet" href="style.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration-description" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="AImon5.0" class="md-header__button md-logo" aria-label="AImon5.0" data-md-component="logo">
+      
+  <img src="img/3DGeo_globe_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AImon5.0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration description
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/3dgeo-heidelberg/aimon" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="AImon5.0" class="md-nav__button md-logo" aria-label="AImon5.0" data-md-component="logo">
+      
+  <img src="img/3DGeo_globe_white.svg" alt="logo">
+
+    </a>
+    AImon5.0
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/3dgeo-heidelberg/aimon" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Notebook examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Notebook examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="main.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Main AImon5.0 monitoring pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adaptive_monitoring.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Adaptive monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="classification_of_change_events_rule_based.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Rule-based classification of change events
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="filtering_of_change_events_rule_based.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Rule-based filtering of change events
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="classification_of_change_events_using_random_forest_classifier.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Random forest classification of change events
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Configuration description
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="configuration_description.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration description
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#project_setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      project_setting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vapc_settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      vapc_settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m3c2_settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      m3c2_settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster_settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      cluster_settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pc_projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      pc_projection
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#project_setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      project_setting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vapc_settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      vapc_settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m3c2_settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      m3c2_settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster_settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      cluster_settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pc_projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      pc_projection
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+
+
+
+                  
+
+
+  
+  
+
+
+<h1 id="configuration-description">Configuration Description</h1>
+<p>This document details each configuration parameter and its role in the processing pipeline for point cloud change detection. The pipeline integrates voxelization (VAPC), change analysis via M3C2 (py4dgeo), clustering, and projections for visualization. The settings described below are used across various modules to ensure reproducibility.</p>
+<p><em>For each parameter, the allowed formats are indicated. When a parameter is fixed to a set of options, those acceptable values are listed.</em></p>
+<p>In summary, the configuration parameters described bellow establish a framework for point cloud analysis:</p>
+<ul>
+<li><a href="#project_setting"><strong>Global project settings</strong></a> define naming, logging, and file output behaviors.</li>
+<li><a href="#vapc_settings"><strong>VAPC settings</strong></a> determine voxelization parameters and computational procedures for extracting meaningful geometric properties.</li>
+<li><a href="#m3c2_settings"><strong>M3C2 settings</strong></a> include corepoint generation, normal computation, and registration errors to facilitate precise change quantification.</li>
+<li><a href="#cluster_settings"><strong>Clustering parameters</strong></a> aggregate significant changes into spatially coherent groups.</li>
+<li><a href="#pc_projection"><strong>Point cloud projection parameters</strong></a> ensure that processed data is accurately visualized and georeferenced.</li>
+</ul>
+<p>Collectively, these settings enable a workflow for detecting, quantifying, and visualizing changes in 3D time series datasets.</p>
+<details>
+<summary>Example of a configuration file</summary>
+
+<pre><code class="language-json">{
+    &quot;project_setting&quot;: {
+        &quot;project_name&quot;: &quot;Trier_vs6_av0_999&quot;,
+        &quot;output_folder&quot;: &quot;./test_data/out&quot;,
+        &quot;temporal_format&quot;: &quot;%y%m%d_%H%M%S&quot;,
+        &quot;silent_mode&quot;: true,
+        &quot;include_timestamp&quot;: false
+    },
+    &quot;vapc_settings&quot;: {
+        &quot;vapc_config&quot;: {
+            &quot;voxel_size&quot;: 6,
+            &quot;origin&quot;: [
+                0, 0, 0
+            ],
+            &quot;attributes&quot;: {},
+            &quot;filter&quot;: {
+                &quot;filter_attribute&quot;: &quot;point_count&quot;,
+                &quot;min_max_eq&quot;: &quot;greater_than&quot;,
+                &quot;filter_value&quot;: 30
+            },
+            &quot;compute&quot;: [],
+            &quot;return_at&quot;: &quot;center_of_gravity&quot;
+        },
+        &quot;bi_temporal_vapc_config&quot;: {
+            &quot;signicance_threshold&quot;: 0.999
+        },
+        &quot;vapc_mask&quot;: {
+            &quot;buffer_size&quot;: 0
+        }
+    },
+    &quot;m3c2_settings&quot;: {
+        &quot;corepoints&quot;: {
+            &quot;use&quot;: false,
+            &quot;point_spacing_m&quot;: 1
+        },
+        &quot;m3c2&quot;: {
+            &quot;normal_radii&quot;: [
+                1, 2, 3
+            ],
+            &quot;cyl_radii&quot;: 1,
+            &quot;max_distance&quot;: 10.0,
+            &quot;registration_error&quot;: 0.02
+        }
+    },
+    &quot;cluster_settings&quot;: {
+        &quot;cluster_method&quot;: &quot;DBSCAN&quot;,
+        &quot;distance_threshold&quot;: 1,
+        &quot;cluster_by&quot;: [
+            &quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;
+        ],
+        &quot;min_cluster_size&quot;: 100
+    },
+    &quot;pc_projection&quot;: {
+        &quot;pc_path&quot;: &quot;./test_data/240826_000005.laz&quot;,
+        &quot;make_range_image&quot;: true,
+        &quot;make_color_image&quot;: false,
+        &quot;create_kml&quot;: true,
+        &quot;top_view&quot;: false,
+        &quot;resolution_cm&quot;: 15.0,
+        &quot;camera_position&quot;: [
+            330599.6068, 5515785.9140, 135.4113
+        ],
+        &quot;rgb_light_intensity&quot;: 100,
+        &quot;range_light_intensity&quot;: 15,
+        &quot;epsg&quot;: 32632
+    }
+}
+</code></pre>
+
+</details>
+
+<hr />
+<h2 id="project_setting"><span style="color:#c92434"><strong>project_setting</strong></span></h2>
+<ul>
+<li>
+<p><strong>project_name</strong>:<br />
+  This specifies the project identifier (e.g. <code>Trier_vs6_av0_999</code>).
+  <em>Allowed format</em>: Any non-empty string; typically alphanumeric with underscores or hyphens.<br />
+  All outputs are stored in a subdirectory with the same name as the project within the designated output folder.</p>
+</li>
+<li>
+<p><strong>output_folder</strong>:<br />
+  The base directory where all output files are stored (e.g., <code>./test_data/out</code>).<br />
+<em>Allowed format</em>: A valid relative or absolute file path as a string.</p>
+</li>
+<li>
+<p><strong>temporal_format</strong>:<br />
+  A date-time formatting string (e.g., <code>%y%m%d_%H%M%S</code>) used for parsing timestamps from filenames and for generating consistent output file names.<br />
+<em>Allowed format</em>: Formats compatible with Python’s <code>strftime</code> and <code>strptime</code>; only valid format specifiers (e.g., <code>%Y</code>, <code>%m</code>, <code>%d</code>, <code>%H</code>, <code>%M</code>, <code>%S</code>) are accepted.</p>
+</li>
+<li>
+<p><strong>silent_mode</strong>:<br />
+  If set to <code>true</code>, the process minimizes console output.<br />
+<em>Allowed format</em>: Boolean (<code>true</code> or <code>false</code>).</p>
+</li>
+<li>
+<p><strong>include_timestamp</strong>:<br />
+  When enabled, appends timestamps to output folder. If disabled, previous outputs may be overwritten.<br />
+<em>Allowed format</em>: Boolean (<code>true</code> or <code>false</code>).</p>
+</li>
+</ul>
+<h2 id="vapc_settings"><span style="color:#c92434"><strong>vapc_settings</strong></span></h2>
+<h3>vapc_config</h3>
+
+<ul>
+<li>
+<p><strong>voxel_size</strong>:<br />
+  Defines the size of voxels used to subdivide the point cloud. Smaller voxels result in higher spatial resolution at increased computational cost, while larger voxels aggregate more points.<br />
+<em>Allowed format</em>: A positive float.</p>
+</li>
+<li>
+<p><strong>origin</strong>:<br />
+  A three-dimensional coordinate <code>[x, y, z]</code> that establishes the reference point for the voxel grid. Defaults to <code>[0, 0, 0]</code>.<br />
+<em>Allowed format</em>: A list or array of three numeric values (floats or integers).</p>
+</li>
+<li>
+<p><strong>attributes</strong>:<br />
+  A dictionary serving as a placeholder for supplemental parameters (e.g., intensity averaging) required during preprocessing.<br />
+<em>Allowed format</em>: A JSON/dictionary with string keys and corresponding values.</p>
+</li>
+<li>
+<p><strong>filter</strong>:</p>
+<ul>
+<li><strong>filter_attribute</strong>:
+The DataFrame column used to filter voxels. For example, <code>"point_count"</code> restricts processing to voxels that meet a specified point density.<br />
+<em>Allowed format</em>: A string representing a valid column name.</li>
+<li><strong>min_max_eq</strong>:<br />
+The comparison operator (e.g., <code>"greater_than"</code>, <code>"=="</code>, <code>"&lt;"</code>, etc.) that quantifies how the attribute is compared against a threshold.<br />
+<em>Allowed options</em>: <code>"equal_to"</code>, <code>"=="</code>, <code>"not_equal_to"</code>, <code>"!="</code>, <code>"greater_than"</code>, <code>"&gt;"</code>, <code>"greater_than_or_equal_to"</code>, <code>"&gt;="</code>, <code>"less_than"</code>, <code>"&lt;"</code>, <code>"less_than_or_equal_to"</code>, <code>"&lt;="</code>.</li>
+<li><strong>filter_value</strong>:<br />
+Numeric threshold (e.g., 30) applied to the corresponding attribute to select voxels for further analysis.<br />
+<em>Allowed format</em>: An integer or float, matching the data type of the attribute field.</li>
+</ul>
+</li>
+<li>
+<p><strong>compute</strong>:<br />
+  A list of computational operations to be executed for each voxel.<br />
+<em>Allowed options</em>: A list of strings from a fixed set such as <code>"voxel_index"</code>, <code>"point_count"</code>, <code>"point_density"</code>, <code>"percentage_occupied"</code>, <code>"covariance_matrix"</code>, <code>"eigenvalues"</code>, <code>"geometric_features"</code>, <code>"center_of_gravity"</code>, <code>"distance_to_center_of_gravity"</code>, <code>"std_of_cog"</code>, <code>"closest_to_center_of_gravity"</code>, <code>"center_of_voxel"</code>, <code>"corner_of_voxel"</code>.</p>
+</li>
+<li>
+<p><strong>return_at</strong>:<br />
+  Indicates which computed attribute should represent the voxel’s location. For instance, using <code>"center_of_gravity"</code> selects the voxel centroid as the representative coordinate.<br />
+<em>Allowed options</em>: A string value chosen from the attributes computed (e.g., <code>"center_of_gravity"</code>, <code>"closest_to_center_of_gravity"</code>, etc).</p>
+</li>
+</ul>
+<h3>bi_temporal_vapc_config</h3>
+
+<ul>
+<li><strong>signicance_threshold</strong>:<br />
+  A statistical threshold (e.g., 0.999) used during bi-temporal comparisons. This value is often used alongside measures such as the Mahalanobis distance to determine whether changes observed between epochs are statistically significant.<br />
+<em>Allowed format</em>: A float between 0 and 1.</li>
+</ul>
+<h3>vapc_mask</h3>
+
+<ul>
+<li><strong>buffer_size</strong>:<br />
+  Specifies an optional buffer zone (in voxel units) around the computed grid to accommodate edge effects. A zero value indicates no additional padding.<br />
+<em>Allowed format</em>: A non-negative integer.</li>
+</ul>
+<p><em>Additional Context:</em><br />
+The VAPC module performs voxelization and computes metrics (e.g., covariance matrices, eigenvalues) essential for detecting subtle geometric variations. These voxel properties underpin change detection procedures implemented in the change analysis modules.</p>
+<hr />
+<h2 id="m3c2_settings"><span style="color:#c92434"><strong>m3c2_settings</strong></span></h2>
+<h3>corepoints</h3>
+
+<ul>
+<li>
+<p><strong>use</strong>:<br />
+  Boolean flag indicating whether to generate a reduced subset of core points from the voxelized data. If set to <code>false</code>, analysis utilizes the full or pre-voxelized point set.<br />
+<em>Allowed format</em>: Boolean (<code>true</code> or <code>false</code>).</p>
+</li>
+<li>
+<p><strong>point_spacing_m</strong>:<br />
+  Specifies the inter-point spacing (in meters) for core points. Smaller spacing yields a denser representation, which may improve resolution at the expense of increased computational load.<br />
+<em>Allowed format</em>: A positive float.</p>
+</li>
+</ul>
+<h3>m3c2</h3>
+
+<ul>
+<li>
+<p><strong>normal_radii</strong>:<br />
+  A list (e.g., <code>[1, 2, 3]</code>) defining the radii used to calculate surface normals at multiple scales. These normals capture local surface orientations, crucial for quantifying changes.<br />
+<em>Allowed format</em>: A list of positive floats.</p>
+</li>
+<li>
+<p><strong>cyl_radii</strong>:<br />
+  Sets the radius of the cylindrical neighborhood used in M3C2 distance computation. This parameter influences the selection of points for comparing corresponding regions across epochs.<br />
+<em>Allowed format</em>: A positive float.</p>
+</li>
+<li>
+<p><strong>max_distance</strong>:<br />
+  The maximum allowable distance for point comparisons.<br />
+<em>Allowed format</em>: A positive float.</p>
+</li>
+<li>
+<p><strong>registration_error</strong>:<br />
+  The computed error when aligning the two point cloud datasets.<br />
+<em>Allowed format</em>: A positive float, typically derived from registration uncertainty measurements.</p>
+</li>
+</ul>
+<p><em>Additional Context:</em><br />
+The M3C2 analysis uses these settings to compute precise distance measures and to quantify uncertainties (e.g., level-of-detection values) that inform subsequent clustering and change detection.</p>
+<hr />
+<h2 id="cluster_settings"><span style="color:#c92434"><strong>cluster_settings</strong></span></h2>
+<ul>
+<li>
+<p><strong>cluster_method</strong>:<br />
+  Specifies the clustering algorithm used to aggregate significant change detections. DBSCAN is typically employed, although alternative methods, such as connected components, are supported.<br />
+<em>Allowed options</em>: <code>"DBSCAN"</code> or <code>"connected_components"</code>.</p>
+</li>
+<li>
+<p><strong>distance_threshold</strong>:<br />
+  The maximum distance within which points are considered part of the same cluster. This parameter is analogous to the “eps” parameter in DBSCAN.<br />
+<em>Allowed format</em>: A positive float.</p>
+</li>
+<li>
+<p><strong>cluster_by</strong>:<br />
+  Defines which dimensions (commonly X, Y, and Z coordinates) are used during the clustering process.<br />
+<em>Allowed format</em>: A list of strings. Fixed options are typically <code>"X"</code>, <code>"Y"</code>, and <code>"Z"</code>.</p>
+</li>
+<li>
+<p><strong>min_cluster_size</strong>:<br />
+  The minimum number of points required for a group to be recognized as a valid cluster. Clusters with fewer points are deemed insignificant.<br />
+<em>Allowed format</em>: A positive integer.</p>
+</li>
+</ul>
+<p><em>Additional Context:</em><br />
+Clustering, as implemented, aggregates spatially correlated change detections into meaningful groups for further analysis or visualization.</p>
+<hr />
+<h2 id="pc_projection"><span style="color:#c92434"><strong>pc_projection</strong></span></h2>
+<ul>
+<li>
+<p><strong>pc_path</strong>:<br />
+  The file path to the input point cloud (e.g., <code>./test_data/240826_000005.laz</code>).<br />
+<em>Allowed format</em>: A valid file path string; the file must exist and be in LAS/LAZ format.</p>
+</li>
+<li>
+<p><strong>make_range_image</strong>:<br />
+  Boolean flag to create a range image from the point cloud.<br />
+<em>Allowed format</em>: Boolean (<code>true</code> or <code>false</code>).</p>
+</li>
+<li>
+<p><strong>make_color_image</strong>:<br />
+  Specifies whether to generate a color image from the point cloud data.<br />
+<em>Allowed format</em>: Boolean (<code>true</code> or <code>false</code>).</p>
+</li>
+<li>
+<p><strong>create_kml</strong>:<br />
+  If <code>true</code>, a KML file is generated to facilitate rapid geospatial visualization.<br />
+<em>Allowed format</em>: Boolean (<code>true</code> or <code>false</code>).</p>
+</li>
+<li>
+<p><strong>top_view</strong>:<br />
+  Indicates whether a top-down (bird’s-eye) view is produced in the projection.<br />
+<em>Allowed format</em>: Boolean (<code>true</code> or <code>false</code>).</p>
+</li>
+<li>
+<p><strong>resolution_cm</strong>:<br />
+  Specifies the resolution (in centimeters) of the output image—the lower the value, the higher the resolution.<br />
+<em>Allowed format</em>: A positive float.</p>
+</li>
+<li>
+<p><strong>camera_position</strong>:<br />
+  The [x, y, z] coordinates defining the camera’s viewpoint for rendering, which directly impacts the visualization perspective.<br />
+<em>Allowed format</em>: A list or array of three numeric values (floats or integers).</p>
+</li>
+<li>
+<p><strong>rgb_light_intensity</strong> and <strong>range_light_intensity</strong>:<br />
+  Control the intensity of lighting in the RGB and range images, respectively.<br />
+<em>Allowed format</em>: Positive integers or floats, typically defined within a practical range (e.g., 0–255 for RGB).</p>
+</li>
+<li>
+<p><strong>epsg</strong>:<br />
+  The EPSG code representing the coordinate reference system of the point cloud data (e.g., 32632).<br />
+<em>Allowed format</em>: An integer corresponding to a valid EPSG code.</p>
+</li>
+</ul>
+<p><em>Additional Context:</em><br />
+Projection settings are essential for generating accurate visual representations. They ensure that spatial data is correctly rendered and georeferenced for analysis and reporting.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="classification_of_change_events_using_random_forest_classifier.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Random forest classification of change events">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Random forest classification of change events
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": ["search.highlight", "content.code.copy", "navigation.top", "navigation.footer"], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
