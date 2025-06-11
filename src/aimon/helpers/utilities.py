@@ -19,6 +19,19 @@ import rasterio as rio
 from rasterio.plot import show
 import shapely as shp
 
+from collections import defaultdict
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+import urllib
+from urllib.request import urlopen
+from shutil import copyfileobj
+
+
 def read_json_file(file_path):
     """Read JSON data from a file.
 
@@ -397,3 +410,166 @@ def plot_change_events(vector, raster, event_type_col=None, colors=None):
         gdf.boundary.plot(ax=ax)  # Plot just the boundary
 
     plt.show()
+
+
+###############################################
+# Handling online files
+
+def get_online_file_list(FOLDER_URL, options):
+    try:
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver.get(FOLDER_URL)
+        
+        # Wait until the wrapper div is populated
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "wrapper"))
+        )
+
+        # Extract filenames (modify based on structure)
+        filenames = driver.find_elements(By.TAG_NAME, "a")
+        list_files = []
+        for file in filenames:
+            name = file.text.strip()
+            link = file.get_attribute("href")  # Get the full URL
+            if name and os.path.splitext(name)[-1] in [".las", ".laz", ".ply", ".txt", ".xyz"]:
+                list_files.append(link)
+    finally:
+        driver.quit()  # Close the browser
+    
+    return list_files
+
+
+def download_online_file(download_page_link, download_dir, options):
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.get(download_page_link)
+    # Wait until the wrapper div is populated
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "wrapper"))
+    )
+    file = driver.find_elements(By.TAG_NAME, "a")[-1]
+    pc_link = file.get_attribute("href")  # Get the full URL
+    pc_link_name = urllib.parse.unquote(pc_link)
+    pc_file_name = os.path.basename(pc_link_name).split('&')[0]
+    print(f"Downloading the point cloud: {pc_file_name}")
+
+    download_path = os.path.join(download_dir, pc_file_name)
+    with urlopen(pc_link) as in_stream, open(download_path, 'wb') as out_file:
+        copyfileobj(in_stream, out_file)
+    print("Done")
+    return download_path
+
+
+def upload_file(upload_url, file_path, options):
+    import re
+    import requests
+    from bs4 import BeautifulSoup
+    session = requests.Session()
+    response = session.get(upload_url)
+    html = response.text
+    # csrf_token = session.cookies.get('sfcsrftoken')
+
+    match = re.search(r'csrfToken: "([^"]+)"', html)
+    csrf_token = match.group(1)
+
+    files = {'file': open(file_path, 'rb')}
+    headers = {
+        'Referer': upload_url,
+        'X-CSRFToken': csrf_token
+    }
+
+    upload_response = session.post(upload_url, files=files, headers=headers)
+    # print(upload_response.status_code, upload_response.text)
+
+
+
+###############################################
+# For datamodel
+
+class Geometry:
+    def __init__(self, type: str, coordinates: list[list[float]]):
+        self.type = type
+        self.coordinates = np.flip(coordinates[0], axis=1).tolist()  # Reverse the order of coordinates from [X,Y] to [Y,X] to match data model format
+
+class GeoObject:
+    def __init__(self, id: str, type: str, dateTime: str, geometry: Geometry, customEntityData: dict[str, str]):
+        self.id = id
+        self.type = type
+        self.dateTime = dateTime
+        self.geometry = geometry
+        self.customEntityData = customEntityData
+
+class ImageData:
+    def __init__(self, url: str, width: int, height: int):
+        self.url = url
+        self.width = width
+        self.height = height
+
+class Observation:
+    def __init__(self, startDateTime: str, endDateTime: str, geoObjects: list[GeoObject], backgroundImageData: ImageData = {}):
+        self.startDateTime = startDateTime
+        self.endDateTime = endDateTime
+        self.geoObjects = geoObjects
+        self.backgroundImageData = backgroundImageData
+
+class DataModel:
+    def __init__(self, observations: list[Observation]):
+        self.observations = observations
+        
+    def toJSON(self):
+        return json.dumps(
+            self,
+            default=lambda o: o.__dict__,
+            sort_keys=True,
+            indent=4)
+    
+
+def convert_geojson_to_datamodel(geojson: dict, bg_img: str=None, width: int=None, height: int=None) -> DataModel:
+    # Group features by timestamp
+    grouped_features = defaultdict(list)
+    if geojson is None:
+        print("No change events found")
+        return None
+    
+    for feature in geojson.get("features", []):
+        props = feature.get("properties", {})
+        t_min_raw = props.get("t_min")
+        t_max_raw = props.get("t_max")
+        # Convert t_min and t_max to ISO 8601 format
+        t_min = datetime.strptime(t_min_raw, "%y%m%d_%H%M%S").strftime("%Y-%m-%dT%H:%M:%SZ")
+        t_max = datetime.strptime(t_max_raw, "%y%m%d_%H%M%S").strftime("%Y-%m-%dT%H:%M:%SZ")
+        if t_min and t_max:
+            grouped_features[(t_min, t_max)].append(feature)
+
+    observations = []
+    for (t_min, t_max), features in grouped_features.items():
+        geo_objects = []
+        for i, feature in enumerate(features):
+            geometry_data = feature.get("geometry", {})
+            geometry = Geometry(
+                type=geometry_data.get("type", ""),
+                coordinates=geometry_data.get("coordinates", [])
+            )
+            props = feature.get("properties", {})
+            geo_object = GeoObject(
+                id=props.get("object_id", f"obj_{i}"),
+                type=props.get("type", "undefined"),
+                dateTime=t_min,
+                geometry=geometry,
+                customEntityData={k: str(v) for k, v in props.items() if k not in {"object_id", "event_type", "t_min", "t_max", "geometry"}} # Add any properties you want to exclude from customEntityData
+            )
+            geo_objects.append(geo_object)
+
+        image_data = ImageData(bg_img, width, height)  # Replace with actual image data if available
+
+        observation = Observation(
+            startDateTime=t_min,
+            endDateTime=t_max,
+            geoObjects=geo_objects,
+            backgroundImageData=image_data
+        )
+        observations.append(observation)
+
+    data_model = DataModel(observations=observations)
+    datamodel_json = data_model.toJSON()
+
+    return datamodel_json

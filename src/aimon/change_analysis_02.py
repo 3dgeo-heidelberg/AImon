@@ -50,7 +50,7 @@ class ChangeAnalysisM3C2:
             epochs=(epoch_refernce, epoch_target),
             corepoints=epoch_corepoints.cloud[::],
             normal_radii=tuple(m3c2_config["normal_radii"]),
-            cyl_radii=(m3c2_config["cyl_radii"],),
+            cyl_radius=m3c2_config["cyl_radii"],
             max_distance=m3c2_config["max_distance"],
             registration_error=m3c2_config["registration_error"],
         )
@@ -190,7 +190,6 @@ class ChangeAnalysisM3C2:
         
         m3c2_config = config["m3c2_settings"]["m3c2"]
         corepoint_config = config["m3c2_settings"]["corepoints"]
-
         
         # Mask point clouds based on significant change detected within voxels
         if not os.path.isfile(t1_file_vapc) or not os.path.isfile(t2_file_vapc):
@@ -205,25 +204,14 @@ class ChangeAnalysisM3C2:
                 "voxel_size":corepoint_config["point_spacing_m"],
                 "return_at":"closest_to_center_of_gravity"				
             }
-        
+
         xyzs = []
         corepoints = []
-        distances = []
-        lo_detections = []
-        nx = []
-        ny = []
-        nz = []
-        n_radius = []
-        spread1 = []
-        spread2 =[]
-        num_samples1 = []
-        num_samples2 = []
-        epoch_ids = []
 
+        vapc_objs = []
         for i,masked_pc in enumerate([t1_file_vapc,t2_file_vapc]):
             # Load xyz data
-            data_handler = DataHandler(masked_pc
-                                        )
+            data_handler = DataHandler(masked_pc)
             data_handler.load_las_files()
             vapc = Vapc(voxel_size = vapc_config["voxel_size"],
                         return_at= vapc_config["return_at"])
@@ -237,52 +225,44 @@ class ChangeAnalysisM3C2:
                 corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
             else:
                 corepoints.append(np.array(vapc.df[["X","Y","Z"]]))
+            vapc_objs.append(vapc)
+
         # Compute M3C2
         try:
             # Compute M3C2 for both epochs in both directions.
-            for i,cp in enumerate(corepoints):
-                m3c2_distances, uncertainties,normal_directions, normal_radii = ChangeAnalysisM3C2.compute_m3c2(xyzs[i],xyzs[-i-1],cp,m3c2_config)
+            for i,vapc in enumerate(vapc_objs):
+                m3c2_distances, uncertainties,normal_directions, normal_radii = ChangeAnalysisM3C2.compute_m3c2(xyzs[i],xyzs[-i-1],np.array(vapc.df[["X","Y","Z"]]),m3c2_config)
                 #Filter for change bigger then level of detection 
                 rel_change_mask = np.abs(m3c2_distances) >= uncertainties["lodetection"]
                 # Add points with significant change to the output
-                distances.append(m3c2_distances[rel_change_mask])
-                lo_detections.append(uncertainties["lodetection"][rel_change_mask])
-                spread1.append(uncertainties["spread1"][rel_change_mask])
-                spread2.append(uncertainties["spread2"][rel_change_mask])
-                num_samples1.append(uncertainties["num_samples1"][rel_change_mask])
-                num_samples2.append(uncertainties["num_samples2"][rel_change_mask])
-                nx.append(normal_directions.T[0][rel_change_mask])
-                ny.append(normal_directions.T[1][rel_change_mask])
-                nz.append(normal_directions.T[2][rel_change_mask])
-                n_radius.append(normal_radii[rel_change_mask])
+                vapc.df = vapc.df[rel_change_mask]
+                vapc.df["M3C2_distance"] = m3c2_distances[rel_change_mask]                
+                vapc.df["M3C2_lodetection"] = uncertainties["lodetection"][rel_change_mask]
+                vapc.df["spread1"] = uncertainties["spread1"][rel_change_mask]
+                vapc.df["spread2"] = uncertainties["spread2"][rel_change_mask]
+                vapc.df["num_samples1"] = uncertainties["num_samples1"][rel_change_mask]
+                vapc.df["num_samples2"] = uncertainties["num_samples2"][rel_change_mask]
+                vapc.df["nx"] = normal_directions.T[0][rel_change_mask]
+                vapc.df["ny"] = normal_directions.T[1][rel_change_mask]
+                vapc.df["nz"] = normal_directions.T[2][rel_change_mask]
+                vapc.df["n_radius"] = normal_radii[rel_change_mask]
                 ep = np.ones(shape = (m3c2_distances[rel_change_mask].shape[0],1))*i
-                epoch_ids.append(ep)
-                corepoints[i] = cp[rel_change_mask]
+                vapc.df["epoch"] = ep
         except Exception as error:
             with open(outfile_m3c2_no_change,"w") as ef:
                 ef.write("%s"%error)
             return
         # Save the results
         dh = DataHandler("")
-        corepoints = np.vstack(corepoints)
-        # Distances
-        distances = np.concatenate(distances)
-        # Level of detection
-        lo_detections = np.concatenate(lo_detections)
-        spread1 = np.concatenate(spread1)
-        spread2 = np.concatenate(spread2)
-        num_samples1 = np.concatenate(num_samples1)
-        num_samples2 = np.concatenate(num_samples2)
-        # Normals
-        nx = np.concatenate(nx)
-        ny = np.concatenate(ny)
-        nz = np.concatenate(nz)
-        n_radius = np.concatenate(n_radius)
-
-        epoch_ids = np.concatenate(epoch_ids)
-        dh.df = pd.DataFrame(np.c_[corepoints,distances,lo_detections,epoch_ids,nx,ny,nz,n_radius,spread1,spread2,num_samples1,num_samples2
-                            ], columns= ["X","Y","Z","M3C2_distance","M3C2_lodetection","epoch","nx","ny","nz","n_radius","spread1","spread2","num_samples1","num_samples2"])
-        dh.save_as_las(outfile_m3c2)
+        dh.df = pd.concat([vapc_objs[0].df,vapc_objs[1].df])
+        # dh.df = pd.DataFrame(np.c_[corepoints,distances,lo_detections,epoch_ids,nx,ny,nz,n_radius,spread1,spread2,num_samples1,num_samples2
+        #                     ], columns= ["X","Y","Z","M3C2_distance","M3C2_lodetection","epoch","nx","ny","nz","n_radius","spread1","spread2","num_samples1","num_samples2"])
+        try:
+            dh.save_as_las(outfile_m3c2)
+        except Exception as error:
+            with open(outfile_m3c2_no_change,"w") as ef:
+                ef.write("%s"%error)
+            return
         return dh.df
 
     @timeit

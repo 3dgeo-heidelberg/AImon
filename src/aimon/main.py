@@ -1,22 +1,19 @@
-import os, sys, io
-import numpy as np
-from pathlib import Path
+import os, sys
 import argparse
-import glob
 
 from aimon.voxel_wise_change_detection_01 import compute_bitemporal_vapc
 from aimon.change_analysis_02 import ChangeAnalysisM3C2
 from aimon.pc_projection_03 import PCloudProjection
 from aimon.change_projection_04 import ProjectChange
 
-from aimon.helpers.utilities import setup_configuration, get_min_sec, Loader
+from aimon.helpers.utilities import setup_configuration, Loader
 from aimon.helpers.cluster import cluster
 from aimon.helpers.change_events import process_m3c2_file_into_change_events
 # from bi_vapc_01 import compute_bitemporal_vapc
 
 import vapc
 import datetime
-import time
+import json
 
 
 def fn_parse_args():
@@ -51,19 +48,31 @@ def fn_parse_args():
 
     return parser.parse_args()
 
-def main() -> None:
+
+
+def main():
     """
     Main function to execute the full workflow.
     """
-
-    loader = Loader("Computing... ", "Finished", 0.35).start()
     args = fn_parse_args()
+    config_file = args.config_file
+    filenames = args.filenames
     # Iterate over all pairs of input files and all configuration files
+    run_pipeline(config_file, filenames)
+
+
+def run_pipeline(config_file, filenames):
+    """ Run the processing pipeline for each pair of input files.
+    Args:
+        config_file (str): Path to the configuration file.
+        filenames (list of str): List of input filenames.
+    """
     start = datetime.datetime.now()
     timestamp = start.strftime("%Y_%m_%d_%H-%M-%S")
-    for i, t1_file in enumerate(args.filenames[:-1]):
-        t2_file = args.filenames[i+1]
-        config_file = args.config_file
+    loader = Loader("Computing... ", "Finished", 0.35).start()
+    for i, t1_file in enumerate(filenames[:-1]):
+        t2_file = filenames[i+1]
+        config_file =config_file
         (
         configuration,
         t1_vapc_out_file,
@@ -131,8 +140,10 @@ def main() -> None:
     
     # Project the 3D change events point cloud to pixel and UTM 32N coordinates
     epsg = int(configuration['pc_projection']['epsg'])
-    change_prj = ProjectChange(change_event_file, project_name, projected_image_folder, projected_events_folder, epsg)
+    create_kml = int(configuration['pc_projection']['create_kml'])
+    change_prj = ProjectChange(change_event_file, project_name, projected_image_folder, projected_events_folder, epsg, create_kml)
     change_prj.project_change()
+
     loader.stop()
 
 

@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Please cite the AImon5.0 repository when using our software & tools in your research."
+authors:
+    - family-names: AImon5.0 Development Core Team
+title: "AImon5.0"
+version: 0.0.1
+date-released: 2025-06-11
+license: "MIT"
+repository-code: "https://github.com/3dgeo-heidelberg/AImon"

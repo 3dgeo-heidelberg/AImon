@@ -1,4 +1,4 @@
-# AImon<sup>5.0</sup>
+# AImon5.0
 
 ## 📖 About
 
@@ -33,6 +33,21 @@ cd aimon
     ```
     python -m pip install -v --editable .
     ```
+
+
+## Usage from the main repository folder:
+Bi-temporal:
+```bash
+python src/aimon/main.py -c "<path/to/config_file.json>" -f "<path/to/t_1.las>" "<path/to/t_2.las>"
+```
+
+Multi-temporal:
+```bash
+python src/aimon/main.py -c "<path/to/config_file.json>" -f "<path/to/t_1.las>" "<path/to/t_2.las>" "<path/to/t_3.las>" ... "<path/to/t_n-1.las>" "<path/to/t_n.las>"
+```
+
+
+
 
 ## 📜 License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)\
