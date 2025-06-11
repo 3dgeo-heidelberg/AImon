@@ -6,18 +6,18 @@ This document details each configuration parameter and its role in the processin
 
 In summary, the configuration parameters described bellow establish a framework for point cloud analysis:
 
-- [<span style="color:#881823">**Global project settings**</span>](#project_setting) define naming, logging, and file output behaviors. 
-- [<span style="color:#881823">**VAPC settings**</span>](#vapc_settings) determine voxelization parameters and computational procedures for extracting meaningful geometric properties.
-- [<span style="color:#881823"> **M3C2 settings**</span>](#m3c2_settings) include corepoint generation, normal computation, and registration errors to facilitate precise change quantification.
-- [<span style="color:#881823">**Clustering parameters**</span>](#cluster_settings) aggregate significant changes into spatially coherent groups.
-- [<span style="color:#881823">**Point cloud projection parameters**</span>](#pc_projection) ensure that processed data is accurately visualized and georeferenced.
+- <a href="#project_setting">**Global project settings**</a> define naming, logging, and file output behaviors.
+- <a href="#vapc_settings">**VAPC settings**</a> determine voxelization parameters and computational procedures for extracting meaningful geometric properties.
+- <a href="#m3c2_settings">**M3C2 settings**</a> include corepoint generation, normal computation, and registration errors to facilitate precise change quantification.
+- <a href="#cluster_settings">**Clustering parameters**</a> aggregate significant changes into spatially coherent groups.
+- <a href="#pc_projection">**Point cloud projection parameters**</a> ensure that processed data is accurately visualized and georeferenced.
 
 Collectively, these settings enable a workflow for detecting, quantifying, and visualizing changes in 3D time series datasets.
 
 
 <details>
 <summary>Example of a configuration file</summary>
-```
+```json
 {
     "project_setting": {
         "project_name": "Trier_vs6_av0_999",
@@ -90,7 +90,7 @@ Collectively, these settings enable a workflow for detecting, quantifying, and v
 
 ---
 
-## <span style="color:#881823">**project_setting**</span>
+## <span style="color:#c92434">**project_setting**</span>
 
 - **project_name**:  
   This specifies the project identifier (e.g. `Trier_vs6_av0_999`).
@@ -114,7 +114,7 @@ Collectively, these settings enable a workflow for detecting, quantifying, and v
   *Allowed format*: Boolean (`true` or `false`).
 
 
-## <span style="color:#881823">**vapc_settings**</span>
+## <span style="color:#c92434">**vapc_settings**</span>
 
 <h3>vapc_config</h3>
 
@@ -166,7 +166,7 @@ The VAPC module performs voxelization and computes metrics (e.g., covariance mat
 
 ---
 
-## <span style="color:#881823">**m3c2_settings**</span>
+## <span style="color:#c92434">**m3c2_settings**</span>
 
 <h3>corepoints</h3>
 
@@ -201,7 +201,7 @@ The M3C2 analysis uses these settings to compute precise distance measures and t
 
 ---
 
-## <span style="color:#881823">**cluster_settings**</span>
+## <span style="color:#c92434">**cluster_settings**</span>
 
 - **cluster_method**:  
   Specifies the clustering algorithm used to aggregate significant change detections. DBSCAN is typically employed, although alternative methods, such as connected components, are supported.  
@@ -224,7 +224,7 @@ Clustering, as implemented, aggregates spatially correlated change detections in
 
 ---
 
-## <span style="color:#881823">**pc_projection**</span>
+## <span style="color:#c92434">**pc_projection**</span>
 
 - **pc_path**:  
   The file path to the input point cloud (e.g., `./test_data/240826_000005.laz`).  

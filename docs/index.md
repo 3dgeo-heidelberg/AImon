@@ -1,10 +1,13 @@
-<img src="img/3DGeo_Logo_300dpi.png" alt="3DGeo Logo" title="3DGeo Logo" width=150 style="float: right;">
-<br>
-
 # Welcome to AImon5.0
-<a href="https://www.uni-heidelberg.de/aimon">
-  <img src="img/AImon_logo.png?raw=true" alt="AImon5.0 logo" style="width:500px;" />
-</a>
+
+<table>
+  <a href="https://www.uni-heidelberg.de/en/aimon">
+    <img src="img/AImon_logo.png?raw=true" alt="AImon5.0 logo" style="width:500px;" />
+  </a>
+  <a href="https://www.geog.uni-heidelberg.de/en/3dgeo">
+    <img src="img/3DGeo_Logo_300dpi.png" alt="3DGeo Logo" title="3DGeo Logo" width=150 style="float: right;">
+  </a>
+</table>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -26,9 +29,9 @@ the funding measure "Digital GreenTech – Environmental Engineering meets Digit
 ### Overall objective
 <div style="text-align: justify">
 Our environment and the Earth's surface are constantly changing, and global warming and climate change are accelerating the pace and magnitude of these changes. As a result, geohazards - triggered by natural events or human activities - are becoming more frequent. For example, intense and prolonged rainfall or thawing of permafrost in the Alps are increasingly causing landslides and rockfalls that threaten local populations and critical infrastructure such as railways and roads, with serious economic consequences.
-
+<br><br>
 A key tool for integrated risk management is access to relevant 4D geospatial information - accurate 3D data with high temporal resolution - acquired through near real-time, permanent or on-demand monitoring. Permanently installed autonomous laser scanning (PLS) systems have shown great potential for monitoring hazard zones, producing billions of 3D measurements daily. Early computational methods exist to analyze this data, but to make it operational, a new interface is needed to bridge application needs with 4D data collection and analysis.
-
+<br><br>
 This interface connects stakeholder expertise with autonomous PLS systems and data archives using AI and 4D analysis. It enables the operational use of PLS for risk monitoring - detecting and tracking relevant events such as slope activity in real time. For the first time, stakeholders are able to use PLS for continuous hazard monitoring.
 </div>
 
@@ -40,10 +43,14 @@ The goal of this project was to bridge the gap between research and practice. Wh
 </div>
 
 
-|                                                                                                                                                                                                                   |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|<img src="img/study_site.png?raw=true" alt="Trier Map"/> <br/> Study site of the AImon5.0 project located in Trier in Germany (red dot). |
-
+<table>
+  <tr>
+    <td style="background-color:#ffffff; color:black; padding:10px;">
+      <img src="img/study_site.png?raw=true" alt="Trier Map"/><br/>
+      Study site of the AImon5.0 project located in Trier in Germany (red dot).
+    </td>
+  </tr>
+</table>
 
 ### Method development and implementation
 <div style="text-align: justify">
@@ -60,8 +67,10 @@ For the second approach, research was carried out to find out how the state-of-t
 <div style="text-align: justify">
 The following methods were developed by the 
 <a href="https://www.geog.uni-heidelberg.de/en/3dgeo">3DGeo Research Group</a> within their main work packages.
+</div>
 
 ### New concept of 'change events'
+<div style="text-align: justify">
 A change event is characterized by different attributes, each representing a measurable dimension of the change. The diagram of Fig. 3 highlights the modular structure of change events, emphasizing how temporal and spatial metrics combine to define and categorize observed changes. A classifier assigns an event type to the change based on the characteristics, enabling semantic interpretation of what kind of event occurred (e.g., gravitational mass movement, change in vegetation, etc).<br>
 <img src="img/change_event_model.png?raw=true" alt="logo" style="width:500px;"/>
 </div>
@@ -84,20 +93,63 @@ Development of new concepts and tools for the visualization of the detected terr
 - 2.3: 3D objects
 
 ## 💡 Implemented methods and their potential applications
-- **Point Cloud Projection**: Generate range and color images from point cloud data.
-- **Bi-Temporal Analysis**: Compare point clouds from different time frames to detect changes.
-- **Change Event Management**: Convert detected clusters into change events.
-- **Data Handling**: Efficiently split, append, and merge LAS/LAZ files.
-- **GIS and KML Layer Generation**: Project 3D change events to 2D GIS and KML polygon layers for QGIS and Google Earth visualization.
-- **Visualization**: Projected images and change events visualization.
+- **Point cloud projection**: Generate range and color images from point cloud data.
+- **Bi-temporal analysis**: Compare point clouds from different time frames to detect changes.
+- **Change event management**: Convert detected clusters into change events.
+- **Data handling**: Efficiently split, append, and merge LAS/LAZ files.
+- **GIS and KML layer generation**: Project 3D change events to 2D GIS and KML polygon layers with their metadata for QGIS and Google Earth visualization.
+- **Visualization**: Quickly visualize change events on the generated range and color images.
 
 
 ## 🎮 Examples
-|                                                                                                                                                                                                                   |                                                                                                                                                                                                                         |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Example 1: Main AImon5.0 monitoring pipeline <br>  <br> <a href="main.html"><img src="img/main.png" width=500></a> | Example 2: Adaptive monitoring <br> <a href="adaptive_monitoring.html"><img src="img/adaptive_monitoring.gif" width=500></a> |
-| Example 3: Rule-based classification of change events <br> <a href="classification_of_change_events_rule_based.html"><img src="img/classified_rule_based.png" width=500></a> | Example 4: Rule-based filtering of change events <br> <a href="filtering_of_change_events_rule_based.html"><img src="img/filtered_rule_based.png" width=500></a>                                              |
-| Example 5: Manually labelled dataset for random forest training <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/labelled_change_events.png" width=500></a> | Example 6: Random forest classification on prediction dataset <br> <a href="classification_of_change_events_using_random_forest_classifier.html"><img src="img/classified_using_random_forest.png" width=500></a> |
+
+<table>
+  <tr>
+    <td style="background-color:#ffffff; color:black; padding:10px;">
+      Example 1: Main AImon5.0 monitoring pipeline <br><br>
+      <a href="main.html">
+        <img src="img/main.png" width="500">
+      </a>
+    </td>
+    <td style="background-color:#ffffff; color:black; padding:10px;">
+      Example 2: Adaptive monitoring <br>
+      <a href="adaptive_monitoring.html">
+        <img src="img/adaptive_monitoring.gif" width="500">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="background-color:#ffffff; color:black; padding:10px;">
+      Example 3: Rule-based classification of change events <br>
+      <a href="classification_of_change_events_rule_based.html">
+        <img src="img/classified_rule_based.png" width="500">
+      </a>
+    </td>
+    <td style="background-color:#ffffff; color:black; padding:10px;">
+      Example 4: Rule-based filtering of change events <br>
+      <a href="filtering_of_change_events_rule_based.html">
+        <img src="img/filtered_rule_based.png" width="500">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="background-color:#ffffff; color:black; padding:10px;">
+      Example 5: Manually labelled dataset for random forest training <br>
+      <a href="classification_of_change_events_using_random_forest_classifier.html">
+        <img src="img/labelled_change_events.png" width="500">
+      </a>
+    </td>
+    <td style="background-color:#ffffff; color:black; padding:10px;">
+      Example 6: Random forest classification on prediction dataset <br>
+      <a href="classification_of_change_events_using_random_forest_classifier.html">
+        <img src="img/classified_using_random_forest.png" width="500">
+      </a>
+    </td>
+  </tr>
+</table>
+
+
+
 
 
 ## 🛠️ Full worfklow implementation
@@ -224,7 +276,7 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 
 **Software usage**
 
-As a starting point, please have a look to the Jupyter Notebooks available listed in the top left corner of the page.
+As a starting point, please have a look to the Jupyter Notebooks available listed in the top left corner of the page. <a href="configuration_description.html">Click here</a> for a detailled description of the configuration file parameters.
 
 
 **Citation**

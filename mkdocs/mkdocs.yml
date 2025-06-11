@@ -4,13 +4,28 @@ docs_dir: ../docs
 site_dir: ../site
 
 theme:
-  logo: img/3DGeo_globe_white.svg
+  logo: img/3DGeo_globe_white.svg     # light mode logo
   favicon: img/3dgeo.ico
   name: material
   custom_dir: overrides
   palette:
-    primary: custom
-    accent: custom
+      - media: "(prefers-color-scheme: light)"
+        scheme: default
+        logo: img/3DGeo_globe_white.svg     # light mode logo
+        primary: custom
+        accent: custom
+        toggle:
+          icon: material/brightness-7
+          name: Switch to dark mode
+
+      - media: "(prefers-color-scheme: dark)"
+        scheme: slate
+        logo: img/3DGeo_globe_red.png     # dark mode logo
+        primary: custom
+        accent: custom  # same as above
+        toggle:
+          icon: material/brightness-4
+          name: Switch to light mode
   features:
     - search.highlight
     - content.code.copy
