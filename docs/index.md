@@ -22,15 +22,15 @@
 Modern permanently installed laser scanners can deliver sub‐hourly point clouds, opening the door to early warning of surface deformations. Current workflows struggle to keep pace with such data volumes in near real-time. Vegetation and occlusions in forested or complex terrain further degrade ground‐point coverage, undermining the reliability of change estimates. As a result, there remains a critical need for efficient, robust processing strategies that can detect and quantify subtle surface shifts.
 <br><br>
 The project AImon5.0 was funded by the Federal Ministry of Research, Technology and Space (BMBF) within
-the funding measure "Digital GreenTech – Environmental Engineering meets Digitalisation" as part of the "Research for Sustainability (FONA) Strategy". Please find more project details on our website <a href="https://www.uni-heidelberg.de/aimon">uni-heidelberg.de/aimon</a>.
+the funding measure "Digital GreenTech – Environmental Engineering meets Digitalisation" as part of the "Research for Sustainability (FONA) Strategy". Please find more project details on <a href="https://www.uni-heidelberg.de/en/aimon">our website</a>.
 </div>
 
 
 ### Overall objective
 <div style="text-align: justify">
-Our environment and the Earth's surface are constantly changing, and global warming and climate change are accelerating the pace and magnitude of these changes. As a result, geohazards - triggered by natural events or human activities - are becoming more frequent. For example, intense and prolonged rainfall or thawing of permafrost in the Alps are increasingly causing landslides and rockfalls that threaten local populations and critical infrastructure such as railways and roads, with serious economic consequences.
+Our environment and the Earth's surface are constantly changing, and global warming and climate change are accelerating the pace and magnitude of these changes. As a result, geohazards, triggered by natural events or human activities, are becoming more frequent. For example, intense and prolonged rainfall or thawing of permafrost in the Alps are increasingly causing landslides and rockfalls that threaten local populations and critical infrastructure such as railways and roads, with serious economic consequences.
 <br><br>
-A key tool for integrated risk management is access to relevant 4D geospatial information - accurate 3D data with high temporal resolution - acquired through near real-time, permanent or on-demand monitoring. Permanently installed autonomous laser scanning (PLS) systems have shown great potential for monitoring hazard zones, producing billions of 3D measurements daily. Early computational methods exist to analyze this data, but to make it operational, a new interface is needed to bridge application needs with 4D data collection and analysis.
+A key tool for integrated risk management is access to relevant 4D geospatial information (accurate 3D data with high temporal resolution) acquired through near real-time, permanent or on-demand monitoring. Permanently installed autonomous laser scanning (PLS) systems have shown great potential for monitoring hazard zones, producing billions of 3D measurements daily. Computational methods to analyze this data exist, but to make it operational, a new interface is needed to bridge application needs with 4D data collection and analysis.
 <br><br>
 This interface connects stakeholder expertise with autonomous PLS systems and data archives using AI and 4D analysis. It enables the operational use of PLS for risk monitoring - detecting and tracking relevant events such as slope activity in real time. For the first time, stakeholders are able to use PLS for continuous hazard monitoring.
 </div>
@@ -56,10 +56,10 @@ The goal of this project was to bridge the gap between research and practice. Wh
 <div style="text-align: justify">
 The developed methods are particularly suitable for operational use and adapted in order to deliver reliable and timely results. Automated information extraction represents a central interface between the PLS system in the field, the quality-assured change information, and the end users. Scientifically, we investigated and combined two complementary concepts that can integrate expert knowledge into automated data analysis:<br>
 
-&nbsp;&nbsp;&nbsp;&nbsp; 1. <u>Top-down approach via a knowledge- and rule-based classification of changes</u>: In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g. abrupt rockfall) are defined in their sequence. A set of new methods and tools for data management for fast and accurate searches were developed and evaluated;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; 1. <u>Top-down approach via a knowledge- and rule-based classification of changes</u>: In that case, the users know exactly which events they want to find in the data streams and how these processes (e.g., abrupt rockfall) are defined in their sequence. A set of new methods and tools for data management for fast and accurate searches were developed and evaluated;<br>
 &nbsp;&nbsp;&nbsp;&nbsp; 2. <u>Data-driven approach using AI</u>: Machine learning methods find relevant change events after a user-controlled training phase and present them to the experts for evaluation. The users do not know in advance how the events, possibly also overlaid processes, are represented in the raw data. However, the users can distinguish relevant from non-relevant extracted events for their use case and thus train an AI model.<br>
 
-For the second approach, research was carried out to find out how the state-of-the-art point cloud-based deep learning models can be trained quickly and as automatically as possible in the background and how their hyperparameters can be optimized. For the visualization of the detected and classified changes, it was determined - in coordination with end users and the PLS operator - which abstraction levels and visualization forms are best suited for certain tasks and also specified reaction times. In contrast to visualization in 2D and 3D (e.g. in GIS or dashboards), fundamental research was carried out for the visualization of 4D processes in PLS data due to a lack of existing methods and tools.
+For the second approach, research was carried out to find out how the state-of-the-art point cloud-based machine learning models can be trained quickly and as automatically as possible in the background and how their hyperparameters can be optimized. In coordination with end users and the PLS operator, it was determined which abstraction levels and visualization forms are best suited for certain tasks, as well as specified reaction times, for the visualization of the detected and classified changes. In contrast to visualization in 2D and 3D (e.g., in GIS or dashboards), fundamental research was carried out for the visualization of 4D processes in PLS data due to a lack of existing methods and tools.
 </div>
 
 
@@ -76,7 +76,7 @@ A change event is characterized by different attributes, each representing a mea
 </div>
 
 **Research target 1 - Hierarchical classification of detected change:**  
-<div style="text-align: justify">Developing new methods and tools to automatically extract relevant change information from the last two point clouds. The method analyses different types of changes in the terrain (e.g. rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps comprise:
+<div style="text-align: justify">Developing new methods and tools to automatically extract relevant change information from the last two point clouds. The method analyses different types of change in the terrain (e.g., rockfall events, movements or erosion processes) fully automatically by delimiting them in terms of time and space. Five different steps comprise:
 </div>
 - 1.1: Rule-based change classification
 - 1.2: [Hierarchical analysis](https://doi.org/10.5445/IR/1000180377)
@@ -97,6 +97,7 @@ Development of new concepts and tools for the visualization of the detected terr
 - **Bi-temporal analysis**: Compare point clouds from different time frames to detect changes.
 - **Change event management**: Convert detected clusters into change events.
 - **Data handling**: Efficiently split, append, and merge LAS/LAZ files.
+- **3D objects**: Convert change events into 3D mesh objects.
 - **GIS and KML layer generation**: Project 3D change events to 2D GIS and KML polygon layers with their metadata for QGIS and Google Earth visualization.
 - **Visualization**: Quickly visualize change events on the generated range and color images.
 
