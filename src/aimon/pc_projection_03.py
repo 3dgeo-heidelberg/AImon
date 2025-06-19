@@ -200,19 +200,14 @@ class PCloudProjection:
         # Convert radians to degrees
         theta_deg, phi_deg = np.rad2deg(theta), np.rad2deg(phi)
 
-        # Discretize angles to image coordinates
-        if np.floor(min(theta_deg)) == -180 or np.floor(max(theta_deg)) == 180:
-            mask = theta_deg < 0
-            theta_deg[mask] += 360
-        
-        self.h_fov = (np.floor(min(theta_deg)), np.ceil(max(theta_deg)))
+        # Wrap negative angles to [0, 360) if range crosses -180/180
+        if np.any(theta_deg < 0):
+            theta_deg = np.mod(theta_deg, 360)
+        self.h_fov = (np.floor(np.min(theta_deg)), np.ceil(np.max(theta_deg)))
 
-
-        if np.floor(min(phi_deg)) == -180 or np.floor(max(phi_deg)) == 180:
-            mask = phi_deg < 0
-            phi_deg[mask] += 360
-        
-        self.v_fov = (np.floor(min(phi_deg)), np.ceil(max(phi_deg)))
+        if np.any(phi_deg < 0):
+            phi_deg = np.mod(phi_deg, 360)
+        self.v_fov = (np.floor(np.min(phi_deg)), np.ceil(np.max(phi_deg)))
 
         self.h_img_res = int((self.h_fov[1] - self.h_fov[0]) / self.h_res)
         self.v_img_res = int((self.v_fov[1] - self.v_fov[0]) / self.v_res)
@@ -226,8 +221,21 @@ class PCloudProjection:
         )
 
         # Map angles to pixel indices
-        u = np.round((theta_deg - self.h_fov[0]) / self.h_res).astype(int)
-        v = np.round((phi_deg - self.v_fov[0]) / self.v_res).astype(int)
+        u_og = np.round((theta_deg - self.h_fov[0]) / self.h_res).astype(int)
+        v_og = np.round((phi_deg - self.v_fov[0]) / self.v_res).astype(int)
+
+        rgb_valid_indices = (
+            (u_og >= 0) & (u_og < self.h_img_res) & (v_og >= 0) & (v_og < self.v_img_res)
+        )
+
+        img_shape = (self.h_img_res, self.v_img_res)
+        r_img = np.full(img_shape, np.inf, dtype=r.dtype)
+        np.minimum.at(r_img, (u_og, v_og), r)
+
+        # Get the indices of pixels that actually received a value
+        valid = np.isfinite(r_img)
+        u, v = np.nonzero(valid)
+        r = r_img[u, v]        
 
         # Filter points within range
         valid_indices = (
@@ -238,9 +246,11 @@ class PCloudProjection:
         self.r = r[valid_indices]
         self.r = (self.r-np.min(self.r))*255/np.max(self.r-np.min(self.r))
         if self.make_color_image:
-            self.red = self.red[valid_indices]
-            self.green = self.green[valid_indices]
-            self.blue = self.blue[valid_indices]
+            self.u_rgb = u_og[rgb_valid_indices]
+            self.v_rgb = v_og[rgb_valid_indices]
+            self.red = self.red[rgb_valid_indices]
+            self.green = self.green[rgb_valid_indices]
+            self.blue = self.blue[rgb_valid_indices]
 
         # Shift the point cloud back to its original coordinates
         self.xyz += self.camera_position
@@ -261,9 +271,9 @@ class PCloudProjection:
 
     def apply_shading_to_color_img(self):
         # Populate
-        self.color_image[self.u, self.v, 0] = self.red
-        self.color_image[self.u, self.v, 1] = self.green
-        self.color_image[self.u, self.v, 2] = self.blue
+        self.color_image[self.u_rgb, self.v_rgb, 0] = self.red
+        self.color_image[self.u_rgb, self.v_rgb, 1] = self.green
+        self.color_image[self.u_rgb, self.v_rgb, 2] = self.blue
         # Compute shading (Lambertian model)
         # Light direction for the image to have the right shading
         light_dir_x = abs(self.camera_position[0] - self.mean_x)
