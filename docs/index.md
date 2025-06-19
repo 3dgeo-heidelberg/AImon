@@ -192,6 +192,17 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
   pagetotal    = {8}
 }
 ```
+
+```
+@article{Meyer2025,
+  author       = {Meyer, Jannik and Tabernig, Ronald and H{\"{o}}fle, Bernhard},
+  journal      = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
+  year         = {2025},
+  title        = {Detection of honey bees (Apis mellifera) in hypertemporal LiDAR point cloud time series to extract bee activity zones and times},
+  doi          = {},
+  pagetotal    = {8}
+}
+```
 </details>
 
 <details>
@@ -286,7 +297,7 @@ Please cite the AImon5.0 repository when using our software & tools in your rese
 
 ```
 @software{AImon5.0,
-author = {AImon5.0 Development Core Team},
+author = {Albert, William and Tabernig, Ronald and H{\"{o}}fle, Bernhard},
 title = {AImon5.0: tool for 3D point cloud processing and projection},
 journal = {},
 year = {2025},
