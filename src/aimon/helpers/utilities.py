@@ -31,6 +31,8 @@ import urllib
 from urllib.request import urlopen
 from shutil import copyfileobj
 
+import laspy
+
 
 def read_json_file(file_path):
     """Read JSON data from a file.
@@ -573,3 +575,25 @@ def convert_geojson_to_datamodel(geojson: dict, bg_img: str=None, width: int=Non
     datamodel_json = data_model.toJSON()
 
     return datamodel_json
+
+
+def add_bb(single_file, merged_file):
+    # Load merged point cloud to compute bounding box
+    merged_pc = laspy.read(merged_file)
+    xs, ys, zs = merged_pc.x, merged_pc.y, merged_pc.z
+    from scipy.spatial import ConvexHull
+    pts = np.c_[merged_pc.x, merged_pc.y, merged_pc.z]
+    hull = ConvexHull(pts)
+    hull_vertices = pts[hull.vertices]
+
+    # Load the single point cloud to add the points to
+    target_pc = laspy.read(single_file)
+
+    # Append convex hull vertices to single_file point cloud
+    target_pc.x = np.concatenate([target_pc.x, hull_vertices[:, 0]])
+    target_pc.y = np.concatenate([target_pc.y, hull_vertices[:, 1]])
+    target_pc.z = np.concatenate([target_pc.z, hull_vertices[:, 2]])
+
+    # Save modified point cloud
+    target_pc.write(single_file)
+    print(f"Added bounding box points to {single_file}")
