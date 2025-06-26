@@ -201,12 +201,14 @@ if __name__ == '__main__':
             print(f"No scene description for {current_time}. Skipping simulation.")
 
         ########################### Start Hierarchical Change Analysis Pipeline ###########################
+        print(processed_overview_scenes)
         if len(processed_overview_scenes) == 1: # Create shaded range image of the first overview scan
             configuration["pc_projection"]["pc_path"] = current_survey_laz
 
             pc_prj = PCloudProjection(configuration=configuration,
                                       project_name="%s"%os.path.basename(current_survey_laz)[:-4],
                                       projected_image_folder = os.path.dirname(current_survey_laz))
+            print(pc_prj.bg_image_filename)
             pc_prj.project_pc()
         if len(processed_overview_scenes) > 1:
             if m == 0: # Compare overview scans every full hour
@@ -270,7 +272,7 @@ if __name__ == '__main__':
                     # Project the RBG point cloud to image
                     change_prj = ProjectChange(change_event_file=os.path.dirname(m3c2_clustered)+"change_events.json",
                                                project_name="%s"%os.path.basename(current_survey_laz)[:-4],
-                                               projected_image_path=os.path.dirname(current_survey_laz),
+                                               projected_image_path=pc_prj.bg_image_filename[0],
                                                projected_events_folder=os.path.dirname(m3c2_out_file),
                                                epsg= configuration["pc_projection"]["epsg"])
                     change_prj.project_change()
