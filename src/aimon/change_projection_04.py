@@ -86,7 +86,7 @@ class ProjectChange:
                 geojson_gis = fiona.open(self.geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(self.epsg))
             # Add the polygon to the main geojson file
             geojson_gis.write({
-                'geometry': mapping(self.polygon_gis),
+                'geometry': mapping(self.geom_gis),
                 'properties': {
                     'event_type': str(change_event.event_type),
                     'object_id': str(change_event.object_id),
@@ -108,8 +108,8 @@ class ProjectChange:
             # Retrieve the metadata
             with rasterio.open(self.bg_img_path) as src:
                 image_metadata_loaded = dict(src.tags().items())
-        except:
-            print("Missing some information, cannot project change into image")
+        except Exception as e:
+            print("Problem when reading the input image background:\n", e)
             return
 
         # Get metadata of the image. Necessary for the projection of the change event points
@@ -173,7 +173,7 @@ class ProjectChange:
 
             # Create the geometry
             list_points = []
-            if len(np.unique(change_points_uv[:, 0])) < 3 or len(np.unique(change_points_uv[:, 1])) < 3:
+            if change_points_uv.shape[0] < 3:   # If there are less than 3 points, create a LineString
                 for i in range(change_points_uv.shape[0]):
                     list_points.append([int(v_img_res - change_points_uv[i, 1]), -int(change_points_uv[i, 0])])
 
@@ -229,14 +229,14 @@ class ProjectChange:
             list_points = np.asarray(list_points)
             list_points.T[[0, 1]] = list_points.T[[1, 0]]
             list_points[:, 0] *= -1
-            self.polygon_gis = Polygon(np.array(list_points))
+            self.geom_gis = Polygon(np.array(list_points))
             # Compute centroid
             self.centroid_gis = np.mean(change_event_pts_og, axis=0)
             return 'Polygon'
 
         except:
             # Create the vector
-            self.polygon_gis = LineString(np.array(change_event_pts_xy))
+            self.geom_gis = LineString(np.array(change_event_pts_xy))
             # Compute centroid
             self.centroid_gis = np.mean(change_event_pts_og, axis=0)
             return 'LineString'
@@ -307,34 +307,8 @@ class ProjectChange:
                 linear_ring = SubElement(outer_boundary, 'LinearRing')
                 coord_element = SubElement(linear_ring, 'coordinates')
                 coord_element.text = coordinates.strip()
-        
-        ########################
-        
+                
         # Beautify the output XML
         kml_str = xml.dom.minidom.parseString(tostring(kml)).toprettyxml(indent="  ")
         with open(self.kml_name_gis, 'w') as file:
             file.write(kml_str)
-
-        #############################
-
-if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
-    # args = parser.parse_args()
-    # config = utilities.read_json_file(args.config)
-
-
-
-    config_file = r"/home/william/Documents/DATA/TRIER/project_settings_trier.json"
-    config = utilities.read_json_file(config_file)
-    
-    
-
-    img = ProjectChange(
-        change_event_file = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/02_Change_analysis_UHD_Change_Events/change_events.json",
-        project_name = config["project_setting"]["project_name"],
-        projected_image_path = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/03_Change_visualisation_UHD_Projected_Images/Trier_vs6_av0_999_RangeImage.tif",
-        projected_events_folder = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/04_Change_visualisation_UHD_Change_Events"
-    )
-
-    img.project_change()

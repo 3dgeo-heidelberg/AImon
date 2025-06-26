@@ -48,6 +48,7 @@ class PCloudProjection:
         self.camera_position = configuration["pc_projection"]["camera_position"]
         self.rgb_light_intensity = configuration["pc_projection"]["rgb_light_intensity"]
         self.range_light_intensity = configuration["pc_projection"]["range_light_intensity"]
+        self.bg_image_filename = []
         ### INITIALIZING VARIABLES ###
         ##############################
 
@@ -108,6 +109,7 @@ class PCloudProjection:
         if not os.path.exists(self.projected_image_folder):
             os.makedirs(self.projected_image_folder)
         filename = os.path.join(self.projected_image_folder,f"{self.project_name}_{self.image_type}Image.tif")
+        self.bg_image_filename.append(filename)
 
         raster = np.moveaxis(self.shaded_image, [0, 1, 2], [2, 1, 0])
         raster = np.rot90(raster, k=-1, axes=(1, 2))
