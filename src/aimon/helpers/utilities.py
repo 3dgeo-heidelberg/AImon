@@ -15,6 +15,7 @@ import rasterio
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
+from shapely.geometry import shape
 
 from collections import defaultdict
 
@@ -361,7 +362,6 @@ def build_pipeline_command(folder_path, config_file, default_cmd, use_every_xth_
 
 
 def plot_change_events(change_event_file, img_path, event_type_col=None, colors=None, figsize=(8,6)):
-    from shapely.geometry import shape
     # Load the background image (as array)
     with rasterio.open(img_path) as src:
         img = src.read(1)
