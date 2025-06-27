@@ -117,7 +117,7 @@ if __name__ == '__main__':
             "min_cluster_size": 25
         },
         "pc_projection": {
-            "epsg": 32632,
+            "epsg": None,
             "make_range_image": True,
             "make_color_image": False,
             "top_view": False,
@@ -129,7 +129,7 @@ if __name__ == '__main__':
                 135.411
                 ],
             "rgb_light_intensity": 100,
-            "range_light_intensity": 15,
+            "range_light_intensity": 5
         }
     }
 
@@ -201,15 +201,15 @@ if __name__ == '__main__':
             print(f"No scene description for {current_time}. Skipping simulation.")
 
         ########################### Start Hierarchical Change Analysis Pipeline ###########################
-        print(processed_overview_scenes)
-        if len(processed_overview_scenes) == 1: # Create shaded range image of the first overview scan
+        
+        if len(processed_overview_scenes) == 1 or change_fov: # Create shaded range image of the first overview scan or when the FOV has changed
             configuration["pc_projection"]["pc_path"] = current_survey_laz
 
             pc_prj = PCloudProjection(configuration=configuration,
                                       project_name="%s"%os.path.basename(current_survey_laz)[:-4],
                                       projected_image_folder = os.path.dirname(current_survey_laz))
-            print(pc_prj.bg_image_filename)
             pc_prj.project_pc()
+            
         if len(processed_overview_scenes) > 1:
             if m == 0: # Compare overview scans every full hour
                 t1_file = processed_overview_scenes[-2]
@@ -270,11 +270,13 @@ if __name__ == '__main__':
                     # Create change events, a shaded range image, and .geojson files that show the change events projected into the shaded range image and in original coordinates
                     process_m3c2_file_into_change_events(m3c2_clustered)
                     # Project the RBG point cloud to image
-                    change_prj = ProjectChange(change_event_file=os.path.dirname(m3c2_clustered)+"change_events.json",
+                    dirname_m3c2_clustered = os.path.dirname(m3c2_clustered)
+                    ce_file = os.path.join(dirname_m3c2_clustered, "change_events.json")
+                    change_prj = ProjectChange(change_event_file=ce_file,
                                                project_name="%s"%os.path.basename(current_survey_laz)[:-4],
                                                projected_image_path=pc_prj.bg_image_filename[0],
                                                projected_events_folder=os.path.dirname(m3c2_out_file),
-                                               epsg= configuration["pc_projection"]["epsg"])
+                                               epsg=None)
                     change_prj.project_change()
 
                     change_detected = True  # Set to True as changes are detected

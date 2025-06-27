@@ -10,14 +10,11 @@ from itertools import cycle
 from shutil import get_terminal_size
 from threading import Thread
 
-import geopandas as gpd
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
+import rasterio
+import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
-import rasterio as rio
-from rasterio.plot import show
-import shapely as shp
 
 from collections import defaultdict
 
@@ -363,28 +360,33 @@ def build_pipeline_command(folder_path, config_file, default_cmd, use_every_xth_
     return command_str
 
 
-def plot_change_events(vector, raster, event_type_col=None, colors=None):
-    fig, ax = plt.subplots(1, figsize=(12, 12))
+def plot_change_events(change_event_file, img_path, event_type_col=None, colors=None, figsize=(8,6)):
+    from shapely.geometry import shape
+    # Load the background image (as array)
+    with rasterio.open(img_path) as src:
+        img = src.read(1)
+        height, width = img.shape
 
-    with rio.open(raster) as rds:
-        show(
-            (rds, (3, 2, 1)),  # Read 3 bands of raster in R G B order (3,2,1)
-            adjust=True,       # Rescale 0.0 - 1.0
-            ax=ax,             # Use existing matplotlib axes
-        )
+    # Load the GeoJSON features
+    with open(change_event_file, 'r') as f:
+        geojson = json.load(f)
+    features = geojson['features']
 
-    # Load vector data
-    gdf = gpd.read_file(vector)
-
-    # Flip Y-axis of geometry
-    gdf['geometry'] = gdf['geometry'].map(lambda polygon: shp.ops.transform(lambda x, y: (x, -y), polygon))
+    # Start plotting
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.imshow(img, cmap='gray', origin='upper')
 
     if event_type_col is not None:
-        event_types = gdf[event_type_col].unique()
+        try:
+            event_types =  [f.get('properties', {}).get(event_type_col) for f in features]
+            event_types = np.unique(event_types)
+        except:
+            print(f"No event type called {event_type_col}")
+            return
         if colors is not None:
             # Use provided colormap
             if type(colors) == list:
-                if len(event_types) > len(colors):
+                if event_types.shape[0] > len(colors):
                     raise ValueError(f"Only {len(colors)} colors defined but {len(event_types)} classes found.")
 
                 color_map = dict(zip(event_types, colors))
@@ -397,20 +399,31 @@ def plot_change_events(vector, raster, event_type_col=None, colors=None):
             colors = [mcolors.to_hex(cmap(i)) for i in range(len(event_types))]
             color_map = dict(zip(event_types, colors))
 
-        gdf['color'] = gdf[event_type_col].map(color_map)
+    # Overlay polygons as outlines
+    for feat in features:
+        geom = shape(feat['geometry'])
+        if geom.geom_type == 'Polygon':
+            x, y = geom.exterior.xy
+            y = [-yi for yi in y]
+            event_type = feat['properties'].get(event_type_col)
+            clr = color_map.get(event_type)
 
-        # Plot colored by class column
-        gdf.plot(ax=ax, color=gdf['color'], edgecolor='black', linewidth=0.5, alpha=0.6)
+            ax.plot(x, y, color=clr, linewidth=2)
+        elif geom.geom_type == 'LineString':
+            x, y = geom.xy
+            ax.plot(x, y, color=color_map, linewidth=2)
 
-        # Create dynamic legend
-        legend_elements = [
-            Patch(facecolor=color_map[cls], edgecolor='black', label=str(cls))
-            for cls in event_types
-        ]
-        ax.legend(handles=legend_elements, loc='lower right')
-    else:
-        gdf.boundary.plot(ax=ax)  # Plot just the boundary
+    from matplotlib.lines import Line2D
+    # Create custom legend handles
+    handles = [Line2D([0], [0], color=c, lw=2, label=et) for et, c in color_map.items()]
+    if handles:
+        ax.legend(handles=handles, title=event_type_col)
 
+    ax.set_xlim(0, width)
+    ax.set_ylim(height, 0)
+    ax.set_xlabel('Pixel X')
+    ax.set_ylabel('Pixel Y')
+    plt.tight_layout()
     plt.show()
 
 
