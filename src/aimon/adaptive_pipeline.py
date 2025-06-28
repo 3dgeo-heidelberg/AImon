@@ -25,6 +25,7 @@ import vapc
 #Change projection:
 from aimon.pc_projection_03 import PCloudProjection
 from aimon.change_projection_04 import ProjectChange
+
 #Mute vapc 
 vapc.enable_trace(False)
 vapc.enable_timeit(False)
@@ -86,7 +87,7 @@ if __name__ == '__main__':
                 "return_at": "center_of_gravity"
             },
             "bi_temporal_vapc_config": {
-                "signicance_threshold": 0.999
+                "significance_threshold": 0.999
             },
             "vapc_mask": {
                 "buffer_size": 0
@@ -202,7 +203,7 @@ if __name__ == '__main__':
 
         ########################### Start Hierarchical Change Analysis Pipeline ###########################
         
-        if len(processed_overview_scenes) == 1 or change_fov: # Create shaded range image of the first overview scan or when the FOV has changed
+        if len(processed_overview_scenes) == 1: # Create shaded range image of the first overview scan or when the FOV has changed
             configuration["pc_projection"]["pc_path"] = current_survey_laz
 
             pc_prj = PCloudProjection(configuration=configuration,
@@ -214,81 +215,94 @@ if __name__ == '__main__':
             if m == 0: # Compare overview scans every full hour
                 t1_file = processed_overview_scenes[-2]
                 t2_file = processed_overview_scenes[-1]
+                files = [[t1_file, t2_file,"overview_to_overview"]]
             else: # Compare detail scan to overview scan if change was detected before
                 t1_file = processed_overview_scenes[-2]
                 t2_file = processed_detail_scenes[-1]
+                t2_file_overview = processed_overview_scenes[-1]
+                files = [[t1_file, t2_file,"high_res_to_overview"], [t1_file, t2_file_overview,"overview_to_overview"]]
 
-            t1_vapc_out_file = os.path.join(current_time_out_folder, f"{current_time}_t1_vapc.laz")
-            t2_vapc_out_file = os.path.join(current_time_out_folder, f"{current_time}_t2_vapc.laz")
-            #This is an intemediate solution
-            t = "250101_"+"".join(os.path.basename(t1_file).split("_")[:2]) + "00__250101_" + "".join(os.path.basename(t2_file).split("_")[:2])+"00"
-            m3c2_out_file = os.path.join(current_time_out_folder, f"{t}_m3c2.laz")
-            m3c2_clustered = os.path.join(current_time_out_folder, f"{t}_m3c2_clustered.laz")
-            change_event_folder = os.path.join(current_time_out_folder, f"{current_time}_change_events")
+            for file_pair in files:
+                t1_file, t2_file, suffix = file_pair
+                print(f"Comparing {t1_file} and {t2_file}")
 
-            if change_fov:
-                #Reduce the extent of pc1 to the extent of pc2
-                dh1 = vapc.DataHandler(t1_file)
-                dh1.load_las_files()
-                #Get the angles of the first point cloud
-                phi,theta = compute_angles(np.array(dh1.df.X), np.array(dh1.df.Y), np.array(dh1.df.Z))
-                dh1.df = dh1.df[(phi>= change_fov[2]) & (phi <= change_fov[3]) & (theta >= change_fov[0]) & (theta <= change_fov[1])]
-                #Save the new file
-                dh1.save_as_las(t1_file.replace(".laz", "_cropped.laz"))
-                t1_file = t1_file.replace(".laz", "_cropped.laz")
+                t1_vapc_out_file = os.path.join(current_time_out_folder, f"{current_time}_t1_vapc_{suffix}.laz")
+                t2_vapc_out_file = os.path.join(current_time_out_folder, f"{current_time}_t2_vapc_{suffix}.laz")
 
-            #BI-VAPC - Change detetction module
-            compute_bitemporal_vapc(
-                t1_file,
-                t2_file,
-                t1_vapc_out_file,
-                t2_vapc_out_file,
-                configuration
-                )
-            
-            #Extract areas that are occupied in both epochs
-            # mask_file = os.path.join(os.path.dirname(t1_vapc_out_file), "mask.las")
-            # if os.path.exists(mask_file):
-            #     
+                #This is an intermediate solution
+                t = "250101_"+"".join(os.path.basename(t1_file).split("_")[:2]) + "00__250101_" + "".join(os.path.basename(t2_file).split("_")[:2])+"00"
+                m3c2_out_file = os.path.join(current_time_out_folder, f"{t}_m3c2_{suffix}.laz")
+                m3c2_clustered = os.path.join(current_time_out_folder, f"{t}_m3c2_clustered_{suffix}.laz")
+                change_event_folder = os.path.join(current_time_out_folder, f"{current_time}_change_events")
 
-            #M3C2 - Change analysis module
-            ChangeAnalysisM3C2.do_two_sided_bitemporal_m3c2(
-                t1_vapc_out_file,
-                t2_vapc_out_file,
-                m3c2_out_file,
-                configuration
-                )
-            
-            if os.path.exists(m3c2_out_file):
-                #Cluster Changes
-                cluster(m3c2_out_file, 
-                        m3c2_clustered,
-                        configuration
-                        )
+                if suffix == "high_res_to_overview":
+                    #Reduce the extent of pc1 to the extent of pc2
+                    dh1 = vapc.DataHandler(t1_file)
+                    dh1.load_las_files()
+                    #Get the angles of the first point cloud
 
-                if os.path.isfile(m3c2_out_file):
-                    # Create change events, a shaded range image, and .geojson files that show the change events projected into the shaded range image and in original coordinates
-                    process_m3c2_file_into_change_events(m3c2_clustered)
-                    # Project the RBG point cloud to image
-                    dirname_m3c2_clustered = os.path.dirname(m3c2_clustered)
-                    ce_file = os.path.join(dirname_m3c2_clustered, "change_events.json")
-                    change_prj = ProjectChange(change_event_file=ce_file,
-                                               project_name="%s"%os.path.basename(current_survey_laz)[:-4],
-                                               projected_image_path=pc_prj.bg_image_filename[0],
-                                               projected_events_folder=os.path.dirname(m3c2_out_file),
-                                               epsg=None)
-                    change_prj.project_change()
+                    phi,theta = compute_angles(np.array(dh1.df.X), np.array(dh1.df.Y), np.array(dh1.df.Z))
+                
+                    dh1.df = dh1.df[(phi>= change_fov[2]) & (phi <= change_fov[3]) & (theta >= change_fov[0]) & (theta <= change_fov[1])]
+                    #Save the new file
+                    dh1.save_as_las(t1_file.replace(".laz", "_cropped.laz"))
+                    t1_file = t1_file.replace(".laz", "_cropped.laz")
 
-                    change_detected = True  # Set to True as changes are detected
-                    if m == 30 or adaptive_mode is False: # If we are in standard mode we do not update the FOV
-                        change_fov = False
+                #BI-VAPC - Change detetction module
+                compute_bitemporal_vapc(
+                    t1_file,
+                    t2_file,
+                    t1_vapc_out_file,
+                    t2_vapc_out_file,
+                    configuration
+                    )
+                
+                #Extract areas that are occupied in both epochs
+                # mask_file = os.path.join(os.path.dirname(t1_vapc_out_file), "mask.las")
+                # if os.path.exists(mask_file):
+                #     
+
+                #M3C2 - Change analysis module
+                ChangeAnalysisM3C2.do_two_sided_bitemporal_m3c2(
+                    t1_vapc_out_file,
+                    t2_vapc_out_file,
+                    m3c2_out_file,
+                    configuration
+                    )
+                
+                if os.path.exists(m3c2_out_file):
+                    #Cluster Changes
+                    cluster(m3c2_out_file, 
+                            m3c2_clustered,
+                            configuration
+                            )
+
+                    if os.path.isfile(m3c2_out_file):
+                        # Create change events, a shaded range image, and .geojson files that show the change events projected into the shaded range image and in original coordinates
+                        ce_filename = os.path.join(current_time_out_folder, f"change_events_{suffix}.json")
+                        obj_folder = os.path.join(current_time_out_folder, "convex_hulls_%s"%suffix)
+                        pc_folder = os.path.join(current_time_out_folder, "point_clouds_%s"%suffix)
+                        process_m3c2_file_into_change_events(m3c2_clustered,ce_filename,pc_folder,obj_folder)
+                        # Project the RBG point cloud to image
+                        dirname_m3c2_clustered = os.path.dirname(m3c2_clustered)
+                        os.makedirs(os.path.join(os.path.dirname(m3c2_out_file),suffix), exist_ok=True)
+                        change_prj = ProjectChange(change_event_file=ce_filename,
+                                                project_name="%s_%s"%(os.path.basename(current_survey_laz)[:-4],suffix),
+                                                projected_image_path=pc_prj.bg_image_filename[0],
+                                                projected_events_folder=os.path.join(os.path.dirname(m3c2_out_file),suffix),
+                                                epsg=None)
+                        change_prj.project_change()
+
+                        change_detected = True  # Set to True as changes are detected
+                        if adaptive_mode is False: # If we are in standard mode we do not update the FOV
+                            change_fov = False
+                        else:
+                            change_fov = get_min_and_max_vertical_and_horizontal_angles(m3c2_clustered)
                     else:
-                        change_fov = get_min_and_max_vertical_and_horizontal_angles(m3c2_out_file)
+                        change_detected = False
                 else:
+                    print(f"M3C2 output file {m3c2_out_file} does not exist --> No change detected.")
                     change_detected = False
-            else:
-                print(f"M3C2 output file {m3c2_out_file} does not exist --> No change detected.")
-                change_detected = False
 
         ############################ End code here ###########################
 
