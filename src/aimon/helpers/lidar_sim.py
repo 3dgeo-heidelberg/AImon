@@ -66,39 +66,45 @@ def run_lidar_simulation(path_to_survey,
 def compute_angles(xv,yv,zv,
                    x = 26.5, 
                    y = -240.015, 
-                   z = 135.411,
-                   buffer= 0 #m
+                   z = 135.411
                    ):
-    # Calculate the angles for each point in the DataFrame
-    phi = -90 + np.arctan2(yv+buffer - y, xv+buffer - x) * 180 / np.pi
-    theta = np.arctan2(zv+buffer - z, np.sqrt((xv+buffer - x) ** 2 + (yv+buffer - y) ** 2)) * 180 / np.pi
-    return phi, theta
+    # Vector differences from scan position
+    z+=1.7 # because of helios platform and scanner height
+    dx = xv - x
+    dy = yv - y
+    dz = zv - z
+    # Horizontal angle (azimuth) in degrees [0, 360)
+    theta = -90 + np.arctan2(dy, dx) * 180 / np.pi
+    # Elevation angle in degrees from horizontal plane
+    r = np.sqrt(dx**2 + dy**2)
+    phi = np.degrees(np.arctan2(dz, r))
+    return phi, theta 
 
 
-def get_min_and_max_vertical_and_horizontal_angles(infile,scan_pos= [26.5,-240.015,135.411]):
+def get_min_and_max_vertical_and_horizontal_angles(infile, scan_pos=[26.5,-240.015,135.411]):
     dh = vapc.DataHandler(infile)
     dh.load_las_files()
 
-    phi_1, theta_1 = compute_angles(dh.df.X.min(), dh.df.Y.min(), dh.df.Z.min(), 
-                                        scan_pos[0], scan_pos[1], scan_pos[2])
-    phi_2, theta_2 = compute_angles(dh.df.X.max(), dh.df.X.max(), dh.df.Z.max(),
-                                        scan_pos[0], scan_pos[1], scan_pos[2])
+    # grab raw arrays
+    xs = dh.df['X'].to_numpy()
+    ys = dh.df['Y'].to_numpy()
+    zs = dh.df['Z'].to_numpy()
 
-    min_phi = min(phi_1, phi_2)
-    max_phi = max(phi_1, phi_2)
-    min_theta = min(theta_1, theta_2)
-    max_theta = max(theta_1, theta_2)
+    # compute arrays of phi, theta for _every_ point
+    phi, theta = compute_angles(xs, ys, zs,
+                                scan_pos[0], scan_pos[1], scan_pos[2])
 
-    delta_phi = max_phi - min_phi
-    delta_theta = max_theta - min_theta
+    # true mins & maxs
+    min_phi, max_phi = float(phi.min()), float(phi.max())
+    min_theta, max_theta = float(theta.min()), float(theta.max())
+    d_theta  = (max_theta - min_theta) * 0.2   # 20% vertical buffer
+    d_phi    = (max_phi   - min_phi  ) * 0.2   # 20% horizontal buffer
 
-    min_phi = min_phi - delta_phi * 0.25
-    max_phi = max_phi + delta_phi * 0.25
-    min_theta = min_theta - delta_theta * 0.25
-    max_theta = max_theta + delta_theta * 0.25
+    min_theta -= abs(d_theta) 
+    max_theta += abs(d_theta) 
+    min_phi   -= abs(d_phi)   
+    max_phi   += abs(d_phi)   
 
-    print(f"min_phi: {min_phi}, min_theta: {min_theta}")    
-    print(f"max_phi: {max_phi}, max_theta: {max_theta}")
     return min_theta, max_theta, min_phi, max_phi
 
 def update_survey(
@@ -130,10 +136,10 @@ def update_survey(
     # 3) Update the scanner settings
     # Set the vertical and horizontal angles
     if change_fov:
-        vmin, vmax = change_fov[0], change_fov[1]
+        vmin, vmax = change_fov[2], change_fov[3]
         leg_scanner.set("verticalAngleMin_deg", str(vmin))
         leg_scanner.set("verticalAngleMax_deg", str(vmax))
-        hstart, hstop = change_fov[2], change_fov[3]
+        hstart, hstop = change_fov[0], change_fov[1]
         leg_scanner.set("headRotateStart_deg", str(hstart))
         leg_scanner.set("headRotateStop_deg", str(hstop))
 
