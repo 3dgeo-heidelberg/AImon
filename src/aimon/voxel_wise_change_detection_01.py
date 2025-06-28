@@ -35,7 +35,7 @@ def compute_bitemporal_vapc(
     #Mask file
     mask_file = os.path.join(os.path.dirname(t1_vapc_out_file), "mask.las")
     #Extract areas
-    alpha_value = configuration["vapc_settings"]["bi_temporal_vapc_config"]["signicance_threshold"]
+    alpha_value = configuration["vapc_settings"]["bi_temporal_vapc_config"]["significance_threshold"]
     voxel_size = configuration["vapc_settings"]["vapc_config"]["voxel_size"]
     extract_areas_with_change_using_mahalanobis_distance(t1_file, t2_file, mask_file, t1_vapc_out_file, t2_vapc_out_file, voxel_size, alpha_value, delete_mask_file=False)
 
