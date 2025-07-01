@@ -24,7 +24,7 @@
             "return_at": "center_of_gravity"
         },
         "bi_temporal_vapc_config": {
-            "signicance_threshold": 0.999
+            "significance_threshold": 0.999
         },
         "vapc_mask": {
             "buffer_size": 0

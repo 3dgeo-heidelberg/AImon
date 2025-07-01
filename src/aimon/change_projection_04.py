@@ -2,7 +2,7 @@ import argparse
 import os
 import numpy as np
 from scipy.spatial import ConvexHull
-from shapely import Polygon
+from shapely import Polygon, LineString
 import rasterio
 from shapely.geometry import mapping, Polygon
 import fiona
@@ -30,7 +30,7 @@ class ProjectChange:
         - project_gis_layer: Helper function to handle GIS layer projection.
     """
 
-    def __init__(self, change_event_file, project_name, projected_image_path, projected_events_folder, epsg=4979, create_kml=False):
+    def __init__(self, change_event_file, project_name, projected_image_path, projected_events_folder, epsg=None, create_kml=False):
         ##############################
         ### INITIALIZING VARIABLES ###
         self.project = project_name
@@ -51,69 +51,71 @@ class ProjectChange:
         # change_events = utilities.read_json_file(self.path_change_events)
         change_events = ChangeEventCollection()
         change_events = change_events.load_from_file(self.path_change_events)
-        # Create the schema for the attributes of the geojson
-        schema = {
-            'geometry': 'Polygon',
-            'properties': {
-                'event_type': 'str',
-                'object_id': 'str',
-                'X_centroid': 'float',
-                'Y_centroid': 'float',
-                'Z_centroid': 'float',
-                't_min': 'str',
-                't_max': 'str',
-                'change_magnitudes_mean': 'float',
-                'volumes_from_convex_hulls': 'float',
-                'cluster_point_cloud': 'str',
-                'cluster_point_cloud_chull': 'str'
-                }
-            }
-        # Open the shapefile to be able to write each polygon in it
-        geojson = fiona.open(self.geojson_name, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(self.epsg), 'binary')
-        geojson_gis = fiona.open(self.geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(self.epsg))
-        for change_event in change_events.events:
-            
-            #if 'undefined' in str(change_event['event_type']): continue
+        schema = None
 
-            # Fetch contour points
+        for change_event in change_events.events:
+            # Fetch points
             change_event_pts_og = change_event.convex_hull["points_building"]
             change_event_pts_og = np.asarray(change_event_pts_og)
             
             # Handle the empty array, if any
             if change_event_pts_og.shape[0] == 0:
                 continue
-            
-            # GIS layer
-            self.project_gis_layer(change_event_pts_og)
-            # Add the polygon to the main geojson file
-            geojson_gis.write({
-                'geometry': mapping(self.polygon_gis),
-                'properties': {
-                    'event_type': str(change_event.event_type),
-                    'object_id': str(change_event.object_id),
-                    'X_centroid': float(self.centroid_gis[0]),
-                    'Y_centroid': float(self.centroid_gis[1]),
-                    'Z_centroid': float(self.centroid_gis[2]),
-                    't_min': str(change_event.t_min),
-                    't_max': str(change_event.t_max),
-                    'change_magnitudes_mean': float(change_event.change_magnitudes["mean"]),
-                    'volumes_from_convex_hulls': float(change_event.convex_hull["volume"]),
-                    'cluster_point_cloud': str(change_event.cluster_point_cloud),
-                    'cluster_point_cloud_chull': str(change_event.cluster_point_cloud_chull)
-                }
-            })
-        geojson_gis.close()
+            if schema is None:
+                # GIS layer
+                geom = self.project_gis_layer(change_event_pts_og)
+                # Create the schema for the attributes of the geojson
+                schema = {
+                    'geometry': geom,
+                    'properties': {
+                        'event_type': 'str',
+                        'object_id': 'str',
+                        'X_centroid': 'float',
+                        'Y_centroid': 'float',
+                        'Z_centroid': 'float',
+                        't_min': 'str',
+                        't_max': 'str',
+                        'change_magnitudes_mean': 'float',
+                        'volumes_from_convex_hulls': 'float',
+                        'cluster_point_cloud': 'str',
+                        'cluster_point_cloud_chull': 'str'
+                        }
+                    }
+            # Open the shapefile to be able to write each polygon in it
+            geojson = fiona.open(self.geojson_name, 'w', 'GeoJSON', schema, None, 'binary')
+            if self.epsg is not None:
+                geojson_gis = fiona.open(self.geojson_name_gis, 'w', 'GeoJSON', schema, fiona.crs.CRS.from_epsg(self.epsg))
+                # Add the polygon to the main geojson file
+                geojson_gis.write({
+                    'geometry': mapping(self.geom_gis),
+                    'properties': {
+                        'event_type': str(change_event.event_type),
+                        'object_id': str(change_event.object_id),
+                        'X_centroid': float(self.centroid_gis[0]),
+                        'Y_centroid': float(self.centroid_gis[1]),
+                        'Z_centroid': float(self.centroid_gis[2]),
+                        't_min': str(change_event.t_min),
+                        't_max': str(change_event.t_max),
+                        'change_magnitudes_mean': float(change_event.change_magnitudes["mean"]),
+                        'volumes_from_convex_hulls': float(change_event.convex_hull["volume"]) if "volume" in change_event.convex_hull else 0.0,
+                        'cluster_point_cloud': str(change_event.cluster_point_cloud),
+                        'cluster_point_cloud_chull': str(change_event.cluster_point_cloud_chull)
+                    }
+                })
+            else: break
+        if self.epsg is not None:
+            try:
+                geojson_gis.close()
+            except:
+                print("No change event detected")
 
         # Load EXIF data from an image
         try:
             # Retrieve the metadata
-            #self.bg_img_path = os.path.join(os.getcwd(), self.bg_img_path)
-            lst_bg_img = os.listdir(self.bg_img_path)
-            bg_img = os.path.join(self.bg_img_path, lst_bg_img[0])
-            with rasterio.open(bg_img) as src:
+            with rasterio.open(self.bg_img_path) as src:
                 image_metadata_loaded = dict(src.tags().items())
-        except:
-            print("Missing some information, cannot project change into image")
+        except Exception as e:
+            print("Problem when reading the input image background:\n", e)
             return
 
         # Get metadata of the image. Necessary for the projection of the change event points
@@ -133,9 +135,9 @@ class ProjectChange:
         top_view = json.loads(image_metadata_loaded['top_view'].lower()) # Using json.loads() method to convert the string "True"/"False" to a boolean
         
         for change_event in change_events.events:
-            #if 'undefined' in str(change_event['event_type']): continue
+            
 
-            # Fetch contour points in WGS84 coordinate system
+            # Fetch contour points
             change_event_pts_og = change_event.convex_hull["points_building"]
             change_event_pts_og = np.asarray(change_event_pts_og)
             
@@ -175,26 +177,30 @@ class ProjectChange:
             v = np.round((phi - v_fov_x) / res).astype(int)
             change_points_uv = np.c_[u, v]
 
-            # Create the convex hull
-            if len(np.unique(change_points_uv[:, 0])) < 3 or len(np.unique(change_points_uv[:, 1])) < 3:
-                continue
+            # Create the geometry
+            list_points = []
+            if change_points_uv.shape[0] < 3:   # If there are less than 3 points, create a LineString
+                for i in range(change_points_uv.shape[0]):
+                    list_points.append([int(v_img_res - change_points_uv[i, 1]), -int(change_points_uv[i, 0])])
+
+                geom = LineString(np.array(list_points))
+
             else:
                 hull = ConvexHull(change_points_uv)
 
-            # Order the points anti-clockwise
-            list_points = []
-            for simplex in hull.vertices:
-                list_points.append([int(v_img_res - change_points_uv[simplex, 1]), -int(change_points_uv[simplex, 0])])
-            
-            # Create the polygon
-            polygon = Polygon(np.array(list_points))
+                # Order the points anti-clockwise
+                for simplex in hull.vertices:
+                    list_points.append([int(v_img_res - change_points_uv[simplex, 1]), -int(change_points_uv[simplex, 0])])
+                
+                # Create the polygon
+                geom = Polygon(np.array(list_points))
 
             # Compute centroid
             centroid = np.mean(change_event_pts_og, axis=0)
 
             # Add the polygon to the main shapefile
             geojson.write({
-                'geometry': mapping(polygon),
+                'geometry': mapping(geom),
                 'properties': {
                     'event_type': str(change_event.event_type),
                     'object_id': str(change_event.object_id),
@@ -204,33 +210,49 @@ class ProjectChange:
                     't_min': str(change_event.t_min),
                     't_max': str(change_event.t_max),
                     'change_magnitudes_mean': float(change_event.change_magnitudes["mean"]),
-                    'volumes_from_convex_hulls': float(change_event.convex_hull["volume"]),
+                    'volumes_from_convex_hulls': float(change_event.convex_hull["volume"]) if "volume" in change_event.convex_hull else 0.0,
                     'cluster_point_cloud': str(change_event.cluster_point_cloud),
                     'cluster_point_cloud_chull': str(change_event.cluster_point_cloud_chull)
                 }
             })
-        geojson.close()
+        try:
+            geojson.close()
+        except:
+            # Exception already handled for 'geojson_gis.close()'
+            pass
 
         if self.create_kml:
-            self.geojson2kml()
+            if self.epsg is not None:
+                self.geojson2kml()
+            else:
+                print("Cannot create kml file. EPSG not specified.")
 
 
     def project_gis_layer(self, change_event_pts_og):
         change_event_pts_xy = change_event_pts_og[:,:2]
         # Create the convex hull
-        hull = ConvexHull(change_event_pts_xy)
-        # Order the points anti-clockwise
-        list_points = []
-        for simplex in hull.vertices:
-            list_points.append([int(change_event_pts_xy[simplex, 1]), -int(change_event_pts_xy[simplex, 0])])
-        
-        # Create the polygon
-        list_points = np.asarray(list_points)
-        list_points.T[[0, 1]] = list_points.T[[1, 0]]
-        list_points[:, 0] *= -1
-        self.polygon_gis = Polygon(np.array(list_points))
-        # Compute centroid
-        self.centroid_gis = np.mean(change_event_pts_og, axis=0)
+        try:
+            hull = ConvexHull(change_event_pts_xy)
+            # Order the points anti-clockwise
+            list_points = []
+            for simplex in hull.vertices:
+                list_points.append([int(change_event_pts_xy[simplex, 1]), -int(change_event_pts_xy[simplex, 0])])
+            
+            # Create the polygon
+            list_points = np.asarray(list_points)
+            list_points.T[[0, 1]] = list_points.T[[1, 0]]
+            list_points[:, 0] *= -1
+            self.geom_gis = Polygon(np.array(list_points))
+            # Compute centroid
+            self.centroid_gis = np.mean(change_event_pts_og, axis=0)
+            return 'Polygon'
+
+        except:
+            # Create the vector
+            self.geom_gis = LineString(np.array(change_event_pts_xy))
+            # Compute centroid
+            self.centroid_gis = np.mean(change_event_pts_og, axis=0)
+            return 'LineString'
 
 
     def geojson2kml(self):
@@ -298,33 +320,8 @@ class ProjectChange:
                 linear_ring = SubElement(outer_boundary, 'LinearRing')
                 coord_element = SubElement(linear_ring, 'coordinates')
                 coord_element.text = coordinates.strip()
-        
-        ########################
-        
+                
         # Beautify the output XML
         kml_str = xml.dom.minidom.parseString(tostring(kml)).toprettyxml(indent="  ")
         with open(self.kml_name_gis, 'w') as file:
             file.write(kml_str)
-
-        #############################
-
-if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("config", help="Project config file containing information for the projection of the point cloud and change events.", type=str)
-    # args = parser.parse_args()
-    # config = utilities.read_json_file(args.config)
-
-    config_file = r"/home/william/Documents/DATA/TRIER/project_settings_trier.json"
-    config = utilities.read_json_file(config_file)
-    
-    
-
-    img = ProjectChange(
-        change_event_file = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/02_Change_analysis_UHD_Change_Events/change_events.json",
-        project_name = config["project_setting"]["project_name"],
-        projected_image_path = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/03_Change_visualisation_UHD_Projected_Images",
-        projected_events_folder = "/home/william/Documents/GitHub/AImon/out/Trier_vs6_av0_999/04_Change_visualisation_UHD_Change_Events"
-    )
-
-    img.project_change()
-

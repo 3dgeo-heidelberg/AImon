@@ -31,6 +31,7 @@ theme:
     - content.code.copy
     - navigation.top
     - navigation.footer
+    - search.suggest
 use_directory_urls: false
 extra_css:
   - customs.css
@@ -48,9 +49,9 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Notebook examples:
-    - Main AImon5.0 monitoring pipeline: main.ipynb
-    - Adaptive monitoring: adaptive_monitoring.ipynb
-    - Rule-based classification of change events: classification_of_change_events_rule_based.ipynb
-    - Rule-based filtering of change events: filtering_of_change_events_rule_based.ipynb
-    - Random forest classification of change events: classification_of_change_events_using_random_forest_classifier.ipynb
+    - Main AImon5.0 monitoring pipeline: jupyter/main.ipynb
+    - Adaptive monitoring: jupyter/adaptive_monitoring.ipynb
+    - Rule-based classification of change events: jupyter/classification_of_change_events_rule_based.ipynb
+    - Rule-based filtering of change events: jupyter/filtering_of_change_events_rule_based.ipynb
+    - Random forest classification of change events: jupyter/classification_of_change_events_using_random_forest_classifier.ipynb
     - Configuration description: configuration_description.md

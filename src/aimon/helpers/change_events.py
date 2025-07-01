@@ -830,18 +830,21 @@ class ChangeEventCollection:
 # ---------------------------------------------------------------------------
 # Functions to Process m3c2 File into Change Event Objects
 # ---------------------------------------------------------------------------
-def process_m3c2_file(m3c2_clustered):
+def process_m3c2_file(m3c2_clustered, ce_file = None,pc_folder = None, obj_folder = None):
     """
     Load a clustered M3C2 file, compute change events for each cluster,
     write per‑cluster files (point cloud and convex hull), and save a JSON file
     with the change event collection.
     """
     outfolder = os.path.dirname(m3c2_clustered)
-    pc_folder = os.path.join(outfolder, "point_clouds")
-    obj_folder = os.path.join(outfolder, "convex_hulls")
+    if pc_folder is None:
+        pc_folder = os.path.join(outfolder, "point_clouds")
+    if obj_folder is None:
+        obj_folder = os.path.join(outfolder, "convex_hulls")
     os.makedirs(pc_folder, exist_ok=True)
     os.makedirs(obj_folder, exist_ok=True)
-    ce_file = os.path.join(outfolder, "change_events.json")
+    if ce_file is None:
+        ce_file = os.path.join(outfolder, "change_events.json")
 
     # Load data using DataHandler
     dh = DataHandler(m3c2_clustered)
@@ -866,17 +869,17 @@ def process_m3c2_file(m3c2_clustered):
     collection.save_to_file(ce_file)
     return collection
 
-def process_m3c2_file_into_change_events(m3c2_clustered):
+def process_m3c2_file_into_change_events(m3c2_clustered,ce_filename = None, pc_folder = None, obj_folder = None):
         outfolder = os.path.dirname(m3c2_clustered)
         if not os.path.isdir(outfolder):
             os.makedirs(outfolder)
-
-        ce_filename = os.path.join(outfolder,"change_events.json")
+        if ce_filename is None:
+            ce_filename = os.path.join(outfolder,"change_events.json")
         merged_ce_file = os.path.join(os.path.dirname(outfolder), "change_events.json")
 
         if not os.path.isfile(ce_filename):
             try:
-                coll = process_m3c2_file(m3c2_clustered)
+                coll = process_m3c2_file(m3c2_clustered, ce_file=ce_filename, pc_folder=pc_folder, obj_folder = obj_folder)
                 # print("Processed change events:")
                 # print(coll)
             except Exception as e:
