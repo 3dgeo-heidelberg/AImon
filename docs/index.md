@@ -165,6 +165,7 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 ```
 @article{Tabernig2025,
   author       = {Tabernig, Ronald and Albert, William and Weiser, Hannah and H{\"{o}}fle, Bernhard},
+  journal      = {6th Joint International Symposium on Deformation Monitoring (JISDM)},
   year         = {2025},
   title        = {A hierarchical approach for near real-time 3D surface change analysis of permanent laser scanning point clouds},
   doi          = {10.5445/IR/1000180377},
@@ -201,6 +202,20 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
   title        = {Detection of honey bees (Apis mellifera) in hypertemporal LiDAR point cloud time series to extract bee activity zones and times},
   doi          = {},
   pagetotal    = {8}
+}
+```
+
+```
+@article{YANG2025481,
+  author       = {Yihui Yang and Christoph Holst},
+  journal      = {ISPRS Journal of Photogrammetry and Remote Sensing},
+  year         = {2025},
+  title        = {Piecewise-ICP: Efficient and robust registration for 4D point clouds in permanent laser scanning},
+  doi          = {https://doi.org/10.1016/j.isprsjprs.2025.06.026},
+  volume       = {227},
+  pages        = {481-500},
+  issn         = {0924-2716},
+  url          = {https://www.sciencedirect.com/science/article/pii/S0924271625002527},
 }
 ```
 </details>
