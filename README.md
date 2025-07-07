@@ -4,6 +4,11 @@
 
 The [3DGeo Research Group](https://www.geog.uni-heidelberg.de/en/3dgeo) focuses on advancing geohazard monitoring through the use of 4D geospatial data. With global climate change accelerating environmental risks like landslides and rockfalls, our work leverages autonomous laser scanning (PLS) systems to capture real-time 3D data, enabling proactive risk management. We develop AI-driven methods for continuous hazard monitoring, bridging the gap between research and practical, application-oriented solutions. Our goal is to refine and extend multi-temporal analysis techniques to enhance hazard detection and mitigate the impact on communities and infrastructure. The study site is located in Trier, Germany.
 
+
+##  Online documentation
+
+Thorough online documentation on the research project, study site, developed methods, and publications can be found [here](3dgeo-heidelberg.github.io/AImon/). Feel free to use the notebook implementation examples as a starting point, and remember to cite this repository.
+
 ## 💻 Installation with a Conda environment
 
 To avoid negative interactions between installed packages and version conflicts, a conda environment should be created for each new project. Follow the three next steps:
