@@ -159,6 +159,7 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 ## 📚 Publications
 <details>
 <summary>Journal and conference</summary>
+
 ```
 @article{Tabernig2025,
   author       = {Tabernig, Ronald and Albert, William and Weiser, Hannah and H{\"{o}}fle, Bernhard},
@@ -215,10 +216,12 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
   url          = {https://www.sciencedirect.com/science/article/pii/S0924271625002527},
 }
 ```
+
 </details>
 
 <details>
 <summary>Software</summary>
+
 ```
 @software{Tabernig_VAPC_-_Voxel_2024,
   author = {Tabernig, Ronald and Albert, William and Weiser, Hannah and H{\"{o}}fle, Bernhard},
@@ -230,10 +233,12 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
   year = {2024}
 }
 ```
+
 </details>
 
 <details>
 <summary>Abstract</summary>
+
 ```
 @inproceedings{TabernigAGIT2025,
   author       = {Tabernig, R. and Albert, W. and Weiser, H. and H{\"{o}}fle, B.},
@@ -310,6 +315,25 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
   url          = {https://doi.org/10.5194/egusphere-egu24-1613}
 }
 ```
+
+</details>
+
+
+<details>
+<summary>Bachelor thesis</summary>
+
+```
+Lukas Fuchs (2025): Assessment of Low-Cost Laser Scanning Setups for 3D Rockfall Monitoring Using Virtual Laser Scanning. Institute of Geography, Heidelberg University.
+```
+
+```
+Niklas Carniel (2024): Deriving activity zones of the Äußeres Hochebenkar rock glacier through boulder-tracking based on multitemporal ULS point clouds. Institute of Geography, Heidelberg University.
+```
+
+```
+Michelle Meier (2024): Change Detection in Laser Scanning Data for Rockfall Classification and Correlation Analysis on a Slope in Obergurgl, Tyrol. Institute of Geography, Heidelberg University.
+```
+
 </details>
 
 ## 📂 Credits
