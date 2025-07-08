@@ -108,13 +108,13 @@ Development of new concepts and tools for the visualization of the detected terr
   <tr>
     <td style="background-color:#ffffff; color:black; padding:10px;">
       Example 1: Main AImon5.0 monitoring pipeline <br><br>
-      <a href="main.html">
+      <a href="jupyter/main.html">
         <img src="img/main.png" width="500">
       </a>
     </td>
     <td style="background-color:#ffffff; color:black; padding:10px;">
       Example 2: Adaptive monitoring <br>
-      <a href="adaptive_monitoring.html">
+      <a href="jupyter/adaptive_monitoring.html">
         <img src="img/adaptive_monitoring.gif" width="500">
       </a>
     </td>
@@ -122,13 +122,13 @@ Development of new concepts and tools for the visualization of the detected terr
   <tr>
     <td style="background-color:#ffffff; color:black; padding:10px;">
       Example 3: Rule-based classification of change events <br>
-      <a href="classification_of_change_events_rule_based.html">
+      <a href="jupyter/classification_of_change_events_rule_based.html">
         <img src="img/classified_rule_based.png" width="500">
       </a>
     </td>
     <td style="background-color:#ffffff; color:black; padding:10px;">
       Example 4: Rule-based filtering of change events <br>
-      <a href="filtering_of_change_events_rule_based.html">
+      <a href="jupyter/filtering_of_change_events_rule_based.html">
         <img src="img/filtered_rule_based.png" width="500">
       </a>
     </td>
@@ -136,21 +136,18 @@ Development of new concepts and tools for the visualization of the detected terr
   <tr>
     <td style="background-color:#ffffff; color:black; padding:10px;">
       Example 5: Manually labelled dataset for random forest training <br>
-      <a href="classification_of_change_events_using_random_forest_classifier.html">
+      <a href="jupyter/classification_of_change_events_using_random_forest_classifier.html">
         <img src="img/labelled_change_events.png" width="500">
       </a>
     </td>
     <td style="background-color:#ffffff; color:black; padding:10px;">
       Example 6: Random forest classification on prediction dataset <br>
-      <a href="classification_of_change_events_using_random_forest_classifier.html">
+      <a href="jupyter/classification_of_change_events_using_random_forest_classifier.html">
         <img src="img/classified_using_random_forest.png" width="500">
       </a>
     </td>
   </tr>
 </table>
-
-
-
 
 
 ## 🛠️ Full worfklow implementation
@@ -238,6 +235,22 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 <details>
 <summary>Abstract</summary>
 ```
+@inproceedings{TabernigAGIT2025,
+  author       = {Tabernig, R. and Albert, W. and Weiser, H. and H{\"{o}}fle, B.},
+  title        = {Towards in-situ near real-time 3D environmental monitoring and geospatial point cloud analysis with open-source software},
+  booktitle    = {AGIT Conference 2025. Vol. 1},
+  editor       = {},
+  pages        = {202},
+  year         = {2025},
+  address      = {Salzburg},
+  publisher    = {Universitätsbibliothek Salzburg},
+  doi          = {10.25598/agit/2025-48},
+  note         = {Abstract},
+  url          = {https://doi.org/10.25598/agit/2025-48}
+}
+```
+
+```
 @inproceedings{AlbertSummerSchool2024,
   author       = {Albert, William},
   title        = {Considering wind effects in LiDAR simulation-based machine learning for point cloud classification in forests},
@@ -251,6 +264,21 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
   note         = {Abstract},
   url          = {https://doi.org/10.15203/99106-137-3}
 }
+```
+
+```
+@inproceedings{Hofle2024,
+  author       = {H{\"{o}}fle, B. and Tabernig, R. and Zahs, V. and Esmorís, A.M. and Winiwarter, L. and Weiser, H.},
+  title        = {Machine-learning based 3D point cloud classification and multitemporal change analysis with simulated laser scanning data using open source scientific software},
+  booktitle    = {EGU General Assembly 2024},
+  volume       = {EGU24},
+  pages        = {1--2},
+  year         = {2024},
+  doi          = {10.5194/egusphere-egu24-1261},
+  note         = {Abstract},
+  url          = {https://doi.org/10.5194/egusphere-egu24-1261}
+}
+
 ```
 
 ```
@@ -281,21 +309,6 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
   doi          = {10.5194/egusphere-egu24-1613},
   url          = {https://doi.org/10.5194/egusphere-egu24-1613}
 }
-```
-
-```
-@inproceedings{Hofle2024,
-  author       = {H{\"{o}}fle, B. and Tabernig, R. and Zahs, V. and Esmorís, A.M. and Winiwarter, L. and Weiser, H.},
-  title        = {Machine-learning based 3D point cloud classification and multitemporal change analysis with simulated laser scanning data using open source scientific software},
-  booktitle    = {EGU General Assembly 2024},
-  volume       = {EGU24},
-  pages        = {1--2},
-  year         = {2024},
-  doi          = {10.5194/egusphere-egu24-1261},
-  note         = {Abstract},
-  url          = {https://doi.org/10.5194/egusphere-egu24-1261}
-}
-
 ```
 </details>
 
