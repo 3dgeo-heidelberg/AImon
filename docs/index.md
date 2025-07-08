@@ -203,20 +203,6 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 }
 ```
 
-```
-@article{YANG2025481,
-  author       = {Yihui Yang and Christoph Holst},
-  journal      = {ISPRS Journal of Photogrammetry and Remote Sensing},
-  year         = {2025},
-  title        = {Piecewise-ICP: Efficient and robust registration for 4D point clouds in permanent laser scanning},
-  doi          = {https://doi.org/10.1016/j.isprsjprs.2025.06.026},
-  volume       = {227},
-  pages        = {481-500},
-  issn         = {0924-2716},
-  url          = {https://www.sciencedirect.com/science/article/pii/S0924271625002527},
-}
-```
-
 </details>
 
 <details>
