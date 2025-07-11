@@ -183,12 +183,14 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 
 ```
 @article{Albert2025,
-  author       = {Albert, William and Weiser, Hannah and Tabernig, Ronald and H{\"{o}}fle, Bernhard},
-  journal      = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
-  year         = {2025},
-  title        = {Wind during terrestrial laser scanning of trees: Simulation-based assessment of effects on point cloud features and leaf-wood classification},
-  doi          = {},
-  pagetotal    = {8}
+  author = {Albert, W. and Weiser, H. and Tabernig, R. and H\"ofle, B.},
+  journal = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
+  year = {2025},
+  title = {Wind during terrestrial laser scanning of trees: Simulation-based assessment of effects on point cloud features and leaf-wood classification},
+  volume = {X-G-2025},
+  pages = {25--32},
+  url = {https://isprs-annals.copernicus.org/articles/X-G-2025/25/2025/},
+  doi = {10.5194/isprs-annals-X-G-2025-25-2025}
 }
 ```
 
