@@ -161,13 +161,16 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 <summary>Journal and conference</summary>
 
 ```
-@article{Tabernig2025,
-  author       = {Tabernig, Ronald and Albert, William and Weiser, Hannah and H{\"{o}}fle, Bernhard},
-  journal      = {6th Joint International Symposium on Deformation Monitoring (JISDM)},
+@article{Tabernig2025100254,
+  author       = {Ronald Tabernig and William Albert and Hannah Weiser and Patrick Fritzmann and Katharina Anders and Martin Rutzinger and Bernhard Höfle},
+  journal      = {Science of Remote Sensing},
+  title        = {Temporal aggregation of point clouds improves permanent laser scanning of landslides in forested areas},
   year         = {2025},
-  title        = {A hierarchical approach for near real-time 3D surface change analysis of permanent laser scanning point clouds},
-  doi          = {10.5445/IR/1000180377},
-  pagetotal    = {9}
+  doi          = {https://doi.org/10.1016/j.srs.2025.100254},
+  volume       = {12},
+  pages        = {100254},
+  issn         = {2666-0172},
+  url          = {https://www.sciencedirect.com/science/article/pii/S2666017225000604}
 }
 ```
 
@@ -175,8 +178,8 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 @article{Lindenbergh2025100094,
   author       = {Roderik Lindenbergh and Katharina Anders and Mariana Campos and Daniel Czerwonka-Schröder and Bernhard Höfle and Mieke Kuschnerus and Eetu Puttonen and Rainer Prinz and Martin Rutzinger and Annelies Voordendag and Sander Vos},
   journal      = {ISPRS Open Journal of Photogrammetry and Remote Sensing},
-  year         = {2025},
   title        = {Permanent terrestrial laser scanning for near-continuous environmental observations: Systems, methods, challenges and applications},
+  year         = {2025},
   volume       = {17},
   pages        = {100094},
   url          = {https://www.sciencedirect.com/science/article/pii/S2667393225000134},
@@ -185,13 +188,23 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 }
 ```
 
+```
+@article{Tabernig2025,
+  author       = {Tabernig, Ronald and Albert, William and Weiser, Hannah and H{\"{o}}fle, Bernhard},
+  journal      = {6th Joint International Symposium on Deformation Monitoring (JISDM)},
+  title        = {A hierarchical approach for near real-time 3D surface change analysis of permanent laser scanning point clouds},
+  year         = {2025},
+  doi          = {10.5445/IR/1000180377},
+  pagetotal    = {9}
+}
+```
 
 ```
 @article{WeiserHoefle2025,
   author       = {Weiser, Hannah and H{\"{o}}fle, Bernhard},
   journal      = {EarthArXiv},
-  year         = {2025},
   title        = {Advancing vegetation monitoring with virtual laser scanning of dynamic scenes (VLS-4D): Opportunities, implementations and future perspectives},
+  year         = {2025},
   doi          = {10.31223/X51Q5V},
 }
 ```
@@ -200,8 +213,8 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 @article{Albert2025,
   author       = {Albert, William and Weiser, Hannah and Tabernig, Ronald and H\"ofle, Bernhard},
   journal      = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
-  year         = {2025},
   title        = {Wind during terrestrial laser scanning of trees: Simulation-based assessment of effects on point cloud features and leaf-wood classification},
+  year         = {2025},
   volume       = {X-G-2025},
   pages        = {25--32},
   url          = {https://isprs-annals.copernicus.org/articles/X-G-2025/25/2025/},
@@ -213,8 +226,8 @@ Serves as the entry point for the AImon5.0 processing workflow. It orchestrates 
 @article{Meyer2025,
   author       = {Meyer, Jannik and Tabernig, Ronald and H{\"{o}}fle, Bernhard},
   journal      = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
-  year         = {2025},
   title        = {Detection of honey bees (Apis mellifera) in hypertemporal LiDAR point cloud time series to extract bee activity zones and times},
+  year         = {2025},
   volume       = {X-G-2025},
   pages        = {583--590},
   url          = {https://isprs-annals.copernicus.org/articles/X-G-2025/583/2025/},
