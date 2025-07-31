@@ -43,11 +43,13 @@ plugins:
       ignore_h1_titles: True
   - search
 markdown_extensions:
+  - md_in_html
   - attr_list
   - abbr
 
 nav:
   - Home: index.md
+  - GitHub repository ↗: https://github.com/3dgeo-heidelberg/AImon
   - Notebook examples:
     - Main AImon5.0 monitoring pipeline: jupyter/main.ipynb
     - Adaptive monitoring: jupyter/adaptive_monitoring.ipynb
