@@ -7,7 +7,7 @@ The [3DGeo Research Group](https://www.geog.uni-heidelberg.de/en/3dgeo) focuses 
 
 ##  Online documentation
 
-Thorough online documentation on the research project, study site, developed methods, and publications can be found [here](3dgeo-heidelberg.github.io/AImon/). Feel free to use the notebook implementation examples as a starting point, and remember to cite this repository.
+Thorough online documentation on the research project, study site, developed methods, and publications can be found [here](https://3dgeo-heidelberg.github.io/AImon/). Feel free to use the notebook implementation examples as a starting point, and remember to cite this repository.
 
 ## 💻 Installation with a Conda environment
 
